@@ -16,6 +16,22 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'register' => [
+        'path' => './assets/js/register.js',
+        'entrypoint' => true,
+    ],
+    'resetpw' => [
+        'path' => './assets/js/resetpw.js',
+        'entrypoint' => true,
+    ],
+    'updatepw' => [
+        'path' => './assets/js/updatepw.js',
+        'entrypoint' => true,
+    ],
+    'deleteAccount' => [
+        'path' => './assets/js/deleteAccount.js',
+        'entrypoint' => true,
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
@@ -24,5 +40,15 @@ return [
     ],
     '@hotwired/turbo' => [
         'version' => '7.3.0',
+    ],
+    'bootstrap' => [
+        'version' => '5.3.3',
+    ],
+    '@popperjs/core' => [
+        'version' => '2.11.8',
+    ],
+    'bootstrap/dist/css/bootstrap.min.css' => [
+        'version' => '5.3.3',
+        'type' => 'css',
     ],
 ];

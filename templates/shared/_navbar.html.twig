@@ -1,0 +1,51 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="/">Numerology</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarColor04">
+			<ul class="navbar-nav me-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="#">🎓 Formations</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">💌 Newsletter</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">👨‍💻 Qui suis-je ?</a>
+				</li>
+			</ul>
+			<ul class="navbar-nav">
+				{% if app.user %}
+					{% if is_granted('ROLE_ADMIN') %}
+						<li class="nav-item">
+							<a href="{{ path('admin') }}" class="nav-link">Administration</a>
+						</li>
+					{% endif %}
+					<div class="btn-group">
+						<button class="dropdown-toggle btn-dropdown-user" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+							<div
+								class="sc-gravatar">
+									Paramètres
+							</div>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-lg-end py-0">
+							<li class="py-2 px-2">
+								<a class="dropdown-item dropdown-user" href="{{path('app_profile')}}">Profil</a>
+							</li>
+							<div class="space-between"></div>
+							<li class="py-2 px-2">
+								<a class="dropdown-item dropdown-user color-btn-logout" href="{{ path('app_logout') }}">Se déconnecter</a>
+							</li>
+						</ul>
+					</div>
+				{% else %}
+					<li class="nav-item">
+						<a href="{{ path('app_login') }}" class="btn btn-primary btn-connect">Se connecter</a>
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</nav>

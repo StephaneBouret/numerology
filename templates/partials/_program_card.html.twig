@@ -1,0 +1,45 @@
+<div class="items-programs">
+	<section class="item-program">
+		<div class="img-program">
+			{% if app.user %}
+				<a href="#" class="text-decoration-none">
+					<img src="{{ vich_uploader_asset(p, 'imageFile') }}" alt="{{ p.name }}" class="program-img">
+				</a>
+			{% else %}
+				<a href="#" class="text-decoration-none">
+					<img src="{{ vich_uploader_asset(p, 'imageFile') }}" alt="{{ p.name }}" class="program-img">
+				</a>
+			{% endif %}
+		</div>
+		<div class="program-content">
+			<div class="text-start">
+				<header>
+					<div class="payment-terms-program mb-0">
+						<ul class="payment-terms-list">
+							<li>{{ p.price | amount }}</li>
+						</ul>
+					</div>
+					{% if app.user %}
+						<a href="#" class="text-decoration-none">
+							<h2 class="title-program">{{ p.name }}</h2>
+						</a>
+					{% else %}
+						<a href="#" class="text-decoration-none">
+							<h2 class="title-program">{{ p.name }}</h2>
+						</a>
+					{% endif %}
+				</header>
+				<div class="content-program">
+					{{ p.description | nl2br }}
+				</div>
+				<div class="show-program d-flex">
+					{% if app.user %}
+						<a href="#" class="show-detail-program">Voir les cours</a>
+					{% else %}
+						<a href="#" class="show-detail-program">👀 Voir le contenu de la formation</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
