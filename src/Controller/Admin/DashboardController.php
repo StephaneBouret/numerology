@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Entity\Program;
+use App\Entity\NewsLetter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -36,6 +37,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Programmes', 'fas fa-list-check', Program::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
+        yield MenuItem::linkToCrud('Newsletter', 'fa-solid fa-envelope-open-text', NewsLetter::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'home_index');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

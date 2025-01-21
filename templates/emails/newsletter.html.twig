@@ -1,0 +1,7 @@
+<h1>Demande d'inscription à la newsletter</h1>
+<p>Bonjour,</p>
+<p>Vous venez de recevoir une demande d'inscription à la newsletter.</p>
+<p>Prénom et nom du demandeur : {{ user.firstname }} {{ user.lastname }}</p>
+<p>Email du demandeur : {{ user.email }}</p>
+<p>Numéro du demandeur : #{{ user.id }}</p>
+<p><a href="{{ absolute_url(path('admin')) }}">Back office</a></p>

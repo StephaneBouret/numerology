@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Newsletter
+{% endblock %}
+
+{% block body %}
+	<div class="container pt-5">
+		<section class="newsletter jyoYKi">
+			<div class="container-news">
+				<section class="wrap-news">
+					<div class="content-news text-center">
+						<header>
+							<h2 class="title-news">Obtenir les mises à jour</h2>
+						</header>
+						<div class="content-news">
+							Obtenez régulièrement des offres, des conseils et des mises à jour en vous inscrivant à notre newsletter 🚀
+						</div>
+						<div class="form-news">
+							{{ form_start(form, { 'attr': {'class': 'sign-up-form'} }) }}
+							{{ form_errors(form.email) }}
+							<div class="content-sign-up-form">
+								<div class="input-row">
+									{{ form_widget(form.email, { 'attr': {'class': 'input-email'} }) }}
+								</div>
+								<button type="submit" class="submit-news">Souscrire</button>
+							</div>
+							<p class="text-news mb-0">Vous vous inscrivez pour recevoir des emails de l'application</p>
+							{{ form_end(form) }}
+						</div>
+					</div>
+				</section>
+			</div>
+		</section>
+	</div>
+{% endblock %}
