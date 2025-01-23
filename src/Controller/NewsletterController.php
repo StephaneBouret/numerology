@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class NewsletterController extends AbstractController
 {
     #[Route('/newsletter', name: 'app_newsletter')]
-    #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette page')]
+    #[IsGranted('CAN_EDIT', message: 'Vous n\'avez pas confimé votre email')]
     public function index(Request $request, EntityManagerInterface $em, SendMailService $mail): Response
     {
         /** @var User */

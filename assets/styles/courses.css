@@ -483,6 +483,60 @@
 }
 
 /*--------------------------------------------------------------
+# Nav floating
+--------------------------------------------------------------*/
+.pzkyw5 {
+    position: relative;
+    background-color: rgb(255, 255, 255);
+}
+
+.xya3m1 {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 100;
+    transition: transform 0.5s ease-in-out;
+    transform: translateY(-300%);
+}
+
+.i3u89z {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 100;
+    transition: transform 0.5s ease-in-out;
+    transform: translateY(0px);
+}
+
+.k727f2 {
+    position: relative;
+    margin: 0px auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 18px;
+    max-width: 100%;
+    width: 970px;
+}
+
+.fg56zp {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.a0zity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/*--------------------------------------------------------------
 # Courses List
 --------------------------------------------------------------*/
 .section-programs .card {

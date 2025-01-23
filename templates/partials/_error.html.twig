@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	{{ exception.statusText|trans }}
+{% endblock %}
+
+{% block body %}
+	<div class="container pt-5">
+		<section class="section error-404 d-flex flex-column align-items-center justify-content-center">
+			<h1>{{ exception.statusCode }}</h1>
+			<h2>{{ exception.statusText|trans }}</h2>
+			<a class="btn" href="{{ path('home_index') }}">Accueil</a>
+			<div class="row">
+				<div class="col-md-6 m-auto">
+					<img src="{{ asset('img/not-found.svg') }}" class="img-fluid py-5" alt="Page Not Found">
+				</div>
+			</div>
+		</section>
+	</div>
+{% endblock %}

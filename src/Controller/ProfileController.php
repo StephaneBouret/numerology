@@ -12,15 +12,17 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
+    #[IsGranted('CAN_EDIT', message: 'Vous n\'avez pas confimé votre email')]
     public function index(Request $request, EntityManagerInterface $em): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
+        // $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
 
         $form = $this->createForm(UpdateUserFormType::class, $user);
         $form->handleRequest($request);
