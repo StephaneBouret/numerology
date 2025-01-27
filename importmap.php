@@ -32,6 +32,14 @@ return [
         'path' => './assets/js/deleteAccount.js',
         'entrypoint' => true,
     ],
+    'scrollToggle' => [
+        'path' => './assets/js/scrollToggleDiv.js',
+        'entrypoint' => true,
+    ],
+    '@fortawesome/fontawesome-free/css/all.css' => [
+        'version' => '6.6.0',
+        'type' => 'css',
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],

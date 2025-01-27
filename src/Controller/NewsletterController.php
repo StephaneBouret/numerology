@@ -16,15 +16,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class NewsletterController extends AbstractController
 {
     #[Route('/newsletter', name: 'app_newsletter')]
-    #[IsGranted('CAN_EDIT', message: 'Vous n\'avez pas confimé votre email')]
+    #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour accéder à cette page')]
     public function index(Request $request, EntityManagerInterface $em, SendMailService $mail): Response
     {
         /** @var User */
         $user = $this->getUser();
         $email = $user->getEmail();
+        $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
 
         $new = new NewsLetter;
-        $new->setEmail($user->getEmail());
+        $new->setEmail($email);
 
         $form = $this->createForm(NewsLetterFormType::class, $new);
         $form->handleRequest($request);

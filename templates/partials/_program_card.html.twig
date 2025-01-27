@@ -6,7 +6,7 @@
 					<img src="{{ vich_uploader_asset(p, 'imageFile') }}" alt="{{ p.name }}" class="program-img">
 				</a>
 			{% else %}
-				<a href="#" class="text-decoration-none">
+				<a href="{{ path('app_program', {'slug': p.slug}) }}" class="text-decoration-none">
 					<img src="{{ vich_uploader_asset(p, 'imageFile') }}" alt="{{ p.name }}" class="program-img">
 				</a>
 			{% endif %}
@@ -24,7 +24,7 @@
 							<h2 class="title-program">{{ p.name }}</h2>
 						</a>
 					{% else %}
-						<a href="#" class="text-decoration-none">
+						<a href="{{ path('app_program', {'slug': p.slug}) }}" class="text-decoration-none">
 							<h2 class="title-program">{{ p.name }}</h2>
 						</a>
 					{% endif %}
@@ -36,7 +36,7 @@
 					{% if app.user %}
 						<a href="#" class="show-detail-program">Voir les cours</a>
 					{% else %}
-						<a href="#" class="show-detail-program">👀 Voir le contenu de la formation</a>
+						<a href="{{ path('app_program', {'slug': p.slug}) }}" class="show-detail-program">👀 Voir le contenu de la formation</a>
 					{% endif %}
 				</div>
 			</div>

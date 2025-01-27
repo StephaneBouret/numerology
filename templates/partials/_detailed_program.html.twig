@@ -1,0 +1,31 @@
+<section class="statisfied">
+	<div class="container-programs">
+		<div class="show-detailed-program">
+			<div class="grid-header text-start">
+				<header>
+					<h2 class="title-program show-title-program">Ce que vous allez apprendre avec moi dans ce guide complet sur la numérologie 😊</h2>
+				</header>
+			</div>
+			{% set cleanedContent = program.content|replace({'<div>': '', '</div>': '', '<br>': '\n'}) %}
+			{% set lines = cleanedContent|split('\n')|filter(item => item|trim is not empty) %}
+			{% set columns = lines|batch(5, '') %}
+			{% for column in columns %}
+				<div class="mw-0">
+					<section class="detailed-items-program">
+						<div class="refunded-content">
+							<div class="text-start">
+								<div class="content-program">
+									{% for line in column %}
+										<div class="font-18">
+											{{ line|raw }}
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>

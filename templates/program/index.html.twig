@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ program.slug }}
+{% endblock %}
+
+{% block body %}
+	<section class="show-program mt-0 kcKEGd">
+		<div class="container-programs">
+			<div class="intro-program">
+				<div class="img-program">
+					<img src="{{ vich_uploader_asset(program, 'imageFile') }}" alt="{{ program.name }}" class="program-img">
+				</div>
+				<div class="intro-text-program">
+					<div class="text-start">
+						<header>
+							<div class="payment-terms-program mb-0">
+								<ul class="payment-terms-list">
+									<li class="font-18">{{ program.price | amount }}</li>
+								</ul>
+							</div>
+							<h2 class="title-program font-36 fpTULK">{{ program.name }}</h2>
+						</header>
+						<div class="content-program font-18 fpTULK">
+							{{ program.description | nl2br }}
+						</div>
+						<div class="content-button-go">
+							<div class="wrap-button-go">
+								<a href="#" class="show-detail-program font-18">Allez ! Je me lance ! 💪</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="statisfied">
+		<div class="container-programs">
+			<div class="text-start">
+				<header>
+					<h2 class="title-program show-title-program">Maîtriser la numérologie 💪</h2>
+				</header>
+				<div class="content-program font-18">
+					Cette formation a été conçue, pensée et réalisée pour&nbsp;<strong>réellement comprendre la numérologie</strong>
+					! Elle comprend donc
+					<strong>un guide complet (pour débutants et intermédiaires) à la numérologie</strong>.<br><br>Le tout pour
+					<strong>50 heures de contenus vidéos</strong>, des articles, des ressources et des exercices corrigés !
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="show-program mt-0">
+		<div class="container-programs">
+			<div class="text-start">
+				<header>
+					<h2 class="title-program show-title-program">Le guide complet Numérologie : Créer un e-commerce de A à Z avec le Framework Symfony en 50H de vidéos</h2>
+				</header>
+				<div class="content-program font-18">
+					<div>
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, nemo.
+						<strong>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum vel voluptatibus autem. Hic, voluptates.</strong>
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis, consectetur. :
+					</div>
+					<ul>
+						<li>Lorem, ipsum.</li>
+						<li>Lorem ipsum dolor sit amet.</li>
+						<li>Lorem, ipsum dolor.</li>
+						<li>Lorem ipsum dolor sit.</li>
+						<li>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</li>
+					</ul>
+					<div>
+						On passera donc par l'ensemble des étapes classiques...
+					</div>
+					<div>
+						<br>Les notions sont distillées tout au long des vidéos et ne sont abordées que lorsqu'on en a vraiment besoin et qu'on peut donc les mettre immédiatement en pratique.
+					</div>
+					<div>
+						<br>Alors embarquez avec moi et vous aurez alors des bases solides pour continuer par vous même votre apprentissage de toutes les subtilités de la numérologie !
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	{% include "partials/_detailed_program.html.twig" %}
+	{% include "partials/_nav_float.html.twig" %}
+	<section class="show-program mt-0">
+		<div class="container-programs">
+			<div class="text-start">
+				<header>
+					<h2 class="title-program show-title-program fw-bold">👍 Testez avant d'acheter !</h2>
+				</header>
+				<div class="content-program font-18">
+					<div>
+						<strong>Les deux premières heures de ce cours sont entièrement gratuites</strong>
+						afin que vous vous fassiez une idée de ma pédagogie et de la façon dont j'aborde les différents sujets !
+						<br>
+						<br>
+						<strong>N'hésitez plus ! Testez ce cours avant de l'acheter 😊</strong>
+					</div>
+					<div class="cjl4i1 opvhv0">
+						<div class="opr6f4">
+							<div class="gab819">
+								<a href="#" class="ud1v5m">👀 Montrez-moi les 2 premières heures !</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+{% block importmap %}
+	{{ importmap(['app', 'scrollToggle']) }}
+{% endblock %}

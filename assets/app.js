@@ -9,6 +9,7 @@ import { Application } from "@hotwired/stimulus";
 import './styles/app.css';
 import './styles/courses.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 import 'bootstrap';
 
 window.Stimulus = Application.start();
@@ -24,8 +25,36 @@ const closeAlertMessage = () => {
     }
 }
 
+// Easy selector helper function
+const select = (el, all = false) => {
+    el = el.trim()
+    if (all) {
+        return [...document.querySelectorAll(el)]
+    } else {
+        return document.querySelector(el)
+    }
+}
+
+// Easy on scroll event listener
+const onscroll = (el, listener) => {
+    el.addEventListener('scroll', listener)
+}
+
+// Back to top button
+const backToTop = () => {
+    const backtotop = select('.back-to-top');
+    if (backtotop) {
+        const toggleBacktotop = () => {
+            backtotop.classList.toggle('active', window.scrollY > 100);
+        };
+        window.addEventListener('load', toggleBacktotop);
+        onscroll(document, toggleBacktotop);
+    }
+}
+
 const initPage = () => {
     closeAlertMessage();
+    backToTop();
 };
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

@@ -2,16 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\ProgramRepository;
+use App\Repository\AboutRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity(repositoryClass: ProgramRepository::class)]
+#[ORM\Entity(repositoryClass: AboutRepository::class)]
 #[Vich\Uploadable]
-class Program
+class About
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,12 +21,14 @@ class Program
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Le nom du programme est obligatoire !")]
-    #[Assert\Length(min: 3, minMessage: "Le nom du programme doit avoir au moins {{ limit }} caractères")]
-    private ?string $name = null;
+    #[Assert\NotBlank(message: "Le prénom du dirigeant est obligatoire !")]
+    #[Assert\Length(min: 3, minMessage: "Le prénom du dirigeant doit avoir au moins {{ limit }} caractères")]
+    private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    #[Assert\NotBlank(message: "Le nom du dirigeant est obligatoire !")]
+    #[Assert\Length(min: 3, minMessage: "Le nom du dirigeant doit avoir au moins {{ limit }} caractères")]
+    private ?string $lastname = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "La description est obligatoire !")]
@@ -45,10 +49,10 @@ class Program
             'image/jpg',
             'image/png',
             'image/webp'
-        ],
+    ],
         mimeTypesMessage: 'Le type MIME du fichier n\'est pas valide ({{ type }}). Les formats autorisés sont {{ types }}'
     )]
-    #[Vich\UploadableField(mapping: 'programs_images', fileNameProperty: 'imageName')]
+    #[Vich\UploadableField(mapping: 'about_images', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
 
     #[ORM\Column(nullable: true)]
@@ -57,40 +61,54 @@ class Program
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column]
-    private ?int $price = null;
+    /**
+     * @var Collection<int, Link>
+     */
+    #[ORM\OneToMany(targetEntity: Link::class, mappedBy: 'about', cascade: ['persist', 'remove'])]
+    private Collection $links;
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank(message: "Le contenu est obligatoire !")]
-    private ?string $content = null;
+    public function __construct()
+    {
+        $this->links = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->name;
+        return $this->firstname;
     }
 
-    public function setName(string $name): static
+    public function setFirstname(string $firstname): static
     {
-        $this->name = $name;
+        $this->firstname = $firstname;
 
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getLastname(): ?string
     {
-        return $this->slug;
+        return $this->lastname;
     }
 
-    public function setSlug(string $slug): static
+    public function setLastname(string $lastname): static
     {
-        $this->slug = $slug;
+        $this->lastname = $lastname;
 
         return $this;
+    }
+
+    /**
+     * Retourne le nom complet du formateur
+     *
+     * @return string
+     */
+    public function getFullname(): string
+    {
+        return "{$this->firstname} {$this->lastname}";
     }
 
     public function getDescription(): ?string
@@ -105,7 +123,7 @@ class Program
         return $this;
     }
 
-            /**
+    /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the update. If this
      * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
@@ -130,38 +148,42 @@ class Program
         return $this->imageFile;
     }
 
+    public function setImageName(?string $imageName): void
+    {
+        $this->imageName = $imageName;
+    }
+
     public function getImageName(): ?string
     {
         return $this->imageName;
     }
 
-    public function setImageName(?string $imageName): static
+    /**
+     * @return Collection<int, Link>
+     */
+    public function getLinks(): Collection
     {
-        $this->imageName = $imageName;
+        return $this->links;
+    }
+
+    public function addLink(Link $link): static
+    {
+        if (!$this->links->contains($link)) {
+            $this->links->add($link);
+            $link->setAbout($this);
+        }
 
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function removeLink(Link $link): static
     {
-        return $this->price;
-    }
-
-    public function setPrice(int $price): static
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(string $content): static
-    {
-        $this->content = $content;
+        if ($this->links->removeElement($link)) {
+            // set the owning side to null (unless already changed)
+            if ($link->getAbout() === $this) {
+                $link->setAbout(null);
+            }
+        }
 
         return $this;
     }
