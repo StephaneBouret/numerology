@@ -49,7 +49,7 @@ class Link
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'links', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'links')]
     private ?About $about = null;
 
     public function __toString(): string
