@@ -64,7 +64,7 @@ class About
     /**
      * @var Collection<int, Link>
      */
-    #[ORM\OneToMany(targetEntity: Link::class, mappedBy: 'about', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Link::class, mappedBy: 'about', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $links;
 
     public function __construct()
