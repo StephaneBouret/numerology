@@ -17,12 +17,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
-    #[IsGranted('CAN_EDIT', message: 'Vous n\'avez pas confimé votre email')]
+    #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour accéder à cette page')]
     public function index(Request $request, EntityManagerInterface $em): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        // $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
+        $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
 
         $form = $this->createForm(UpdateUserFormType::class, $user);
         $form->handleRequest($request);
@@ -46,6 +46,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profile/editPassword', name: 'app_edit_password')]
+    #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour accéder à cette page')]
     public function editPassword(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $em)
     {
         /** @var User $user */
@@ -79,6 +80,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('profile/user/{id}/delete', name: 'app_user_delete')]
+    #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour accéder à cette page')]
     public function delete(Request $request, User $user, UserRepository $userRepository)
     {
         /** @var User $user */

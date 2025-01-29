@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mentions légales - {{ company.slug }}{% endblock %}
+{% block title %}Mentions légales -
+	{{ company.slug }}
+{% endblock %}
 
 {% block body %}
 	<section class="legal jyoYKi">
@@ -14,26 +16,33 @@
 				<div class="content-legal">
 					<div class="align-baseline">
 						<strong>{{ company.name }}</strong>
-                        <br>
-                        <strong>SIRET :
-						</strong>{{ company.siren}}
-                        <br><br>
+						<br>
+						<strong>SIRET :
+						</strong>
+						{{ company.siren}}
+						<br><br>
 					</div>
 					<div class="align-baseline">
 						<strong>Adresse :
-						</strong>{{ company.adress}}, {{ company.postalCode }} {{ company.city | upper }}
+						</strong>
+						{{ company.adress}},
+						{{ company.postalCode }}
+						{{ company.city | upper }}
 					</div>
 					<div class="align-baseline">
 						<strong>Email :
-						</strong>{{ company.email }}
+						</strong>
+						{{ company.email }}
 					</div>
 					<div class="align-baseline">
 						<strong>Responsable de la publication :
-						</strong>{{ company.manager }}
+						</strong>
+						{{ company.manager }}
 					</div>
 					<div class="align-baseline">
 						<strong>Créateur du site :
-						</strong>{{ company.manager }}
+						</strong>
+						{{ company.manager }}
 					</div>
 					<div class="align-baseline">
 						<br>
@@ -48,4 +57,5 @@
 			</div>
 		</div>
 	</section>
+	{% include "shared/_footer.html.twig" %}
 {% endblock %}
