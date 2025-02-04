@@ -3,8 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\About;
+use App\Entity\Category;
 use App\Entity\Company;
 use App\Entity\Contact;
+use App\Entity\FaqContent;
 use App\Entity\User;
 use App\Entity\Program;
 use App\Entity\NewsLetter;
@@ -31,7 +33,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Numerology')
+            ->setTitle("L'univers des nombres")
             ->setLocales(['fr']);
     }
 
@@ -41,6 +43,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Formateur', 'fa-regular fa-address-card', About::class);
         yield MenuItem::linkToCrud('Entreprise', 'fa-solid fa-building', Company::class);
         yield MenuItem::linkToCrud('Programmes', 'fas fa-list-check', Program::class);
+        yield MenuItem::linkToCrud('Catégories des faqs', 'fa-solid fa-list', Category::class);
+        yield MenuItem::linkToCrud('Questions', 'fa-solid fa-comments', FaqContent::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
         yield MenuItem::linkToCrud('Newsletter', 'fa-solid fa-envelope-open-text', NewsLetter::class);
         yield MenuItem::linkToCrud('Contacts', 'fa-regular fa-envelope', Contact::class);

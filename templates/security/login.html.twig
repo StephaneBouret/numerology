@@ -8,7 +8,7 @@
 		<div class="card card-fill">
 			<div class="card-body">
 				<div class="my-8 mx-auto" style="width: 480px;">
-					<h1 class="text-center mb-4 fs-4">Se connecter à l'application Sym-Numbers</h1>
+					<h1 class="text-center mb-4 fs-4">Se connecter à l'application {{ appName }}</h1>
 					<form method="post">
 						{% if error %}
 							<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security')|raw }}</div>

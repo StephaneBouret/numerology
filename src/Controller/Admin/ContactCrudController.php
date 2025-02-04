@@ -3,16 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Contact;
-use libphonenumber\PhoneNumberFormat;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use Misd\PhoneNumberBundle\Templating\Helper\PhoneNumberHelper;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -60,21 +57,11 @@ class ContactCrudController extends AbstractCrudController
             EmailField::new('email', 'Email :')
                 ->setFormTypeOptions(['attr' => ['placeholder' => 'Email du demandeur']]),
             TextField::new('phone', 'Téléphone')
-                ->setFormType(PhoneNumberType::class)
-                ->setFormTypeOptions([
-                    'default_region' => 'FR',
-                    'format' => PhoneNumberFormat::NATIONAL,
-                    'attr' => ['placeholder' => 'Téléphone du demandeur']
-                ])
-                ->setColumns(6)
-                ->onlyOnDetail(),
-            TextField::new('phone', 'Téléphone')
                 ->formatValue(function ($value, $entity) {
                     $value = $entity->getPhone();
                     $formattedValue = $this->phoneNumberHelper->format($value, 2);
                     return $formattedValue;
-                })
-                ->onlyOnIndex(),
+                }),
             TextareaField::new('content', 'Contenu de la demande')
                 ->onlyOnDetail(),
             DateTimeField::new('sendAt', 'Envoyé le :'),
