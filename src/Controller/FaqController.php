@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Data\SearchData;
+use App\Form\SearchFormType;
 use App\Repository\FaqContentRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class FaqController extends AbstractController
 {
@@ -13,12 +16,19 @@ final class FaqController extends AbstractController
     {}
 
     #[Route('/questions-frequentes', name: 'app_faq')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $faqs = $this->faqContentRepository->findAll();
+        $data = new SearchData;
+        $data->page = $request->get('page', 1);
+        $form = $this->createForm(SearchFormType::class, $data);
+        $form->handleRequest($request);
+
+        $faqs = $this->faqContentRepository->findSearch($data);
+        // $faqs = $this->faqContentRepository->findAll();
 
         return $this->render('faq/index.html.twig', [
             'faqs' => $faqs,
+            'form' => $form
         ]);
     }
 }

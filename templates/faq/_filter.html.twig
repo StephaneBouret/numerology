@@ -1,0 +1,30 @@
+{{ form_start(form, {'attr': {'class': 'hu4ltu'}}) }}
+<div class="xnsq1r">
+	{{ form_row(form.q) }}
+</div>
+<fieldset class="v8lhhm">
+	{% for category in form.categories %}
+		<div class="form-check abemm2">
+			{{ form_widget(category) }}
+			<label class="form-check-label d-flex qulnzd" for="{{ category.vars.id }}">
+				<div class="w5iwm8">
+					{% if category.vars.attr['data-image-url'] is defined %}
+						<img src="{{ category.vars.attr['data-image-url'] }}" alt="{{ category.vars.attr['data-name'] }}" class="d6p1sq">
+					{% else %}
+						<img src="{{ asset('img/list-ul.svg') }}" alt="Default" class="d6p1sq">
+					{% endif %}
+				</div>
+				<div class="udho67">
+					<div class="k2hclc">
+						{{ category.vars.attr['data-name'] ?? 'Toutes' }}
+					</div>
+					<div class="jdrs90">
+						{{ category.vars.attr['data-content'] ?? 'Toutes les questions' }}
+					</div>
+				</div>
+			</label>
+		</div>
+	{% endfor %}
+</fieldset>
+<button class="btn btn-outline-success mb-3">Filtrer</button>
+{{ form_end(form) }}
