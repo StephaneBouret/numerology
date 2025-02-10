@@ -1,4 +1,7 @@
-{{ form_start(form, {'attr': {'class': 'hu4ltu'}}) }}
+{{ form_start(form, {'attr': {'class': 'hu4ltu js-filter-form'}}) }}
+<div class="spinner-border js-loading" role="status" aria-hidden="true" style="display: none">
+	<span class="visually-hidden">Loading...</span>
+</div>
 <div class="xnsq1r">
 	{{ form_row(form.q) }}
 </div>
@@ -26,5 +29,5 @@
 		</div>
 	{% endfor %}
 </fieldset>
-<button class="btn btn-outline-success mb-3">Filtrer</button>
+<button class="btn btn-outline-success mb-3" id="submit-filter">Filtrer</button>
 {{ form_end(form) }}

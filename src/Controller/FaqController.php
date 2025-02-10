@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class FaqController extends AbstractController
 {
@@ -25,6 +26,12 @@ final class FaqController extends AbstractController
 
         $faqs = $this->faqContentRepository->findSearch($data);
         // $faqs = $this->faqContentRepository->findAll();
+        if ($request->get('ajax')) {
+            return new JsonResponse([
+                'content' => $this->renderView('faq/_faqs.html.twig', ['faqs' => $faqs]),
+                'pagination' => $this->renderView('partials/_pagination.html.twig', ['faqs' => $faqs]),
+            ]);
+        }
 
         return $this->render('faq/index.html.twig', [
             'faqs' => $faqs,
