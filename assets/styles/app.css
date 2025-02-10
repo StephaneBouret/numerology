@@ -133,6 +133,12 @@ body {
     border-radius: 50%;
 }
 
+.vihbpq {
+    max-width: 100px;
+    -o-object-fit: cover;
+       object-fit: cover;
+}
+
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/
@@ -1624,7 +1630,8 @@ input.input100 {
 }
 
 .d6p1sq {
-    filter: brightness(0) saturate(100%) invert(10%) sepia(96%) saturate(4542%) hue-rotate(321deg) brightness(113%) contrast(108%);
+    -webkit-filter: brightness(0) saturate(100%) invert(10%) sepia(96%) saturate(4542%) hue-rotate(321deg) brightness(113%) contrast(108%);
+            filter: brightness(0) saturate(100%) invert(10%) sepia(96%) saturate(4542%) hue-rotate(321deg) brightness(113%) contrast(108%);
 }
 
 .udho67 {
@@ -1672,7 +1679,8 @@ input.input100 {
 }
 
 .vxvpze .d6p1sq {
-    filter: brightness(0) saturate(100%) invert(16%) sepia(81%) saturate(1668%) hue-rotate(172deg) brightness(92%) contrast(101%);
+    -webkit-filter: brightness(0) saturate(100%) invert(16%) sepia(81%) saturate(1668%) hue-rotate(172deg) brightness(92%) contrast(101%);
+            filter: brightness(0) saturate(100%) invert(16%) sepia(81%) saturate(1668%) hue-rotate(172deg) brightness(92%) contrast(101%);
 }
 
 /*--------------------------------------------------------------
