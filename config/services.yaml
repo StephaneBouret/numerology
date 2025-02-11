@@ -30,6 +30,9 @@ services:
         arguments:
             $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"
 
+    App\Service\TwigFileNamer:
+        public: true
+
     auth_mailer:
         # class: Scheb\TwoFactorBundle\Mailer\SymfonyAuthCodeMailer
         class: App\Service\SendEmail2faService

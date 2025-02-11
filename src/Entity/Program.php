@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProgramRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -63,6 +65,29 @@ class Program
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "Le contenu est obligatoire !")]
     private ?string $content = null;
+
+    /**
+     * @var Collection<int, Sections>
+     */
+    #[ORM\OneToMany(targetEntity: Sections::class, mappedBy: 'program')]
+    private Collection $sections;
+
+    /**
+     * @var Collection<int, Courses>
+     */
+    #[ORM\OneToMany(targetEntity: Courses::class, mappedBy: 'program')]
+    private Collection $courses;
+
+    public function __construct()
+    {
+        $this->sections = new ArrayCollection();
+        $this->courses = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 
     public function getId(): ?int
     {
@@ -162,6 +187,66 @@ class Program
     public function setContent(string $content): static
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sections>
+     */
+    public function getSections(): Collection
+    {
+        return $this->sections;
+    }
+
+    public function addSection(Sections $section): static
+    {
+        if (!$this->sections->contains($section)) {
+            $this->sections->add($section);
+            $section->setProgram($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSection(Sections $section): static
+    {
+        if ($this->sections->removeElement($section)) {
+            // set the owning side to null (unless already changed)
+            if ($section->getProgram() === $this) {
+                $section->setProgram(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Courses>
+     */
+    public function getCourses(): Collection
+    {
+        return $this->courses;
+    }
+
+    public function addCourse(Courses $course): static
+    {
+        if (!$this->courses->contains($course)) {
+            $this->courses->add($course);
+            $course->setProgram($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCourse(Courses $course): static
+    {
+        if ($this->courses->removeElement($course)) {
+            // set the owning side to null (unless already changed)
+            if ($course->getProgram() === $this) {
+                $course->setProgram(null);
+            }
+        }
 
         return $this;
     }
