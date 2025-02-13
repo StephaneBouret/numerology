@@ -16,6 +16,16 @@ class CoursesRepository extends ServiceEntityRepository
         parent::__construct($registry, Courses::class);
     }
 
+    public function countAll(): int
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result;
+    }
+
     //    /**
     //     * @return Courses[] Returns an array of Courses objects
     //     */

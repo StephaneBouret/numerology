@@ -2,7 +2,7 @@
 	<section class="item-program">
 		<div class="img-program">
 			{% if app.user %}
-				<a href="#" class="text-decoration-none">
+				<a href="{{ path('app_courses_list') }}" class="text-decoration-none">
 					<img src="{{ vich_uploader_asset(p, 'imageFile') }}" alt="{{ p.name }}" class="program-img">
 				</a>
 			{% else %}
@@ -20,7 +20,7 @@
 						</ul>
 					</div>
 					{% if app.user %}
-						<a href="#" class="text-decoration-none">
+						<a href="{{ path('app_courses_list') }}" class="text-decoration-none">
 							<h2 class="title-program">{{ p.name }}</h2>
 						</a>
 					{% else %}
@@ -34,7 +34,7 @@
 				</div>
 				<div class="show-program d-flex">
 					{% if app.user %}
-						<a href="#" class="show-detail-program">Voir les cours</a>
+						<a href="{{ path('app_courses_list') }}" class="show-detail-program">Voir les cours</a>
 					{% else %}
 						<a href="{{ path('app_program', {'slug': p.slug}) }}" class="show-detail-program">👀 Voir le contenu de la formation</a>
 					{% endif %}
