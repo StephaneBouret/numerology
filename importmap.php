@@ -36,6 +36,10 @@ return [
         'path' => './assets/js/scrollToggleDiv.js',
         'entrypoint' => true,
     ],
+    'admin_custom' => [
+        'path' => './assets/js/admin_custom.js',
+        'entrypoint' => true,
+    ],
     '@fortawesome/fontawesome-free/css/all.css' => [
         'version' => '6.6.0',
         'type' => 'css',

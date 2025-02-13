@@ -534,17 +534,22 @@
     letter-spacing: 0em;
     line-height: 1.75;
     text-transform: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     appearance: none;
     border: 0px;
     cursor: pointer;
     display: inline-block;
+    -webkit-text-decoration-line: none;
     text-decoration-line: none;
     text-decoration-thickness: initial;
+    -webkit-text-decoration-color: initial;
     text-decoration-color: initial;
     text-align: center;
     outline: none;
     padding: 12px 20px;
     font-size: 18px;
+    -webkit-text-decoration-style: unset;
     text-decoration-style: unset;
     background-color: rgb(52, 96, 206);
     color: rgb(255, 255, 255);
@@ -1635,4 +1640,35 @@ table.statement th {
 
 .ml132 {
     margin-left: 138px;
+}
+
+/*--------------------------------------------------------------
+# Template Link partial twig
+--------------------------------------------------------------*/
+.nt8qdd {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #D6D6D7;
+    border-radius: 0.5rem;
+}
+
+.a630tj {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 0;
+    padding: 20px;
+}
+
+@media (min-width: 576px) {
+    .a630tj {
+        padding-top: 24px;
+        padding-bottom: 24px;
+        padding-right: 28px;
+        padding-left: 28px;
+    }
 }

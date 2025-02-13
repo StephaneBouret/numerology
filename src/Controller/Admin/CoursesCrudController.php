@@ -6,14 +6,15 @@ use App\Entity\Courses;
 use App\Entity\Program;
 use App\Entity\Sections;
 use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class CoursesCrudController extends AbstractCrudController
@@ -21,6 +22,11 @@ class CoursesCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Courses::class;
+    }
+
+    public function configureAssets(Assets $assets): Assets
+    {
+        return $assets->addAssetMapperEntry('admin_custom');
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -41,7 +47,7 @@ class CoursesCrudController extends AbstractCrudController
         return [
             IdField::new('id')->onlyOnIndex(),
             TextField::new('name', 'Nom du cours'),
-            TextareaField::new('shortDescription', 'Description courte')->hideOnIndex(),
+            TextEditorField::new('shortDescription', 'Description courte')->hideOnIndex(),
             ChoiceField::new('contentType')
                 ->setLabel('Type de contenu')
                 ->setChoices([
@@ -63,17 +69,31 @@ class CoursesCrudController extends AbstractCrudController
                 )
                 ->autocomplete(),
             FormField::addFieldset('Fichiers :'),
-            TextField::new('partialFile', 'Fichier :')
+            TextField::new('partialFile', 'Fichier Twig :')
                 ->setFormType(VichFileType::class)
                 ->setFormTypeOption('download_label', function ($object) {
                     return $object->getPartialFileName();
                 })
                 ->setFormTypeOption('delete_label', 'Supprimer le fichier')
                 ->setTranslationParameters(['form.label.delete' => 'Supprimer le fichier'])
+                ->addCssClass('field-partialFile')
                 ->hideOnIndex(),
             TextField::new('partialFileName', 'Fichier')
                 ->setHelp('Nom du fichier téléchargé : {{ this.partialFileName }}')
                 ->onlyOnIndex(),
+            TextField::new('videoFile', 'Fichier vidéo :')
+                ->setFormType(VichFileType::class)
+                ->setFormTypeOption('download_label', function ($object) {
+                    return $object->getVideoName();
+                })
+                ->setFormTypeOption('delete_label', 'Supprimer le fichier')
+                ->setTranslationParameters(['form.label.delete' => 'Supprimer le fichier'])
+                ->addCssClass('field-videoFile')
+                ->hideOnIndex(),
+            TextField::new('videoName', 'Fichier vidéo')
+                ->setHelp('Nom du fichier téléchargé : {{ this.videoName }}')
+                ->onlyOnIndex()
+                ->addCssClass('field-videoName'),
         ];
     }
 }
