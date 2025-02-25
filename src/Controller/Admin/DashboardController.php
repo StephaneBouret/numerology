@@ -8,6 +8,7 @@ use App\Entity\Company;
 use App\Entity\Contact;
 use App\Entity\Courses;
 use App\Entity\FaqContent;
+use App\Entity\Navigation;
 use App\Entity\User;
 use App\Entity\Program;
 use App\Entity\NewsLetter;
@@ -47,6 +48,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Programmes', 'fas fa-list-check', Program::class);
         yield MenuItem::linkToCrud('Sections', 'fa-fw fas fa-section', Sections::class);
         yield MenuItem::linkToCrud('Cours', 'fas fa-book-open', Courses::class);
+        yield MenuItem::linkToCrud('Navigation', 'fa-solid fa-route', Navigation::class);
         yield MenuItem::linkToCrud('Catégories des faqs', 'fa-solid fa-list', Category::class);
         yield MenuItem::linkToCrud('Questions', 'fa-solid fa-comments', FaqContent::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);

@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Page de :
+	{{ course.name }}
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid container-padding" id="show">
+		<div class="sidebar-container" id="fullContainer">
+			{{ include('partials/_sidebar_contents.html.twig', {'section': course}) }}
+			{% include "partials/_show_main_content.html.twig" %}
+		</div>
+	</div>
+	{% include "shared/_footer_second.html.twig" %}
+{% endblock %}

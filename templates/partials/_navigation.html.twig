@@ -1,0 +1,20 @@
+{% for nav in navigation %}
+	{% if course.id == nav.id %}
+		{% if loop.index > 1 %}
+			{% set prevPath = navigation[loop.index - 2].path %}
+			<span>
+				<a href="{{ prevPath }}" title="Précédent" rel="prev" class="btn btn-md btn-outline-grey btn-icon">
+					{% include "partials/buttons/_left_arrow_svg.html.twig" %}
+				</a>
+			</span>
+		{% endif %}
+		{% if loop.index < navigation|length %}
+			{% set nextPath = navigation[loop.index].path %}
+			<span>
+				<a href="{{ nextPath }}" aria-label="Continuer" title="Continuer" rel="next" class="btn btn-md btn-outline-grey btn-icon">
+					{% include "partials/buttons/_right_arrow_svg.html.twig" %}
+				</a>
+			</span>
+		{% endif %}
+	{% endif %}
+{% endfor %}

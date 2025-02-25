@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	{{ program.name }}
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid container-padding">
+		<div class="sidebar-container" id="fullContainer">
+			{% include "partials/_sidebar_sections.html.twig" %}
+			{% include "partials/_main_sections.html.twig" %}
+		</div>
+	</div>
+	{% include "shared/_footer_second.html.twig" %}
+{% endblock %}

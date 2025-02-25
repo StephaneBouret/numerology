@@ -1,0 +1,71 @@
+<div class="sidebar-contents" id="customer-sidebar" data-fullscreen-target="sidebar">
+	<ol class="sticky-contents pl-0 list-unstyled">
+		<li class="list-group list-group-xs list-group-menu mb-6">
+			<section class="d-flex align-items-start">
+				{% if nbrLessonsDone == nbrCourses %}
+					{% set opacity = 'opacity-2' %}
+				{% else %}
+					{% set opacity = '' %}
+				{% endif %}
+				<div class="{{ opacity }}">
+					<a href="{{ path('app_sections', {'slug': section.program.slug}) }}" class="thumb thumb-lg thumb-photo thumb-link thumb-program-numerology"></a>
+				</div>
+				<div class="ml-3">
+					<header>
+						<h1 class="h4-title">
+							<a class="text-grey-dark text-decoration-none" href="{{ path('app_sections', {'slug': section.program.slug}) }}">
+								{{ section.program.name }}
+							</a>
+						</h1>
+						<div class="bulleted">
+							<span class="bulleted-item w-100 mt-2">
+								{% if nbrLessonsDone == nbrCourses %}
+									{% set display = 'd-none' %}
+									{% set completed = '' %}
+								{% else %}
+									{% set display = '' %}
+									{% set completed = 'd-none' %}
+								{% endif %}
+								<div class="d-flex align-items-start flex-column {{ display }}">
+									<div class="d-block w-100">
+										<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ nbrLessonsDone }}" aria-valuemin="0" aria-valuemax="{{ nbrCourses }}">
+											<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ (nbrLessonsDone / nbrCourses)*100 }}%"></div>
+										</div>
+									</div>
+									<span>{{ nbrLessonsDone }}/{{ nbrCourses }}
+										complété(s)</span>
+								</div>
+								<div class="d-flex align-items-center {{ completed }}">
+									{% include "partials/buttons/_completed_svg.html.twig" %}
+									<span>
+										Complété
+									</span>
+								</div>
+							</span>
+						</div>
+					</header>
+				</div>
+			</section>
+		</li>
+		{% for s in sections %}
+			<li class="list-group list-group-menu list-group-xs mb-6">
+				<nav aria-label="{{ s.name }}">
+					<header class="d-flex align-items-center n2ymm7">
+						<a href="{{ path('courses_section', {'program_slug': s.program.slug, 'slug': s.slug}) }}">
+							<h2 class="h4 text-md mb-2">{{ s.name }}</h2>
+						</a>
+						<span class="icon closed f4lgy4" data-bs-toggle="collapse" data-bs-target="#collapse-{{ s.id }}" aria-expanded="false" aria-controls="collapse-{{ s.id }}">
+							{% include "partials/buttons/_closed_svg.html.twig" %}
+						</span>
+						<span class="icon opened d-none f4lgy4" data-bs-toggle="collapse" data-bs-target="#collapse-{{ s.id }}" aria-expanded="false" aria-controls="collapse-{{ s.id }}">
+							{% include "partials/buttons/_opened_svg.html.twig" %}
+						</span>
+					</header>
+					<div id="collapse-{{ s.id }}" class="collapse show">
+						{% include "partials/_display_content_type_icon.html.twig" %}
+					</div>
+				</nav>
+			</li>
+		{% endfor %}
+	</ol>
+</div>

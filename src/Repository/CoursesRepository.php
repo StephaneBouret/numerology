@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Courses;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Sections;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Courses>
@@ -16,6 +17,18 @@ class CoursesRepository extends ServiceEntityRepository
         parent::__construct($registry, Courses::class);
     }
 
+    public function countNumberCoursesBySection(Sections $sections): int
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('COUNT(c)')
+            ->andWhere('c.section = :sections')
+            ->setParameter('sections', $sections)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result;
+    }
+
     public function countAll(): int
     {
         $result = $this->createQueryBuilder('c')
@@ -24,6 +37,24 @@ class CoursesRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
 
         return $result;
+    }
+
+    public function countCoursesBySections(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('s.name AS section_name, COUNT(c.id) AS course_count')
+            ->join('c.section', 's')
+            ->groupBy('s.id')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllNames(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.slug')
+            ->getQuery()
+            ->getSingleColumnResult();
     }
 
     //    /**

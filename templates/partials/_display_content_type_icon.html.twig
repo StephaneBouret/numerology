@@ -1,0 +1,48 @@
+<ol class="pl-0 mb-0 list-unstyled">
+	{% for course in s.courses %}
+		{% set set_twig = 'd-none' %}
+		{% set set_video = 'd-none' %}
+		{% set set_quiz = 'd-none' %}
+		{% set set_link = 'd-none' %}
+		{% if course.contentType == constant('App\\Entity\\Courses::TYPE_TWIG') %}
+			{% set set_twig = '' %}
+		{% elseif course.contentType == constant('App\\Entity\\Courses::TYPE_VIDEO') %}
+			{% set set_video = '' %}
+		{% elseif course.contentType == constant('App\\Entity\\Courses::TYPE_QUIZ') %}
+			{% set set_quiz = '' %}
+		{% elseif course.contentType == constant('App\\Entity\\Courses::TYPE_LINK') %}
+			{% set set_link = '' %}
+		{% endif %}
+
+		{% set set_status = "" %}
+		{% set set_visible = "" %}
+
+		{% for l in lessons|filter(l => l.name == course.name and l.status == "DONE") %}
+			{% set set_status = 'd-none' %}
+			{% set set_visible = '' %}
+		{% else %}
+			{% set set_status = '' %}
+			{% set set_visible = 'd-none' %}
+		{% endfor %}
+		<li>
+			<a href="{{ path('courses_show', {'program_slug': course.program.slug, 'section_slug': course.section.slug, 'slug': course.slug}) }}" class="list-group-item list-group-item-action" aria-label="{{ course.slug }}">
+				<div class="list-group-icon {{ set_twig }} {{ set_status }} completed">
+					{% include "partials/buttons/_cloud_svg.html.twig" %}
+				</div>
+				<div class="list-group-icon {{ set_video }} {{ set_status }} completed">
+					{% include "partials/buttons/_play_svg.html.twig" %}
+				</div>
+				<div class="list-group-icon {{ set_quiz }} {{ set_status }} completed">
+					{% include "partials/buttons/_quiz_svg.html.twig" %}
+				</div>
+				<div class="list-group-icon {{ set_link }} {{ set_status }} completed">
+					{% include "partials/buttons/_four_lines_svg.html.twig" %}
+				</div>
+				<div class="list-group-icon bg-color-transp {{ set_visible }}">
+					{% include "partials/buttons/_check_svg.html.twig" %}
+				</div>
+				{{ course.name }}
+			</a>
+		</li>
+	{% endfor %}
+</ol>

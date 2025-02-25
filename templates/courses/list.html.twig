@@ -27,19 +27,17 @@
 								<div class="tab-content pt-2 mt-2">
 									<div class="tab-pane fade profile-overview active show" id="my-programs">
 										{% for prg in programs %}
-											{# {% if app.request.cookies.get('url_visited') %}
+											{% if app.request.cookies.get('url_visited') %}
 												{% set url = app.request.cookies.get('url_visited') %}
 											{% else %}
-												{% set url = app.request.schemeAndHttpHost ~ '/courses/explorer-l-histoire-de-la-numerologie' %}
-											{% endif %} #}
-                                            {% set url = '#' %}
+												{% set url = app.request.schemeAndHttpHost ~ '/courses/formation-en-numerologie/a-propos-de-cette-formation' %}
+											{% endif %}
 											<article class="mb-6 d-flex align-items-center">
-												{# {% if nbrLessonsDone == nbrCourses %}
+												{% if nbrLessonsDone == nbrCourses %}
 													{% set opacity = 'opacity-2' %}
 												{% else %}
 													{% set opacity = '' %}
-												{% endif %} #}
-                                                {% set opacity = '' %}
+												{% endif %}
 												<div class="{{ opacity }}">
 													<a class="thumb thumb-lg thumb-photo thumb-link thumb-program-numerology" href="{{ relative_path(url) }}"></a>
 												</div>
@@ -49,7 +47,7 @@
 															<a class="text-grey-dark text-decoration-none" href="{{ relative_path(url) }}">{{ prg.name }}</a>
 														</h1>
 													</header>
-													{# <div class="bulleted">
+													<div class="bulleted">
 														<span class="bulleted-item w-100 mt-2">
 															{% if nbrLessonsDone == nbrCourses %}
 																{% set display = 'd-none' %}
@@ -74,7 +72,7 @@
 																</span>
 															</div>
 														</span>
-													</div> #}
+													</div>
 												</div>
 											</article>
 										{% endfor %}

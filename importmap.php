@@ -63,4 +63,77 @@ return [
         'version' => '5.3.3',
         'type' => 'css',
     ],
+    'video.js' => [
+        'version' => '8.21.0',
+    ],
+    'global/window' => [
+        'version' => '4.4.0',
+    ],
+    'global/document' => [
+        'version' => '4.4.0',
+    ],
+    '@videojs/xhr' => [
+        'version' => '2.7.0',
+    ],
+    'videojs-vtt.js' => [
+        'version' => '0.15.5',
+    ],
+    '@babel/runtime/helpers/extends' => [
+        'version' => '7.26.0',
+    ],
+    '@videojs/vhs-utils/es/resolve-url.js' => [
+        'version' => '4.1.1',
+    ],
+    'm3u8-parser' => [
+        'version' => '7.2.0',
+    ],
+    '@videojs/vhs-utils/es/codecs.js' => [
+        'version' => '4.1.1',
+    ],
+    '@videojs/vhs-utils/es/media-types.js' => [
+        'version' => '4.1.1',
+    ],
+    '@videojs/vhs-utils/es/byte-helpers' => [
+        'version' => '4.1.1',
+    ],
+    'mpd-parser' => [
+        'version' => '1.3.1',
+    ],
+    'mux.js/lib/tools/parse-sidx' => [
+        'version' => '7.1.0',
+    ],
+    '@videojs/vhs-utils/es/id3-helpers' => [
+        'version' => '4.1.1',
+    ],
+    '@videojs/vhs-utils/es/containers' => [
+        'version' => '4.1.1',
+    ],
+    'mux.js/lib/utils/clock' => [
+        'version' => '7.1.0',
+    ],
+    'video.js/dist/video-js.min.css' => [
+        'version' => '8.21.0',
+        'type' => 'css',
+    ],
+    'is-function' => [
+        'version' => '1.0.2',
+    ],
+    '@videojs/vhs-utils/es/stream.js' => [
+        'version' => '4.1.1',
+    ],
+    '@videojs/vhs-utils/es/decode-b64-to-uint8-array.js' => [
+        'version' => '4.1.1',
+    ],
+    '@videojs/vhs-utils/es/resolve-url' => [
+        'version' => '4.1.1',
+    ],
+    '@videojs/vhs-utils/es/media-groups' => [
+        'version' => '4.1.1',
+    ],
+    '@videojs/vhs-utils/es/decode-b64-to-uint8-array' => [
+        'version' => '4.1.1',
+    ],
+    '@xmldom/xmldom' => [
+        'version' => '0.8.10',
+    ],
 ];
