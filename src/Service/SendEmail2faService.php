@@ -21,7 +21,7 @@ class SendEmail2faService implements AuthCodeMailerInterface
         $user = $this->security->getUser();
         $this->email->sendMail(
             null,
-            'Code de vérification : appliaction SYM NUMBERS',
+            'Code de vérification : application Potentiel Consulting',
             $user->getEmail(),
             'Code de vérification',
             'authentication',

@@ -31,29 +31,47 @@
 									<h2 class="text-h6 mb-3">Informations personnelles</h2>
 									<p>Mettez à jour vos informations personnelles et votre avatar.</p>
 								</div>
-								{{ form_errors(form) }}
-								{{ form_start(form, {'attr': {'class': 'w-100'}}) }}
-								<div class="row mx-0">
-									<div class="col-md-6 col-12 mb-md-0 mb-3 px-0 px-md-2">
-										{{ form_row(form.firstname, {'row_attr': {'class': 'mb-3'}}) }}
-										{{ form_row(form.lastname, {'row_attr': {'class': 'mb-3'}}) }}
-										{{ form_row(form.email, {'row_attr': {'class': 'mb-3'}}) }}
-									</div>
-									<div class="col-md-6 col-12 px-0 px-md-2">
-										{{ form_row(form.adress, {'row_attr': {'class': 'mb-3'}}) }}
-										<div class="row">
-											<div class="col-md-6">
-												{{ form_row(form.postalCode, {'row_attr': {'class': 'mb-3'}}) }}
+								<div class="col-12 col-md-6 mb-md-0 mb-3 px-0 px-md-2">
+									<div class="avatar">
+										<div class="card">
+											<div class="card-header">
+												<div class="d-flex justify-content-between">
+													<div class="card-title">Options</div>
+												</div>
 											</div>
-											<div class="col-md-6">
-												{{ form_row(form.city, {'row_attr': {'class': 'mb-3'}}) }}
+											<div class="card-body">
+												{{ form_errors(formAvatar) }}
+												{{ form_start(formAvatar, {'attr': {'class': 'w-100'}}) }}
+												{{ form_row(formAvatar.imageFile, {'row_attr': {'class': 'mb-3'}}) }}
+												<button type="submit" class="btn btn-warning">Modifier</button>
+												{{ form_end(formAvatar) }}
 											</div>
 										</div>
-										{{ form_row(form.phone, {'row_attr': {'class': 'mb-3'}}) }}
-										<button type="submit" class="btn btn-warning">Modifier</button>
 									</div>
 								</div>
-								{{ form_end(form) }}
+								<div class="col-12 col-md-6 px-0 px-md-2">
+									{{ form_errors(form) }}
+									{{ form_start(form, {'attr': {'class': 'w-100'}}) }}
+									{{ form_row(form.firstname, {'row_attr': {'class': 'mb-3'}}) }}
+									{{ form_row(form.lastname, {'row_attr': {'class': 'mb-3'}}) }}
+									{{ form_row(form.email, {'row_attr': {'class': 'mb-3'}}) }}
+									{{ form_row(form.adress, {'row_attr': {'class': 'mb-3'}}) }}
+									<div class="row">
+										<div class="col-md-6">
+											{{ form_row(form.postalCode, {'row_attr': {'class': 'mb-3'}}) }}
+										</div>
+										<div class="col-md-6">
+											{{ form_row(form.city, {'row_attr': {'class': 'mb-3'}}) }}
+										</div>
+									</div>
+									{{ form_row(form.phone, {'row_attr': {'class': 'mb-3'}}) }}
+									<div class="row">
+										<div class="col-md-6">
+											<button type="submit" class="btn btn-warning">Modifier</button>
+										</div>
+									</div>
+									{{ form_end(form) }}
+								</div>
 							</div>
 						</div>
 					</div>

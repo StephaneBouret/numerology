@@ -8,10 +8,11 @@
 		<div class="card card-fill">
 			<div class="card-body">
 				<div class="my-8 mx-auto" style="width: 480px;">
-					<h1 class="text-center mb-4 fs-4">Se connecter à l'application {{ appName }}</h1>
+					<h1 class="text-center mb-4 fs-4">Se connecter à l'application
+						{{ appName }}</h1>
 					<form method="post">
 						{% if error %}
-							<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security')|raw }}</div>
+							<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 						{% endif %}
 
 						{% if app.user %}
@@ -21,22 +22,24 @@
 								<a href="{{ path('app_logout') }}">Logout</a>
 							</div>
 						{% endif %}
+
 						<div class="form-group mb-3">
-							<label for="inputEmail" class="form-label lh-label fw-semibold">Votre email :</label>
-							<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control form-control-login" autocomplete="email" required autofocus placeholder="e.g. picard@starfleet.org">
+							<label for="username" class="form-label lh-label fw-semibold">Votre email :</label>
+							<input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control form-control-login" autocomplete="email" required autofocus placeholder="e.g. picard@starfleet.org">
 						</div>
 						<div class="form-group mb-3">
-							<label for="inputPassword" class="form-label lh-label fw-semibold">Votre mot de passe :</label>
+							<label for="password" class="form-label lh-label fw-semibold">Votre mot de passe :</label>
 							<div class="position-relative">
-								<input type="password" name="password" id="inputPassword" class="form-control form-control-login" autocomplete="current-password" required placeholder="••••••••" {{ stimulus_controller('symfony/ux-toggle-password/toggle-password', { visibleLabel: 'Afficher', hiddenLabel: 'Masquer', buttonClasses: ['toggle-password-button'], } ) }}>
+								<input type="password" name="_password" id="password" class="form-control form-control-login" autocomplete="current-password" required placeholder="••••••••" {{ stimulus_controller('symfony/ux-toggle-password/toggle-password', { visibleLabel: 'Afficher', hiddenLabel: 'Masquer', buttonClasses: ['toggle-password-button'], } ) }}>
 							</div>
 						</div>
 
-						<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+						<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
 						<button class="btn btn-md btn-dark" type="submit">
 							<span>Se connecter</span>
 						</button>
-						<div class="row mt-3">
+                        <div class="row mt-3">
 							<div class="checkbox col-md-6 text-start">
 								<label>
 									<input type="checkbox" name="_remember_me">
@@ -45,7 +48,7 @@
 							</div>
 						</div>
 					</form>
-					<div class="d-flex flex-column text-center mt-4">
+                    <div class="d-flex flex-column text-center mt-4">
 						<span class="text-muted">Pas encore inscrit(e) ?
 							<a href="{{ path('app_register') }}">M'inscrire</a>
 						</span>

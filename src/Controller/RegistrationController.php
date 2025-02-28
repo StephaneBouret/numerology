@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
-use App\Security\LoginFormAuthenticator;
+use App\Service\AvatarService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +25,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/inscription', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, AvatarService $avatarService): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -44,21 +44,25 @@ class RegistrationController extends AbstractController
             $user->setFirstname(ucfirst($firstname))
                 ->setLastname(mb_strtoupper($lastname));
 
+            $user->setAvatar($avatarService->createAndAssignAvatar($user));
+
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('sym-numbers@gmail.com', 'SYM NUMBERS'))
-                    ->to((string) $user->getEmail())
-                    ->subject('Merci de confirmer votre email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
+            // $this->emailVerifier->sendEmailConfirmation(
+            //     'app_verify_email',
+            //     $user,
+            //     (new TemplatedEmail())
+            //         ->from(new Address('ftuncq@gmail.com', 'Potentiel Consulting'))
+            //         ->to((string) $user->getEmail())
+            //         ->subject('Merci de confirmer votre email')
+            //         ->htmlTemplate('registration/confirmation_email.html.twig')
+            // );
 
             // do anything else you need here, like send an email
-
-            return $security->login($user, LoginFormAuthenticator::class, 'main');
+            $redirectResponse = $security->login($user, 'security.authenticator.form_login.main', 'main');
+            return $redirectResponse;
         }
 
         return $this->render('registration/register.html.twig', [
@@ -103,7 +107,7 @@ class RegistrationController extends AbstractController
             'app_verify_email',
             $user,
             (new TemplatedEmail())
-                ->from(new Address('contact@sym-music.fr', 'Sym Music Email'))
+                ->from(new Address('ftuncq@gmail.com', 'Potentiel Consulting'))
                 ->to((string) $user->getEmail())
                 ->subject('Merci de confirmer votre email')
                 ->htmlTemplate('registration/confirmation_email.html.twig')

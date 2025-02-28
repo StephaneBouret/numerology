@@ -16,16 +16,6 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\LoginFormAuthenticator
-            logout:
-                path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
-            two_factor:
-                auth_form_path: 2fa_login    # The route name you have used in the routes.yaml
-                check_path: 2fa_login_check  # The route name you have used in the routes.yaml
-                trusted_parameter_name: _trusted # Name of the parameter for the trusted device option
-                remember_me_sets_trusted: true # If remember-me option should also set the trusted device cookie
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -39,7 +29,25 @@ security:
             # configure the maximum login attempts
             login_throttling:
                 max_attempts: 3 # per minute ...
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
                 # interval: '15 minutes' # ... or in a custom period
+
+            two_factor:
+                enable_csrf: true
+                auth_form_path: 2fa_login    # The route name you have used in the routes.yaml
+                check_path: 2fa_login_check  # The route name you have used in the routes.yaml
+                trusted_parameter_name: _trusted  # Name of the parameter for the trusted device option
+                remember_me_sets_trusted: true # If remember-me option should also set the trusted device cookie
+
+            # configure the form authentication as the entry point for unauthenticated users
+            entry_point: form_login
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -50,6 +58,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 

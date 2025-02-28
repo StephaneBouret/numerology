@@ -10,10 +10,10 @@ use App\Repository\UserRepository;
 use ZipCodeValidator\Constraints\ZipCode;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -86,7 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     private ?PhoneNumber $phone = null;
 
     #[ORM\Column]
-    private bool $isVerified = false;
+    private bool $isVerified = true;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $resetToken = null;
@@ -99,6 +99,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
      */
     #[ORM\OneToMany(targetEntity: Lesson::class, mappedBy: 'user')]
     private Collection $lessons;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Avatar $avatar = null;
 
     public function __construct()
     {
@@ -288,6 +291,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this;
     }
 
+    /**
+     * Retourne le nom complet de l'utilisateur
+     *
+     * @return string
+     */
+    public function getFullname(): string
+    {
+        return "{$this->firstname} {$this->lastname}";
+    }
+
     public function isEmailAuthEnabled(): bool
     {
         return true; // This can be a persisted field to switch email code authentication on/off
@@ -310,16 +323,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function setEmailAuthCode(string $authCode): void
     {
         $this->authCode = $authCode;
-    }
-
-    /**
-     * Retourne le nom complet de l'utilisateur
-     *
-     * @return string
-     */
-    public function getFullname(): string
-    {
-        return "{$this->firstname} {$this->lastname}";
     }
 
     /**
@@ -348,6 +351,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
                 $lesson->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvatar(): ?Avatar
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?Avatar $avatar): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($avatar === null && $this->avatar !== null) {
+            $this->avatar->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($avatar !== null && $avatar->getUser() !== $this) {
+            $avatar->setUser($this);
+        }
+
+        $this->avatar = $avatar;
 
         return $this;
     }

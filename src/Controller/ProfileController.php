@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Avatar;
 use App\Entity\User;
+use App\Form\AvatarFormType;
 use App\Form\UpdatePasswordUserFormType;
 use App\Form\UpdateUserFormType;
 use App\Repository\UserRepository;
+use App\Service\AvatarService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,11 +21,24 @@ class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour accéder à cette page')]
-    public function index(Request $request, EntityManagerInterface $em): Response
+    public function index(Request $request, EntityManagerInterface $em, AvatarService $avatarService): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
+        // $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
+
+        // Gestion de l'avatar
+        $avatar = $user->getAvatar();
+
+        // Formulaire pour éditer l'avatar existant ou en créer un nouveau si null ou imageName est null
+        $avatarForm = $this->createForm(AvatarFormType::class, $avatar ?: new Avatar());
+        $avatarForm->handleRequest($request);
+
+        if ($avatarService->handleAvatarForm($avatarForm, $user, $avatar)) {
+            $this->addFlash('success', 'La photo a bien été modifiée !');
+
+            return $this->redirectToRoute('app_profile');
+        }
 
         $form = $this->createForm(UpdateUserFormType::class, $user);
         $form->handleRequest($request);
@@ -41,6 +57,7 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/edit.html.twig', [
             'form' => $form,
+            'formAvatar' => $avatarForm,
             'user' => $user
         ]);
     }
@@ -51,7 +68,7 @@ class ProfileController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
+        // $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
 
         $form = $this->createForm(UpdatePasswordUserFormType::class, $user);
         $form->handleRequest($request);
@@ -60,10 +77,10 @@ class ProfileController extends AbstractController
             if ($form->isValid()) {
                 $newPassword = $form->get('newPassword')->getData();
                 $password = $userPasswordHasher->hashPassword($user, $newPassword);
-    
+
                 $user->setPassword($password);
                 $em->flush();
-    
+
                 $this->addFlash('success', 'Votre mot de passe a bien été mis à jour');
                 return $this->redirectToRoute('home_index');
             } else {
@@ -72,7 +89,7 @@ class ProfileController extends AbstractController
                 return $this->redirectToRoute('app_edit_password');
             }
         }
-    
+
         return $this->render('profile/credentials.html.twig', [
             'form' => $form,
             'user' => $user
@@ -85,7 +102,7 @@ class ProfileController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
+        // $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
 
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $this->container->get('security.token_storage')->setToken(null);

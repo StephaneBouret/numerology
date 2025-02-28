@@ -25,3 +25,6 @@
 ###< symfony/asset-mapper ###
 
 /templates/uploads/
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###

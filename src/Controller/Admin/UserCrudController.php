@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Form\AvatarFormType;
 use libphonenumber\PhoneNumberFormat;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -13,11 +14,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use Misd\PhoneNumberBundle\Templating\Helper\PhoneNumberHelper;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -96,6 +97,16 @@ class UserCrudController extends AbstractCrudController
                 })
                 ->onlyOnIndex(),
             BooleanField::new('isVerified', 'Utilisateur vérifié'),
+            ImageField::new('avatar.imageName', 'Avatar')
+                ->setBasePath('images/avatars')
+                ->setUploadDir('public/images/avatars')
+                ->onlyOnIndex()
+                ->setUploadedFileNamePattern('[randomhash].[extension]')
+                ->setRequired(false),
+            TextField::new('avatar', 'Avatar :')
+                ->setFormType(AvatarFormType::class)
+                ->setTranslationParameters(['form.label.delete' => 'Supprimer l\'image'])
+                ->hideOnIndex(),
             FormField::addFieldset('Rôles de l\'utilisateur'),
             ChoiceField::new('roles')
                 ->setChoices(array_combine($roles, $roles))

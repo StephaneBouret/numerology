@@ -22,7 +22,7 @@ final class NewsletterController extends AbstractController
         /** @var User */
         $user = $this->getUser();
         $email = $user->getEmail();
-        $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
+        // $this->denyAccessUnlessGranted('CAN_EDIT', $user, 'Vous n\'avez pas confimé votre email');
 
         $new = new NewsLetter;
         $new->setEmail($email);
