@@ -1,0 +1,9 @@
+<h1>Demande de modération sur l'application</h1>
+<p>Bonjour,</p>
+<p>Vous venez de recevoir une notification de demande de modération d'un commentaire.</p>
+<p>Prénom et nom de l'auteur : {{ comment.user.firstname }} {{ comment.user.lastname }}</p>
+<p>Email de l'auteur : {{ comment.user.email }}</p>
+<p>Numéro du commentaire : #{{ comment.id }}</p>
+<p>Contenu du commentaire : {{ comment.content }}</p>
+<p>Cours du commentaire : {{ comment.getCourse.getName }}</p>
+<p><a href="{{ absolute_url(path('admin')) }}">Back office</a></p>

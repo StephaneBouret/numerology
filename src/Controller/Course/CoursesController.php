@@ -2,8 +2,11 @@
 
 namespace App\Controller\Course;
 
+use App\Entity\Comments;
 use App\Entity\User;
 use App\Form\ButtonFormType;
+use App\Form\CommentsFormType;
+use App\Repository\CommentsRepository;
 use App\Repository\CoursesRepository;
 use App\Repository\LessonRepository;
 use App\Repository\NavigationRepository;
@@ -53,7 +56,7 @@ final class CoursesController extends AbstractController
 
     #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette page')]
     #[Route('/courses/{program_slug}/{section_slug}/{slug}', name: 'courses_show', priority: -1)]
-    public function show($slug, $section_slug, Request $request, NavigationRepository $navigationRepository, CourseFileService $courseFileService): Response
+    public function show($slug, Request $request, NavigationRepository $navigationRepository, CourseFileService $courseFileService, CommentsRepository $commentsRepository): Response
     {
         $currentUrl = $request->getUri();
         $response = new Response();
@@ -86,6 +89,34 @@ final class CoursesController extends AbstractController
 
         $form = $this->createForm(ButtonFormType::class);
 
+        // Partie commentaires
+        $countComments = $commentsRepository->countComments($course);
+        $comment = new Comments;
+        $commentForm = $this->createForm(CommentsFormType::class, $comment);
+        $commentForm->handleRequest($request);
+
+        $routeParameters = $request->attributes->get('_route_params');
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment->setCourse($course)
+                ->setUser($user);
+
+            // On récupère le contenu du champ parent
+            $parentid = $commentForm->get("parent")->getData();
+            // On va chercher le commentaire correspondant
+            if ($parentid != null) {
+                $parent = $commentsRepository->find($parentid);
+            }
+            // On définit le parent
+            $comment->setParent($parent ?? null);
+
+            $this->em->persist($comment);
+            $this->em->flush();
+
+            $this->addFlash('success', 'Votre commentaire a bien été envoyé');
+            return $this->redirectToRoute('courses_show', ['program_slug' => $routeParameters['program_slug'], 'section_slug' => $routeParameters['section_slug'], 'slug' => $course->getSlug()]);
+        }
+
         return $this->render('courses/show.html.twig', [
             'course' => $course,
             'sections' => $sections,
@@ -95,6 +126,8 @@ final class CoursesController extends AbstractController
             'nbrLessonsDone' => $nbrLessonsDone,
             'lessons' => $this->lessonRepository->findBy(['user' => $user->getId()]),
             'fileContent' => $content,
+            'commentForm' => $commentForm,
+            'countComments' => $countComments,
             'navigation' => $navigation,
         ], $response);
     }

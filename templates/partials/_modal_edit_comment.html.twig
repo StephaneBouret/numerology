@@ -1,0 +1,18 @@
+<div class="modal fade" id="exampleModal{{reply.id}}" tabindex="-1" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<form method="post" action="{{ path('app_comments_edit', {'id': reply.id}) }}">
+				<div
+					class="modal-body">
+					<textarea rows="4" cols="50" name="content" required="required" placeholder="Tapez/pour formater et insérer" class="form-control">
+						{{- reply.content|raw -}}
+					</textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-abandonment" data-bs-dismiss="modal">Abandonner</button>
+					<button class="btn btn-dark btn-submit-dark">Modification</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

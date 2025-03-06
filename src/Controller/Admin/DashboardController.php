@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\About;
 use App\Entity\Category;
+use App\Entity\Comments;
 use App\Entity\Company;
 use App\Entity\Contact;
 use App\Entity\Courses;
@@ -50,10 +51,11 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Cours', 'fas fa-book-open', Courses::class);
         yield MenuItem::linkToCrud('Navigation', 'fa-solid fa-route', Navigation::class);
         yield MenuItem::linkToCrud('Catégories des faqs', 'fa-solid fa-list', Category::class);
-        yield MenuItem::linkToCrud('Questions', 'fa-solid fa-comments', FaqContent::class);
+        yield MenuItem::linkToCrud('Questions des faqs', 'fa-solid fa-comments', FaqContent::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
         yield MenuItem::linkToCrud('Newsletter', 'fa-solid fa-envelope-open-text', NewsLetter::class);
         yield MenuItem::linkToCrud('Contacts', 'fa-regular fa-envelope', Contact::class);
+        yield MenuItem::linkToCrud('Commentaires', 'fa-solid fa-comment', Comments::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'home_index');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

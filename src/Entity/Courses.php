@@ -76,9 +76,16 @@ class Courses
     #[ORM\OneToMany(targetEntity: Lesson::class, mappedBy: 'courses')]
     private Collection $lessons;
 
+    /**
+     * @var Collection<int, Comments>
+     */
+    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'course')]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->lessons = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -255,6 +262,36 @@ class Courses
             // set the owning side to null (unless already changed)
             if ($lesson->getCourses() === $this) {
                 $lesson->setCourses(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comments>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comments $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getCourse() === $this) {
+                $comment->setCourse(null);
             }
         }
 

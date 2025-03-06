@@ -2,6 +2,9 @@ import './bootstrap.js';
 import { Application } from "@hotwired/stimulus";
 import ToastController from "./controllers/toast_controller.js";
 import Filter from './js/modules/Filter.js';
+import Comments from './js/modules/Comments.js';
+import Loadmore from './js/modules/Loadmore.js';
+import LikeController from './js/modules/LikeController.js';
 import videojs from "video.js";
 /*
  * Welcome to your app's main JavaScript file!
@@ -128,6 +131,9 @@ const initPage = () => {
     closeAlertMessage();
     backToTop();
     new Filter(document.querySelector('.js-filter'));
+    new Comments;
+    new LikeController;
+    new Loadmore;
     initToggle();
     courseShow();
     collapseButton();

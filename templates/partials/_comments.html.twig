@@ -1,0 +1,165 @@
+<div id="lesson-comments">
+    <div class="spacer-section"></div>
+    <div class="border-top spacer-section"></div>
+    <div id="comments">
+        <div class="d-flex flex-column mb-6">
+            <div class="d-flex align-items-center mb-6">
+                {% if countComments <= 1 %}
+                    {% set genre = 'Commentaire' %}
+                {% else %}
+                    {% set genre = 'Commentaires' %}
+                {% endif %}
+                <h2 id="replies_header">{{ countComments }} {{ genre }}</h2>
+            </div>
+            <div class="col-12 list-comments">
+                <button class="btn btn-sm btn-transparent-secondary mb-3 fs-6 fw-bold" id="loadMore">Montrer les commentaires précédents…</button>
+                {% for comment in course.comments|sort((a, b) => a.createdAt <=> b.createdAt) %}
+                    {% if comment.parent == null %}
+                        <div class="comments" data-created-at="{{ comment.createdAt|date('Y-m-d H:i:s') }}">
+                            <div class="mb-6 mb-sm-8">
+                                <div class="d-flex mb-2">
+                                    <div class="w-100">
+                                        <span class="d-flex align-items-center gap-x-2 flex-wrap mt-n1">
+                                            <div class="avatar avatar-xs">
+                                                <img src="{{ vich_uploader_asset(comment.user.avatar, 'imageFile') }}" class="sc-img-gravatar">
+                                            </div>
+                                            <span class="font-weight-bold text-sm text-grey-dark my-1">{{ comment.user.firstname }} {{ comment.user.lastname }}</span>
+                                            <span class="text-muted">{{ comment.createdAt|date("d/m/Y") }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="text-longform mb-3">
+                                    {{ comment.content|nl2br }}
+                                </div>
+                                <div class="btn-row btn-row-xxs ml-n2 mt-n1 piped piped-slim">
+                                    <a href="#ajout-commentaire" id="displayReply" class="d-inline-flex btn btn-xs btn-transparent-soft btn-rounded btn-tight btn-icon" data-reply data-id="{{ comment.id }}">
+                                        {% include "partials/buttons/_comment_svg.html.twig" %}
+                                        {% if comment.replies|length > 0 %}
+                                            <span>Commenter {{ comment.replies|length }}</span>
+                                        {% else %}
+                                            <span>Commenter</span>
+                                        {% endif %}
+                                    </a>
+                                    <button class="like-button d-inline-flex btn btn-xs btn-transparent-soft btn-rounded btn-tight btn-icon" data-comment-id="{{ comment.id }}">
+                                        {% include "partials/buttons/_like_svg.html.twig" %}
+                                        <span>J'aime <span class="like-count" data-comment-id="{{ comment.id }}">{{ comment.likes|length }}</span></span>
+                                    </button>
+                                    <span>
+                                        <div class="dropdown dropright position-static">
+                                            <button type="button" class="btn btn-xs btn-transparent-soft btn-rounded btn-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {% include "partials/buttons/_three_points_svg.html.twig" %}
+                                            </button>
+                                            <ul class="dropdown-menu p-2">
+                                                {% if app.user.id == comment.user.id or is_granted('ROLE_ADMIN') %}
+                                                    <li>
+                                                        <button class="btn dropdown-item py-1 px-2 fw-normal btn-delete" data-bs-toggle="modal" data-bs-target="#exampleModal{{comment.id}}">Modifier le commentaire</button>
+                                                    </li>
+                                                    <div class="dropdown-divider"></div>
+                                                    <li>
+                                                        <form method="post" action="{{ path('app_comments_delete', {'id': comment.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                                                            <button class="btn dropdown-item text-danger py-1 px-2 fw-normal btn-delete">Supprimer le commentaire</button>
+                                                        </form>
+                                                    </li>
+                                                {% else %}
+                                                    <li>
+                                                        <a class="dropdown-item text-warning" href="{{ path('app_comments_notify', {'id' : comment.id}) }}">
+                                                            <span class="me-2">
+                                                                {% include "partials/buttons/_notify_svg.html.twig" %}
+                                                            </span>
+                                                            Signaler le commentaire
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>
+                                    </span>
+                                </div>
+                                {{ include('partials/_modal_edit_comment.html.twig', {'reply': comment}) }}
+                            </div>
+
+                            <div class="border-left pl-6">
+                                {% for reply in comment.replies %}
+                                    <div id="replies_comment">
+                                        <div class="mb-6 mb-sm-8">
+                                            <div class="d-flex mb-2">
+                                                <div class="w-100">
+                                                    <span class="d-flex align-items-center gap-x-2 flex-wrap mt-n1">
+                                                        <div class="avatar avatar-xs">
+                                                            <img src="{{ vich_uploader_asset(reply.user.avatar, 'imageFile') }}" class="sc-img-gravatar">
+                                                        </div>
+                                                        <span class="font-weight-bold text-sm text-grey-dark my-1">{{ reply.user.firstname }} {{ reply.user.lastname }}</span>
+                                                        <span class="text-muted">{{ reply.createdAt|date("d/m/Y") }}</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="text-longform mb-3">
+                                                {{ reply.content|nl2br }}
+                                            </div>
+                                            <div class="btn-row btn-row-xxs ml-n2 mt-n1 piped piped-slim">
+                                                <button class="like-button d-inline-flex btn btn-xs btn-transparent-soft btn-rounded btn-tight btn-icon" data-comment-id="{{ reply.id }}">
+                                                    {% include "partials/buttons/_like_svg.html.twig" %}
+                                                    <span>J'aime <span class="like-count" data-comment-id="{{ reply.id }}">{{ reply.likes|length }}</span></span>
+                                                </button>
+                                                <span>
+                                                    <div class="dropdown dropright position-static">
+                                                        <button type="button" class="btn btn-xs btn-transparent-soft btn-rounded btn-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            {% include "partials/buttons/_three_points_svg.html.twig" %}
+                                                        </button>
+                                                        <ul class="dropdown-menu p-2">
+                                                            {% if app.user.id == reply.user.id or is_granted('ROLE_ADMIN') %}
+                                                                <li>
+                                                                    <button class="btn dropdown-item py-1 px-2 fw-normal btn-delete" data-bs-toggle="modal" data-bs-target="#exampleModal{{reply.id}}">Modifier le commentaire</button>
+                                                                </li>
+                                                                <div class="dropdown-divider"></div>
+                                                                <li>
+                                                                    <form method="post" action="{{ path('app_comments_delete', {'id': reply.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
+                                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reply.id) }}">
+                                                                        <button class="btn dropdown-item text-danger py-1 px-2 fw-normal btn-delete">Supprimer le commentaire</button>
+                                                                    </form>
+                                                                </li>
+                                                            {% else %}
+                                                                <li>
+                                                                    <a class="dropdown-item text-warning" href="{{ path('app_comments_notify', {'id' : reply.id}) }}">
+                                                                        <span class="me-2">
+                                                                            {% include "partials/buttons/_notify_svg.html.twig" %}
+                                                                        </span>
+                                                                        Signaler le commentaire
+                                                                    </a>
+                                                                </li>
+                                                            {% endif %}
+                                                        </ul>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                            {% include "partials/_modal_edit_comment.html.twig" %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-md-6 w-100" id="ajout-commentaire">
+                <div class="d-inline-flex gap-1">
+                    <a class="btn btn-sm btn-outline-grey btn-icon" data-bs-toggle="collapse" href="#collapseComment" role="button" aria-expanded="false" aria-controls="collapseComment">
+                        {% include "partials/buttons/_comment_svg.html.twig" %}
+                        <span>Ajouter un commentaire</span>
+                    </a>
+                </div>
+                <div class="collapse mt-2" id="collapseComment">
+                    {{ form_start(commentForm) }}
+                    {{ form_row(commentForm.content) }}
+                    <div class="d-flex justify-content-end flex-wrap btn-separator">
+                        <a class="btn btn-sm btn-abandonment me-1" id="abandonment">
+                            <span>Abandonner</span>
+                        </a>
+                        <button type="submit" id="submit-comment" class="btn btn-dark btn-submit-dark" disabled>Publication</button>
+                    </div>
+                    {{ form_end(commentForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

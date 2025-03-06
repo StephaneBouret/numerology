@@ -31,6 +31,10 @@ services:
         arguments:
             $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"
 
+    App\Controller\CommentsController:
+        arguments:
+            $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"
+
     App\Service\TwigFileNamer:
         public: true
 
