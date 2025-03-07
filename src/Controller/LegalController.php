@@ -31,4 +31,14 @@ final class LegalController extends AbstractController
             'company' => $company,
         ]);
     }
+
+    #[Route('/conditions-generales-de-vente', name: 'app_terms')]
+    public function terms(): Response
+    {
+        $company = $this->companyRepository->find(1);
+
+        return $this->render('legal/terms.html.twig', [
+            'company' => $company,
+        ]);
+    }
 }

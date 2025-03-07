@@ -13,17 +13,26 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SecurityController extends AbstractController
 {
+    public function __construct(protected RequestStack $requestStack)
+    {}
+
     #[Route(path: '/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
+        $session = $this->requestStack->getSession();
+
+        $targetPath = $request->query->get('target', $session->get('_security.main.target_path'));
+        if ($targetPath) {
+            $session->set('_security.main.target_path', $targetPath);
+        }
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -131,5 +140,19 @@ class SecurityController extends AbstractController
         // Si le token est invalide on redirige vers le login
         $this->addFlash('danger', 'Jeton invalide');
         return $this->redirectToRoute('app_login');
+    }
+
+    #[Route(path: '/login/success', name: 'app_login_success')]
+    public function loginSuccess(): Response
+    {
+        $session = $this->requestStack->getSession();
+
+        // Récupérer l'URL de redirection stockée
+        $targetPath = $session->get('_security.main.target_path', $this->generateUrl('home_index'));
+
+        // Supprimer la valeur de la session pour éviter une redirection non voulue plus tard
+        $session->remove('_security.main.target_path');
+
+        return $this->redirect($targetPath);
     }
 }

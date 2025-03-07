@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions générales de vente
+{% endblock %}
+
+{% block body %}
+	<section class="legal">
+		<div class="container-legal">
+			<div class="text-start">
+				<header>
+					<h2 class="title-legal">
+						Conditions générales de vente
+					</h2>
+				</header>
+				<div class="content-legal">
+					<div class="align-baseline">
+						<br>
+						<strong>1) Objet<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						Les présentes Conditions Générales de Vente (CGV) ont pour objet de définir les modalités de vente et d'utilisation du programme de formation accessible via notre application.
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>2) Acceptation des CGV<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						L'achat d'un programme de formation implique l'acceptation sans réserve des présentes CGV par l'acheteur.
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>3) Description du service<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						L'application propose l'achat d'un programme de formation en ligne avec un accès illimité dans le temps.
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>4) Prix et paiement<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						Le prix du programme est indiqué en euros, toutes taxes comprises. Le paiement est réalisé en ligne via l'API de Stripe. L'acheteur garantit disposer des autorisations nécessaires pour utiliser le mode de paiement choisi.
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>5) Droit de rétractation et remboursement<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						<ol>
+							<li>
+								<strong>Définition.</strong>
+								Conformément à la législation en vigueur, l'acheteur dispose d'un délai de 14 jours à compter de la date d'achat pour exercer son droit de rétractation et obtenir un remboursement intégral. La demande de remboursement doit être effectuée par e-mail à
+								<a href="mailto:{{ company.email }}">{{ company.email }}</a>
+								en indiquant les informations nécessaires à l'identification de la commande.
+							</li>
+							<li>
+								<strong>Formulaire type de rétractation</strong>
+								(À compléter et renvoyer uniquement si vous souhaitez vous rétracter du contrat)
+								<br>
+								Lettre à adresser en recommandé avec accusé de réception au vendeur.
+								<br>
+								À ..., le ... (date de la lettre)
+								<br>
+								Madame, Monsieur,
+								<br>
+								Conformément à l'article L. 221-18 du code de la consommation, je vous notifie par la présente ma rétractation du contrat portant sur l'achat du programme de formation suivant :
+								<br>
+								<ul>
+									<li>Commande effectuée le : [date]</li>
+									<li>Nom de l'acheteur : [prénom] [nom]</li>
+									<li>Adresse de l'acheteur : [adresse]</li>
+									<li>Date : [date]</li>
+								</ul>
+								En conséquence, je vous prie de bien vouloir me restituer au plus vite et au plus tard dans les 14 jours suivant la réception de la présente, la somme de ... euros que je vous ai versée lors de ma commande, ceci conformément aux dispositions de l'article L. 221-24 du code de la consommation.
+							</li>
+						</ol>
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>6) Accès au programme<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						L'accès au programme de formation est immédiat après validation du paiement et demeure sans limite de durée, sauf suppression du service pour raison technique ou commerciale, auquel cas les utilisateurs seront informés avec un préavis raisonnable.
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>7) Résiliation du compte<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						Nous mettons à votre disposition une fonctionnalité gratuite vous permettant de résilier votre abonnement par voie électronique. L'utilisateur peut supprimer son compte directement depuis son profil, mettant ainsi fin à son abonnement.
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>8) Responsabilité<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						Le vendeur ne saurait être tenu responsable des interruptions ou dysfonctionnements de l'application liés à des problèmes techniques, de maintenance ou à toute cause échappant à son contrôle.
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>9) Protection des données personnelles<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						Les données collectées lors de l'achat sont traitées conformément à notre politique de confidentialité disponible à l'adresse
+						<a href="{{ path('app_privacy')}}">{{ path('app_privacy')}}</a>
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>10) Modifications des CGV<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						Le vendeur se réserve le droit de modifier les présentes CGV à tout moment. Les CGV applicables sont celles en vigueur au moment de l'achat.
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>11) Droit applicable et litiges<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						Les présentes CGV sont soumises au droit français. En cas de litige, les parties s'efforceront de trouver une solution amiable avant toute action judiciaire devant les tribunaux compétents.
+					</div>
+					<div class="align-baseline">
+						<br>
+						<strong>12) Contact<br></strong>
+						<br>
+					</div>
+					<div class="align-baseline">
+						Pour toute question ou réclamation, vous pouvez nous contacter à l'adresse suivante :
+						<a href="mailto:{{ company.email }}">{{ company.email }}</a>.
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	{% include "shared/_footer.html.twig" %}
+{% endblock %}

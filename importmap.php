@@ -136,4 +136,8 @@ return [
     '@xmldom/xmldom' => [
         'version' => '0.8.10',
     ],
+    'purchase' => [
+        'path' => './assets/js/purchase.js',
+        'entrypoint' => true,
+    ],
 ];

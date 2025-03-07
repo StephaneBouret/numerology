@@ -78,10 +78,17 @@ class Program
     #[ORM\OneToMany(targetEntity: Courses::class, mappedBy: 'program')]
     private Collection $courses;
 
+    /**
+     * @var Collection<int, Purchase>
+     */
+    #[ORM\OneToMany(targetEntity: Purchase::class, mappedBy: 'program')]
+    private Collection $purchases;
+
     public function __construct()
     {
         $this->sections = new ArrayCollection();
         $this->courses = new ArrayCollection();
+        $this->purchases = new ArrayCollection();
     }
 
     public function __toString()
@@ -245,6 +252,36 @@ class Program
             // set the owning side to null (unless already changed)
             if ($course->getProgram() === $this) {
                 $course->setProgram(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Purchase>
+     */
+    public function getPurchases(): Collection
+    {
+        return $this->purchases;
+    }
+
+    public function addPurchase(Purchase $purchase): static
+    {
+        if (!$this->purchases->contains($purchase)) {
+            $this->purchases->add($purchase);
+            $purchase->setProgram($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchase(Purchase $purchase): static
+    {
+        if ($this->purchases->removeElement($purchase)) {
+            // set the owning side to null (unless already changed)
+            if ($purchase->getProgram() === $this) {
+                $purchase->setProgram(null);
             }
         }
 
