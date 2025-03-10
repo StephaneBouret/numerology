@@ -13,6 +13,7 @@ use App\Entity\Navigation;
 use App\Entity\User;
 use App\Entity\Program;
 use App\Entity\NewsLetter;
+use App\Entity\Purchase;
 use App\Entity\Sections;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -50,6 +51,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Sections', 'fa-fw fas fa-section', Sections::class);
         yield MenuItem::linkToCrud('Cours', 'fas fa-book-open', Courses::class);
         yield MenuItem::linkToCrud('Navigation', 'fa-solid fa-route', Navigation::class);
+        yield MenuItem::linkToCrud('Commandes', 'fa-solid fa-cart-shopping', Purchase::class);
         yield MenuItem::linkToCrud('Catégories des faqs', 'fa-solid fa-list', Category::class);
         yield MenuItem::linkToCrud('Questions des faqs', 'fa-solid fa-comments', FaqContent::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);

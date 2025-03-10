@@ -26,7 +26,8 @@ final class PurchaseCheckoutController extends AbstractController
         // Vérifier si l'utilisateur a déjà acheté ce programme
         $purchaseExists = $purchaseRepository->findOneBy([
             'user' => $user,
-            'program' => $program
+            'program' => $program,
+            'status' => 'PAYEE'
         ]);
 
         if ($purchaseExists) {
