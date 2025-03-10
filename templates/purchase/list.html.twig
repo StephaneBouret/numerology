@@ -116,7 +116,7 @@
 											</div>
 											{% if p.status == constant('App\\Entity\\Purchase::STATUS_PENDING') %}
 											<div>
-											<a href="" class="btn btn-md a3awwl">
+											<a href="{{ path('purchase_payment_form', {'id': p.id}) }}" class="btn btn-md a3awwl">
 											<span>Payer</span>
 											</a>
 											</div>

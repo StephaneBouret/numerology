@@ -50,7 +50,9 @@ final class PurchaseConfirmationController extends AbstractController
         $this->em->persist($purchase);
         $this->em->flush();
 
-        $this->addFlash('success', 'La commande a bien été enregistrée');
-        return $this->redirectToRoute('app_purchase_list');
+        // $this->addFlash('success', 'La commande a bien été enregistrée');
+        return $this->redirectToRoute('purchase_payment_form', [
+            'id' => $purchase->getId()
+        ]);
     }
 }

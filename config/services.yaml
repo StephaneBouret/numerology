@@ -41,3 +41,8 @@ services:
     auth_mailer:
         # class: Scheb\TwoFactorBundle\Mailer\SymfonyAuthCodeMailer
         class: App\Service\SendEmail2faService
+
+    App\Stripe\StripeService:
+        arguments:
+            $secretKey: '%env(STRIPE_SECRET_KEY)%'
+            $publicKey: '%env(STRIPE_PUBLIC_KEY)%'
