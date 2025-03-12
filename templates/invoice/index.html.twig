@@ -1,0 +1,70 @@
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Votre facture</title>
+    <style>
+       .text-center {
+           text-align: center;
+       }
+
+       .text-right {
+           text-align: right;
+       }
+
+       .text-left {
+           text-align: left;
+       }
+
+       body {
+           font-family: AirbnbCereal, sans-serif;
+       }
+
+       table {
+           border-collapse: collapse;
+       }
+       table td, table th {
+           padding:0.5rem;
+           border-top: 1px solid #ccc;
+       }
+    </style>
+</head>
+<body>
+<div class="text-center">
+<h3>Facture commande n°{{ purchase.number }}</h3>
+<table style="width: 100%;border-bottom:1px solid gray;">
+    <tr>
+        <td style="width: 49%;">
+            <strong>Potentiel Consulting</strong><br/>
+            1 B La Fendoire,<br/>
+            44770, La Plaine sur Mer<br/>
+            ftuncq@gmail.com<br/>
+            06 34 56 05 79
+        </td>
+    </tr>
+</table>
+</div>
+<h3>Votre commande en date du {{ purchase.createdAt|format_datetime('long', 'none', locale='fr') }}</h3>
+<table style="width: 100%;">
+    <thead>
+    <tr>
+        <th scope="col" class="text-left">Référence</th>
+        <th scope="col" class="text-left">Programme de formation</th>
+        <th scope="col" class="text-right">Total T.T.C</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ purchase.number }}</td>
+            <td>{{ purchase.program.name }}</td>
+            <td class="text-right">{{ purchase.amount|amount }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="text-right" style="margin-top: 10px;">
+    <strong>Total T.T.C : </strong> {{ purchase.amount|amount }}
+</div>
+
+</body>
+</html>

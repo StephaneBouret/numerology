@@ -34,6 +34,13 @@
 													{{ p.number }}
 												</div>
 											</div>
+											{% if p.status == constant('App\\Entity\\Purchase::STATUS_PAID') %}
+												<div>
+													<a href="{{ path('app_invoice_customer', {'id': p.id} )}}" class="btn btn-md a3awwl">
+														<span>Facture PDF</span>
+													</a>
+												</div>
+											{% endif %}
 										</div>
 									</div>
 								</div>
@@ -115,11 +122,11 @@
 												</div>
 											</div>
 											{% if p.status == constant('App\\Entity\\Purchase::STATUS_PENDING') %}
-											<div>
-											<a href="{{ path('purchase_payment_form', {'id': p.id}) }}" class="btn btn-md a3awwl">
-											<span>Payer</span>
-											</a>
-											</div>
+												<div>
+													<a href="{{ path('purchase_payment_form', {'id': p.id}) }}" class="btn btn-md a3awwl">
+														<span>Payer</span>
+													</a>
+												</div>
 											{% endif %}
 										</div>
 									</div>

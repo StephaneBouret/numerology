@@ -16,6 +16,7 @@
         "fakerphp/faker": "^1.24.1",
         "knplabs/knp-paginator-bundle": "^6.6.1",
         "liip/imagine-bundle": "^2.13.3",
+        "nucleos/dompdf-bundle": "^4.3",
         "odolbeau/phone-number-bundle": "^4.1",
         "phpdocumentor/reflection-docblock": "^5.6.1",
         "phpstan/phpdoc-parser": "^2.1",
