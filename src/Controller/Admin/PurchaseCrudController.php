@@ -12,13 +12,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class PurchaseCrudController extends AbstractCrudController
 {
+    public function __construct(protected AdminUrlGenerator $adminUrl)
+    {
+    }
+
     public static function getEntityFqcn(): string
     {
         return Purchase::class;
@@ -29,7 +32,7 @@ class PurchaseCrudController extends AbstractCrudController
         return $crud
             ->setEntityPermission('ROLE_ADMIN')
             ->setPageTitle('index', 'Commandes :')
-            ->setPageTitle('detail', fn(Purchase $purchase) => (string) $purchase->getNumber())
+            ->setPageTitle('detail', fn (Purchase $purchase) => (string) $purchase->getNumber())
             ->setEntityLabelInSingular('une commande')
             ->setDefaultSort(['id' => 'DESC'])
             ->setPaginatorPageSize(10);
@@ -37,8 +40,18 @@ class PurchaseCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        $generatePdf = Action::new('generatePdf', 'Générer PDF')
+            ->linkToUrl(function (Purchase $purchase) {
+                return $this->adminUrl
+                    ->setRoute('app_invoice_admin', ['id' => $purchase->getId()])
+                    ->generateUrl();
+            })
+            ->setIcon('fa fa-file-pdf')
+            ->addCssClass('btn btn-secondary')
+            ->displayIf(fn (Purchase $purchase) => $purchase->getStatus() === Purchase::STATUS_PAID);
         $actions = parent::configureActions($actions);
         $actions->disable(Action::NEW, Action::EDIT)
+            ->add(Crud::PAGE_INDEX, $generatePdf)
             ->add(Crud::PAGE_INDEX, Action::DETAIL);
         return $actions;
     }

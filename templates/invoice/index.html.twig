@@ -45,7 +45,16 @@
 </table>
 </div>
 <h3>Votre commande en date du {{ purchase.createdAt|format_datetime('long', 'none', locale='fr') }}</h3>
-<table style="width: 100%;">
+<div class="text-right" style="margin-top: 10px; margin-bottom: 10px;">
+    {{ purchase.user.firstname }} {{ purchase.user.lastname }}
+    <br>
+    {{ purchase.user.adress }}
+    <br>
+    {{ purchase.user.postalCode }} {{ purchase.user.city }}
+    <br>
+    {{ purchase.user.email }}
+</div>
+<table style="width: 100%; margin-top: 20px;">
     <thead>
     <tr>
         <th scope="col" class="text-left">Référence</th>
