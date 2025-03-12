@@ -46,3 +46,7 @@ services:
         arguments:
             $secretKey: '%env(STRIPE_SECRET_KEY)%'
             $publicKey: '%env(STRIPE_PUBLIC_KEY)%'
+
+    App\EventListener\VideoDurationListener:
+        tags:
+            - { name: kernel.event_listener, event: vich_uploader.post_upload }

@@ -14,6 +14,7 @@
         "doctrine/orm": "^3.3.2",
         "easycorp/easyadmin-bundle": "^4.24.4",
         "fakerphp/faker": "^1.24.1",
+        "james-heinrich/getid3": "^1.9",
         "knplabs/knp-paginator-bundle": "^6.6.1",
         "liip/imagine-bundle": "^2.13.3",
         "nucleos/dompdf-bundle": "^4.3",

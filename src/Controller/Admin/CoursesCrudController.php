@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
@@ -47,6 +48,7 @@ class CoursesCrudController extends AbstractCrudController
         return [
             IdField::new('id')->onlyOnIndex(),
             TextField::new('name', 'Nom du cours'),
+            BooleanField::new('isFree', 'Gratuit'),
             TextEditorField::new('shortDescription', 'Description courte')->hideOnIndex(),
             ChoiceField::new('contentType')
                 ->setLabel('Type de contenu')

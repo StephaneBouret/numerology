@@ -17,7 +17,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use Misd\PhoneNumberBundle\Templating\Helper\PhoneNumberHelper;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -55,7 +54,7 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $roles = ['ROLE_ADMIN', 'ROLE_USER'];
+        $roles = ['ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_USER'];
 
         return [
             IdField::new('id')->onlyOnIndex(),
@@ -96,7 +95,6 @@ class UserCrudController extends AbstractCrudController
                     return $formattedValue;
                 })
                 ->onlyOnIndex(),
-            BooleanField::new('isVerified', 'Utilisateur vérifié'),
             ImageField::new('avatar.imageName', 'Avatar')
                 ->setBasePath('images/avatars')
                 ->setUploadDir('public/images/avatars')

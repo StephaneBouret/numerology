@@ -82,6 +82,12 @@ class Courses
     #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'course')]
     private Collection $comments;
 
+    #[ORM\Column]
+    private ?bool $isFree = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $duration = null;
+
     public function __construct()
     {
         $this->lessons = new ArrayCollection();
@@ -294,6 +300,30 @@ class Courses
                 $comment->setCourse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isFree(): ?bool
+    {
+        return $this->isFree;
+    }
+
+    public function setIsFree(bool $isFree): static
+    {
+        $this->isFree = $isFree;
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): static
+    {
+        $this->duration = $duration;
 
         return $this;
     }
