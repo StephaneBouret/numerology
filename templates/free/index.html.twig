@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contenu de la formation
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid container-padding">
+		<div class="dtakq7">
+			<div class="goxpxm">
+				<section class="kntjsd">
+					<header>
+						<h2 class="xdc89f paq312">Sommaire de la formation</h2>
+					</header>
+				</section>
+				{% for section in sections %}
+					<div class="d2n3zp">
+						<details class="wex7kp" open>
+							<summary class="e9tr0b">
+								<h3 class="tl1u5u">
+									{{ section.name }}
+									{% if sectionsTotalDuration[section.id] > 0 %}
+										<small>({{ sectionsTotalDuration[section.id] | format_duration }})</small>
+									{% endif %}
+								</h3>
+							</summary>
+							<div class="lehfe6">
+								{% for course in section.courses %}
+									{% set set_twig = 'd-none' %}
+									{% set set_video = 'd-none' %}
+									{% set set_quiz = 'd-none' %}
+									{% set set_link = 'd-none' %}
+									{% if course.contentType == constant('App\\Entity\\Courses::TYPE_TWIG') %}
+										{% set set_twig = '' %}
+									{% elseif course.contentType == constant('App\\Entity\\Courses::TYPE_VIDEO') %}
+										{% set set_video = '' %}
+									{% elseif course.contentType == constant('App\\Entity\\Courses::TYPE_QUIZ') %}
+										{% set set_quiz = '' %}
+									{% elseif course.contentType == constant('App\\Entity\\Courses::TYPE_LINK') %}
+										{% set set_link = '' %}
+									{% endif %}
+									<div class="az1an0">
+										<div class="list-group-icon {{ set_twig }} completed">
+											{% include "partials/buttons/_cloud_svg.html.twig" %}
+										</div>
+										<div class="list-group-icon {{ set_video }} completed">
+											{% include "partials/buttons/_play_svg.html.twig" %}
+										</div>
+										<div class="list-group-icon {{ set_quiz }} completed">
+											{% include "partials/buttons/_quiz_svg.html.twig" %}
+										</div>
+										<div class="list-group-icon {{ set_link }} completed">
+											{% include "partials/buttons/_four_lines_svg.html.twig" %}
+										</div>
+										<div class="bia4w0">
+											<span class="ge44kx s0yisx">
+												{{ course.name }}
+											</span>
+											{% if course.duration is not null %}
+												<ul class="b0j2e2">
+													<li
+														class="ge44kx hxnga0">
+														{{ course.duration | format_minutes }}
+													</li>
+												</ul>
+											{% endif %}
+										</div>
+										{% if course.isFree %}
+											<a href="{{ path('courses_show', {'program_slug': course.program.slug, 'section_slug': course.section.slug, 'slug': course.slug}) }}" class="pg3n3i">Aperçu</a>
+										{% endif %}
+									</div>
+								{% endfor %}
+							</div>
+						</details>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	{% include "shared/_footer_second.html.twig" %}
+{% endblock %}
