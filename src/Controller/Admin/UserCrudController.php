@@ -54,8 +54,6 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $roles = ['ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_USER'];
-
         return [
             IdField::new('id')->onlyOnIndex(),
             FormField::addFieldset('Détails de l\'utilisateur'),
@@ -107,10 +105,28 @@ class UserCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             FormField::addFieldset('Rôles de l\'utilisateur'),
             ChoiceField::new('roles')
-                ->setChoices(array_combine($roles, $roles))
+                ->setChoices([
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Invité' => 'ROLE_GUEST',
+                    // Pas d'affichage de ROLE_USER afin d'éviter qu'il soit décoché
+                ])
                 ->allowMultipleChoices()
                 ->renderExpanded()
-                ->renderAsBadges(),
+                ->renderAsBadges()
+                ->hideOnIndex(),
+            ChoiceField::new('roles')
+                ->setChoices([
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Invité' => 'ROLE_GUEST',
+                    'Utilisateur' => 'ROLE_USER',
+                ])
+                ->renderAsBadges()
+                ->setChoices(array_flip([
+                    'ROLE_ADMIN' => 'Administrateur',
+                    'ROLE_GUEST' => 'Invité',
+                    'ROLE_USER' => 'Utilisateur',
+                ])) // Inverse clés/valeurs afin d'éviter le formatValue()
+                ->onlyOnIndex(),
         ];
     }
 
@@ -122,6 +138,11 @@ class UserCrudController extends AbstractCrudController
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
+        $roles = $entityInstance->getRoles();
+        if (!in_array('ROLE_USER', $roles, true)) {
+            $roles[] = 'ROLE_USER';
+            $entityInstance->setRoles($roles);
+        }
         $entityInstance->setFirstname(ucfirst($entityInstance->getFirstname()))
                     ->setLastname(strtoupper($entityInstance->getLastname()));
         parent::persistEntity($entityManager, $entityInstance);
@@ -129,6 +150,11 @@ class UserCrudController extends AbstractCrudController
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
+        $roles = $entityInstance->getRoles();
+        if (!in_array('ROLE_USER', $roles, true)) {
+            $roles[] = 'ROLE_USER';
+            $entityInstance->setRoles($roles);
+        }
         $entityInstance->setFirstname(ucfirst($entityInstance->getFirstname()))
                     ->setLastname(strtoupper($entityInstance->getLastname()));
         parent::persistEntity($entityManager, $entityInstance);
