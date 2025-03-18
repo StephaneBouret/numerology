@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class CourseListController extends AbstractController
 {
-    #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette page')]
+    // #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette page')]
     #[Route('/courses', name: 'app_courses_list')]
     public function list(ProgramRepository $programRepository, CoursesRepository $coursesRepository, LessonRepository $lessonRepository): Response
     {

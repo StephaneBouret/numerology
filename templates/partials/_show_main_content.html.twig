@@ -1,5 +1,6 @@
-<div class="main-content">
-{# {{ render(controller('App\\Controller\\SearchController::searchBar')) }} #}
+<div
+	class="main-content">
+	{# {{ render(controller('App\\Controller\\SearchController::searchBar')) }} #}
 	<div id="lesson-header">
 		<div class="d-flex">
 			<div class="w-100">
@@ -48,6 +49,7 @@
 		</div>
 	</div>
 	<div id="lesson-content">
+	{% if is_granted('VIEW_COURSE', course) %}		
 		{% if course.contentType == constant('App\\Entity\\Courses::TYPE_TWIG') %}
 			{{ fileContent|raw }}
 		{% endif %}
@@ -55,18 +57,21 @@
 			{{ fileContent|raw }}
 		{% endif %}
 		{# {% if course.contentType == constant('App\\Entity\\Courses::TYPE_QUIZ') %}
-			{% if quizResults is not empty %}
-				{{ include('partials/quiz/_results.html.twig', {
-        			'quizResults': quizResults,
-        			'totalQuestions': totalQuestions
-    			}) }}
-			{% else %}
-				{% include "partials/quiz/_show.html.twig" %}
-			{% endif %}
-		{% endif %} #}
+									{% if quizResults is not empty %}
+										{{ include('partials/quiz/_results.html.twig', {
+						        			'quizResults': quizResults,
+						        			'totalQuestions': totalQuestions
+						    			}) }}
+									{% else %}
+										{% include "partials/quiz/_show.html.twig" %}
+									{% endif %}
+								{% endif %} #}
 		{% if course.contentType == constant('App\\Entity\\Courses::TYPE_VIDEO') %}
 			{% include "partials/_video.html.twig" %}
 		{% endif %}
+	{% else %}
+		{% include "partials/_locked.html.twig" %}
+	{% endif %}
 	</div>
 	<div class="spacer-section"></div>
 	<div class="text-longform" data-controller="richtext">
@@ -77,55 +82,59 @@
 		<div id="lesson-navigation">
 			<nav class="btn-row justify-content-end">
 				{% include "partials/_navigation.html.twig" %}
-				<div id="completion-button" data-controller="toast">
-					{{ form_start(form, {'action': path('app_course_confirmation', {'id': course.id})}) }}
-					{% if lesson is empty %}
-						{% set display = "d-none" %}
-						{% set finished = "" %}
-						{% set status = "todo" %}
-						{% set message = "Leçon terminée" %}
-					{% endif %}
-					{% if lesson is not empty and lesson.status == 'DONE' %}
-						{% set display = "" %}
-						{% set finished = "d-none" %}
-						{% set status = "done" %}
-						{% set message = "Leçon inachevée" %}
-					{% endif %}
-					{% if lesson is not empty and lesson.status == 'STUDY' %}
-						{% set display = "d-none" %}
-						{% set finished = "" %}
-						{% set status = "todo" %}
-						{% set message = "Leçon terminée" %}
-					{% endif %}
+				{% if is_granted('CHECK_COURSE', course) %}
+					<div id="completion-button" data-controller="toast">
+						{{ form_start(form, {'action': path('app_course_confirmation', {'id': course.id})}) }}
+						{% if lesson is empty %}
+							{% set display = "d-none" %}
+							{% set finished = "" %}
+							{% set status = "todo" %}
+							{% set message = "Leçon terminée" %}
+						{% endif %}
+						{% if lesson is not empty and lesson.status == 'DONE' %}
+							{% set display = "" %}
+							{% set finished = "d-none" %}
+							{% set status = "done" %}
+							{% set message = "Leçon inachevée" %}
+						{% endif %}
+						{% if lesson is not empty and lesson.status == 'STUDY' %}
+							{% set display = "d-none" %}
+							{% set finished = "" %}
+							{% set status = "todo" %}
+							{% set message = "Leçon terminée" %}
+						{% endif %}
 
-					{{ form_widget(form.status, { value : status }) }}
-					<button type="submit" class="toastbtnactions btn btn-md btn-dark btn-icon {{ finished }}" id="toastbtnfinished" data-action="toast#showToast">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16" class="">
-							<path fill-rule="evenodd" clip-rule="evenodd" d="M4 2.75C3.30964 2.75 2.75 3.30964 2.75 4V12C2.75 12.6904 3.30964 13.25 4 13.25H12C12.6904 13.25 13.25 12.6904 13.25 12V4C13.25 3.30964 12.6904 2.75 12 2.75H4ZM1.25 4C1.25 2.48122 2.48122 1.25 4 1.25H12C13.5188 1.25 14.75 2.48122 14.75 4V12C14.75 13.5188 13.5188 14.75 12 14.75H4C2.48122 14.75 1.25 13.5188 1.25 12V4Z"></path>
-						</svg>
-						<span>Valider</span>
-					</button>
+						{{ form_widget(form.status, { value : status }) }}
+						<button type="submit" class="toastbtnactions btn btn-md btn-dark btn-icon {{ finished }}" id="toastbtnfinished" data-action="toast#showToast">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16" class="">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M4 2.75C3.30964 2.75 2.75 3.30964 2.75 4V12C2.75 12.6904 3.30964 13.25 4 13.25H12C12.6904 13.25 13.25 12.6904 13.25 12V4C13.25 3.30964 12.6904 2.75 12 2.75H4ZM1.25 4C1.25 2.48122 2.48122 1.25 4 1.25H12C13.5188 1.25 14.75 2.48122 14.75 4V12C14.75 13.5188 13.5188 14.75 12 14.75H4C2.48122 14.75 1.25 13.5188 1.25 12V4Z"></path>
+							</svg>
+							<span>Valider</span>
+						</button>
 
-					<button type="submit" class="toastbtnactions btn btn-secondary {{ display }}" id="toastbtntodo" data-action="toast#showToast">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16" class="">
-							<path fill-rule="evenodd" clip-rule="evenodd" d="M14.4325 1.38727C14.7709 1.62614 14.8516 2.09411 14.6127 2.43251L8.61273 10.9325C8.48517 11.1132 8.28434 11.2284 8.06395 11.2473C7.84356 11.2661 7.62608 11.1867 7.46967 11.0303L4.46967 8.03033C4.17678 7.73744 4.17678 7.26256 4.46967 6.96967C4.76256 6.67678 5.23744 6.67678 5.53033 6.96967L7.90074 9.34008L13.3873 1.56749C13.6261 1.22909 14.0941 1.1484 14.4325 1.38727ZM4 2.75C3.30964 2.75 2.75 3.30964 2.75 4V12C2.75 12.6904 3.30964 13.25 4 13.25H12C12.6904 13.25 13.25 12.6904 13.25 12V9C13.25 8.58579 13.5858 8.25 14 8.25C14.4142 8.25 14.75 8.58579 14.75 9V12C14.75 13.5188 13.5188 14.75 12 14.75H4C2.48122 14.75 1.25 13.5188 1.25 12V4C1.25 2.48122 2.48122 1.25 4 1.25H9C9.41421 1.25 9.75 1.58579 9.75 2C9.75 2.41421 9.41421 2.75 9 2.75H4Z"></path>
-						</svg>
-						<span>Terminé</span>
-					</button>
-					<div class="toast-container position-fixed bottom-0 end-0 p-5">
-						<div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true" data-toast-target="toast">
-							<div class="d-flex">
-								<div class="toast-body">
-									{{ message }}
+						<button type="submit" class="toastbtnactions btn btn-secondary {{ display }}" id="toastbtntodo" data-action="toast#showToast">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16" class="">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M14.4325 1.38727C14.7709 1.62614 14.8516 2.09411 14.6127 2.43251L8.61273 10.9325C8.48517 11.1132 8.28434 11.2284 8.06395 11.2473C7.84356 11.2661 7.62608 11.1867 7.46967 11.0303L4.46967 8.03033C4.17678 7.73744 4.17678 7.26256 4.46967 6.96967C4.76256 6.67678 5.23744 6.67678 5.53033 6.96967L7.90074 9.34008L13.3873 1.56749C13.6261 1.22909 14.0941 1.1484 14.4325 1.38727ZM4 2.75C3.30964 2.75 2.75 3.30964 2.75 4V12C2.75 12.6904 3.30964 13.25 4 13.25H12C12.6904 13.25 13.25 12.6904 13.25 12V9C13.25 8.58579 13.5858 8.25 14 8.25C14.4142 8.25 14.75 8.58579 14.75 9V12C14.75 13.5188 13.5188 14.75 12 14.75H4C2.48122 14.75 1.25 13.5188 1.25 12V4C1.25 2.48122 2.48122 1.25 4 1.25H9C9.41421 1.25 9.75 1.58579 9.75 2C9.75 2.41421 9.41421 2.75 9 2.75H4Z"></path>
+							</svg>
+							<span>Terminé</span>
+						</button>
+						<div class="toast-container position-fixed bottom-0 end-0 p-5">
+							<div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true" data-toast-target="toast">
+								<div class="d-flex">
+									<div class="toast-body">
+										{{ message }}
+									</div>
+									<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 								</div>
-								<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 							</div>
 						</div>
+						{{ form_end(form) }}
 					</div>
-					{{ form_end(form) }}
-				</div>
+				{% endif %}
 			</nav>
 		</div>
 	{% endif %}
-	{% include "partials/_comments.html.twig" %}
+	{% if is_granted('COMMENT_COURSE', course) %}
+		{% include "partials/_comments.html.twig" %}
+	{% endif %}
 </div>

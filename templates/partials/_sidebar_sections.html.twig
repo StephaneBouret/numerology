@@ -17,6 +17,7 @@
 								{{ program.name }}
 							</a>
 						</h1>
+						{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_GUEST') or (app.user and app.user.purchases|filter(purchase => purchase.program == program and purchase.status == constant('App\\Entity\\Purchase::STATUS_PAID'))|length > 0) %}
 						<div class="bulleted">
 							<span class="bulleted-item w-100 mt-2">
 								{% if nbrLessonsDone == nbrCourses %}
@@ -43,6 +44,9 @@
 								</div>
 							</span>
 						</div>
+						{% else %}
+							{% include "partials/_title_section_if_pending.html.twig" %}
+						{% endif %}
 					</header>
 				</div>
 			</section>
@@ -52,7 +56,7 @@
 				<nav aria-label="{{ s.name }}">
 					<header class="d-flex align-items-center n2ymm7">
 						<a href="{{ path('courses_section', {'program_slug': s.program.slug, 'slug': s.slug}) }}">
-							<h2 class="h4 text-md mb-2">{{ s.name }}</h2>
+							<h2 class="h4 text-md mb-2">{{ s.name }} ({{ sectionsTotalDuration[s.id] | format_duration }})</h2>
 						</a>
 						<span class="icon closed f4lgy4" data-bs-toggle="collapse" data-bs-target="#collapse-{{ s.id }}" aria-expanded="false" aria-controls="collapse-{{ s.id }}">
 							{% include "partials/buttons/_closed_svg.html.twig" %}

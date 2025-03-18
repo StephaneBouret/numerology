@@ -1,0 +1,22 @@
+<div class="jd8ttj">
+	<div class="card">
+		<div class="card-body">
+			<div class="zhczf8">
+				<header class="dgxtkb">
+					<h2 class="kuw4x9">Leçon indisponible</h2>
+				</header>
+				<div>
+					{% if app.user %}
+						<p class="mb-0">Ce cours est réservé aux utilisateurs ayant acheté le programme.</p>
+						<a href="{{ path('app_purchase_checkout', { 'slug': course.program.slug }) }}" class="btn btn-dark">Acheter le cours</a>
+					{% else %}
+						<p class="mb-0">Veuillez
+							<a href="{{ path('app_login') }}" class="text-muted">vous connecter</a>
+							ou
+							<a href="{{ path('app_purchase_checkout', { 'slug': course.program.slug }) }}" class="text-muted">acheter le cours</a>.</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

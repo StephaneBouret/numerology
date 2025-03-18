@@ -25,22 +25,29 @@
 			{% set set_visible = 'd-none' %}
 		{% endfor %}
 		<li>
+			{% set isAccessible = is_granted('VIEW_COURSE', course) %}
 			<a href="{{ path('courses_show', {'program_slug': course.program.slug, 'section_slug': course.section.slug, 'slug': course.slug}) }}" class="list-group-item list-group-item-action" aria-label="{{ course.slug }}">
-				<div class="list-group-icon {{ set_twig }} {{ set_status }} completed">
-					{% include "partials/buttons/_cloud_svg.html.twig" %}
-				</div>
-				<div class="list-group-icon {{ set_video }} {{ set_status }} completed">
-					{% include "partials/buttons/_play_svg.html.twig" %}
-				</div>
-				<div class="list-group-icon {{ set_quiz }} {{ set_status }} completed">
-					{% include "partials/buttons/_quiz_svg.html.twig" %}
-				</div>
-				<div class="list-group-icon {{ set_link }} {{ set_status }} completed">
-					{% include "partials/buttons/_four_lines_svg.html.twig" %}
-				</div>
-				<div class="list-group-icon bg-color-transp {{ set_visible }}">
-					{% include "partials/buttons/_check_svg.html.twig" %}
-				</div>
+				{% if isAccessible %}
+					<div class="list-group-icon {{ set_twig }} {{ set_status }}">
+						{% include "partials/buttons/_cloud_svg.html.twig" %}
+					</div>
+					<div class="list-group-icon {{ set_video }} {{ set_status }}">
+						{% include "partials/buttons/_play_svg.html.twig" %}
+					</div>
+					<div class="list-group-icon {{ set_quiz }} {{ set_status }}">
+						{% include "partials/buttons/_quiz_svg.html.twig" %}
+					</div>
+					<div class="list-group-icon {{ set_link }} {{ set_status }}">
+						{% include "partials/buttons/_four_lines_svg.html.twig" %}
+					</div>
+					<div class="list-group-icon bg-color-transp {{ set_visible }}">
+						{% include "partials/buttons/_check_svg.html.twig" %}
+					</div>
+				{% else %}
+					<div class="list-group-icon">
+						{% include "partials/buttons/_lock_svg.html.twig" %}
+					</div>
+				{% endif %}
 				{{ course.name }}
 			</a>
 		</li>
