@@ -2475,7 +2475,7 @@ button.btn.btn-abandonment:hover {
     top: 10px;
     position: relative;
     line-height: 0 !important;
-    color: color-mix(in srgb, #000000, transparent 50%); 
+    color: color-mix(in srgb, #000000, transparent 50%);
 }
 
 .t8u04l {
@@ -2636,13 +2636,13 @@ button.btn.btn-abandonment:hover {
 }
 
 /* spinner/processing state, errors */
-.spinner,
-.spinner:before,
-.spinner:after {
+#payment-form .spinner,
+#payment-form .spinner:before,
+#payment-form .spinner:after {
     border-radius: 50%;
 }
 
-.spinner {
+#payment-form .spinner {
     color: #ffffff;
     font-size: 22px;
     text-indent: -99999px;
@@ -2654,13 +2654,13 @@ button.btn.btn-abandonment:hover {
     transform: translateZ(0);
 }
 
-.spinner:before,
-.spinner:after {
+#payment-form .spinner:before,
+#payment-form .spinner:after {
     position: absolute;
     content: "";
 }
 
-.spinner:before {
+#payment-form .spinner:before {
     width: 10.4px;
     height: 20.4px;
     background: #5469d4;
@@ -2672,7 +2672,7 @@ button.btn.btn-abandonment:hover {
     animation: loading 2s infinite ease 1.5s;
 }
 
-.spinner:after {
+#payment-form .spinner:after {
     width: 10.4px;
     height: 10.2px;
     background: #5469d4;
@@ -2709,6 +2709,98 @@ button.btn.btn-abandonment:hover {
         width: 80vw;
         min-width: initial;
     }
+}
+
+/*--------------------------------------------------------------
+# Search Select
+--------------------------------------------------------------*/
+.htfd6z {
+    display: flex;
+}
+
+.htfd6z form {
+    width: 100%;
+}
+
+.fullscreen .htfd6z form {
+    max-width: 100%;
+}
+
+.htfd6z form .inner-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.htfd6z .focus .ts-control {
+    border-color: rgb(134, 182.5, 254);
+    outline: 0;
+    box-shadow: 0 0 0 0rem rgba(0, 0, 0, 0);
+}
+
+.inner-form .input-field {
+    height: 38px;
+}
+
+.input-field.first-wrap {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+#course_autocomplete {
+    background: 0 0;
+    border: 0;
+    display: block;
+    width: 100%;
+    margin-bottom: -1rem;
+}
+
+.htfd6z .ts-wrapper.form-select {
+    border-top-right-radius: unset;
+    border-bottom-right-radius: unset;
+}
+
+.fnkrdt {
+    background: #212529 !important;
+    border: 0;
+    border-radius: 6px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    color: #FFFFFF !important;
+    width: 38px;
+    height: 38px;
+    display: flex !important;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+/*--------------------------------------------------------------
+  # Spinner
+  --------------------------------------------------------------*/
+.ts-control.loading::after {
+    display: none !important;
+}
+
+.is-loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #FFF;
+    opacity: 0.5;
+    z-index: 4;
+}
+
+.is-loading .spinner-border {
+    position: absolute;
+    top: calc(50% - 1rem);
+    left: calc(50% - 1rem);
+    z-index: 5;
 }
 
 /*--------------------------------------------------------------
