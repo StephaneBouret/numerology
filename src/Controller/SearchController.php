@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Courses;
 use App\Form\CourseAutocompleteType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,5 +32,18 @@ class SearchController extends AbstractController
         return $this->render('partials/_search.html.twig', [
             'form' => $form,
         ]);
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/course/details/{id}', name: 'course_details', methods: ['GET'])]
+    public function getCourseDetails(Courses $course): JsonResponse
+    {
+        $data = [
+            'program_slug' => $course->getProgram()->getSlug(),
+            'section_slug' => $course->getSection()->getSlug(),
+            'slug' => $course->getSlug(),
+        ];
+
+        return new JsonResponse($data);
     }
 }

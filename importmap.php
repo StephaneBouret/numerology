@@ -157,4 +157,12 @@ return [
         'version' => '2.4.3',
         'type' => 'css',
     ],
+    'rating' => [
+        'path' => './assets/js/rating.js',
+        'entrypoint' => true,
+    ],
+    'countTestimonial' => [
+        'path' => './assets/js/countTestimonial.js',
+        'entrypoint' => true,
+    ],
 ];

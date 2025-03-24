@@ -17,9 +17,6 @@
 	</head>
 	<body>
 		{% include "shared/_navbar.html.twig" %}
-		{% if app.user and not app.user.isVerified %}
-			{% include "partials/_notVerified.html.twig" %}
-		{% endif %}
 		{% include "partials/_flash.html.twig" %}
 		{% block body %}{% endblock %}
 		<a href="#" class="back-to-top d-flex align-items-center justify-content-center">

@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ils nous font confiance
+{% endblock %}
+
+{% block body %}
+	<div class="container pt-5">
+		{% if testimonials is not null %}
+			<div class="qr4wci">
+				<div class="d-flex flex-column r9hs2v">
+					<div class="x9hlg6">
+						<h1 class="hpipapi">
+							<div class="_1b0tbcn">
+								<div class="_f0hro">
+									<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32" aria-hidden="true" role="presentation" focusable="false" style="display: block; height: 32px; width: 32px; fill: currentcolor;">
+										<path fill-rule="evenodd" d="m15.1 1.58-4.13 8.88-9.86 1.27a1 1 0 0 0-.54 1.74l7.3 6.57-1.97 9.85a1 1 0 0 0 1.48 1.06l8.62-5 8.63 5a1 1 0 0 0 1.48-1.06l-1.97-9.85 7.3-6.57a1 1 0 0 0-.55-1.73l-9.86-1.28-4.12-8.88a1 1 0 0 0-1.82 0z"></path>
+									</svg>
+								</div>
+								<div aria-hidden="true">{{ avgRating|number_format(1, ',', ',') }}</div>
+								<div class="r6wb0z">{{ totalCount }}
+									avis</div>
+							</div>
+						</h1>
+					</div>
+					<div class="rd0ps7t">
+						<section>
+							<h2 class="hpipapi">
+								<div class="t1cxoyq9">Évaluation globale</div>
+							</h2>
+						</section>
+						<div class="progress-ratings">
+							<div class="sb22yh96">
+								{% for i in 5..1 %}
+									{% set percentage = percentages[i]|default(0) %}
+									<div class="r19nw222">
+										<div class="r4e9rlv">{{ i }}</div>
+										<div class="progress o1i2s4be" role="progressbar" aria-label="Rating {{ i }}" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
+											<div class="progress-bar i5cdxym" style="width: {{ percentage }}%"></div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="kejc0f">
+				<section class="e0l5hf">
+					<header>
+						<h2 class="lga8zu">Ce qu'en disent les étudiant(e)s</h2>
+					</header>
+				</section>
+				{% for testimonial in testimonials %}
+					<div class="mpbeor mb-3">
+						<div class="rzkbnh">
+							<p class="uahg8t">
+								<i class="fa-solid fa-quote-left hcjsvz"></i>
+								<span>{{ testimonial.content | raw | nl2br }}</span>
+								<i class="fa-solid fa-quote-right eckif3"></i>
+							</p>
+							<img src="{{ vich_uploader_asset(testimonial.author.avatar, 'imageFile') }}" class="t8u04l">
+							<div class="zripw3">
+								{% include "partials/_rating.html.twig" with {'rating': testimonial.rating } %}
+							</div>
+							<h3 class="ik2fic">{{ testimonial.author.firstname }}
+								{{ testimonial.author.lastname }}</h3>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+		{% if (is_granted('ROLE_ADMIN') or is_granted('ROLE_GUEST') or (app.user and app.user.purchases|filter(purchase => purchase.status == constant('App\\Entity\\Purchase::STATUS_PAID'))|length > 0)) and not hasLeftTestimonial %}
+			<div class="row mb-3">
+				<div class="comment-information-box mt-3" id="comment">
+					<section>
+						<div class="d-flex justify-content-between align-items-center">
+							<div class="mr-12">
+								<div class="host-title">
+									Merci de laisser un témoignage
+								</div>
+							</div>
+						</div>
+						<div class="mt-32">
+							<div class="host-link d-flex flex-column">
+								{{ form_start(form) }}
+								<div class="c5r6yyi">
+									<div id="description-input-textarea-character-count" class="c1k9zihq">
+										<span class="c48a4lr" aria-hidden="true">
+											<b class="description-count"></b>&nbsp;caractères restants</span>
+									</div>
+								</div>
+								{{ form_widget(form.content) }}
+								<div class="star-rating mb-3 mt-3" style="cursor: pointer;">
+									<span>Note sur 5 :</span>
+									{% for i in 1..5 %}
+										<i class="far fa-star" data-rating="{{ i }}"></i>
+									{% endfor %}
+								</div>
+								<button type="submit" class="dl673h" data-turbo="false">Laisser un témoignage</button>
+								{{ form_end(form) }}
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+	{% include "shared/_footer_second.html.twig" %}
+{% endblock %}
+
+
+{% block importmap %}
+	{{ importmap(['app', 'countTestimonial', 'rating']) }}
+{% endblock %}

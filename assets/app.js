@@ -5,6 +5,7 @@ import Filter from './js/modules/Filter.js';
 import Comments from './js/modules/Comments.js';
 import Loadmore from './js/modules/Loadmore.js';
 import LikeController from './js/modules/LikeController.js';
+import Autocomplete from './js/modules/Autocomplete.js';
 import videojs from "video.js";
 /*
  * Welcome to your app's main JavaScript file!
@@ -134,6 +135,7 @@ const initPage = () => {
     new Comments;
     new LikeController;
     new Loadmore;
+    new Autocomplete;
     initToggle();
     courseShow();
     collapseButton();

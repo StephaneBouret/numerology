@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\Testimonial;
+use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class TestimonialFormType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('rating', HiddenType::class, [
+                'label' => false,
+            ])
+            ->add('content', TextareaType::class, [
+                'label' => 'Votre commentaire',
+                'attr' => [
+                    'placeholder' => 'Vos remarques sur la formation aideront les prochains étudiants à mieux profiter de leur expérience',
+                    'class' => 'description-textarea',
+                    'rows' => 4,
+                    'autocapitalize' => 'sentences',
+                    'required' => true,
+                    'minlength' => 10,
+                    'maxlength' => 300
+                ]
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Testimonial::class,
+        ]);
+    }
+}

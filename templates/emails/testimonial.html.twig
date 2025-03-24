@@ -1,0 +1,8 @@
+<h1>Demande de modération sur l'application</h1>
+<p>Bonjour,</p>
+<p>Vous venez de recevoir une notification de demande de modération d'un commentaire.</p>
+<p>Prénom et nom de l'auteur : {{ testimonial.author.firstname }} {{ testimonial.author.lastname }}</p>
+<p>Email de l'auteur : {{ testimonial.author.email }}</p>
+<p>Numéro du témoignage : #{{ testimonial.id }}</p>
+<p>Contenu du témoignage : {{ testimonial.content }}</p>
+<p><a href="{{ absolute_url(path('admin')) }}">Back office</a></p>
