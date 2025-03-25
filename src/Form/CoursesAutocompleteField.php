@@ -27,7 +27,7 @@ class CoursesAutocompleteField extends AbstractType
                     $courses->getSlug()
                 );
             },
-            'security' => 'ROLE_USER',
+            // 'security' => 'ROLE_USER',
             'max_results' => 10,
         ]);
     }

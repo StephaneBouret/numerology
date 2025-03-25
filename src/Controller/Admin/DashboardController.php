@@ -9,6 +9,7 @@ use App\Entity\Company;
 use App\Entity\Contact;
 use App\Entity\Courses;
 use App\Entity\FaqContent;
+use App\Entity\Invitation;
 use App\Entity\Navigation;
 use App\Entity\User;
 use App\Entity\Program;
@@ -60,6 +61,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Contacts', 'fa-regular fa-envelope', Contact::class);
         yield MenuItem::linkToCrud('Commentaires', 'fa-solid fa-comment', Comments::class);
         yield MenuItem::linkToCrud('Témoignages', 'fa-solid fa-face-smile', Testimonial::class);
+        yield MenuItem::linkToCrud('Invitations', 'fas fa-envelope', Invitation::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'home_index');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

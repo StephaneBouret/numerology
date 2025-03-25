@@ -9,11 +9,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class SearchController extends AbstractController
 {
-    #[IsGranted('ROLE_USER')]
     #[Route('/search', name: 'search')]
     public function searchBar(Request $request): Response
     {
@@ -34,7 +32,6 @@ class SearchController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/course/details/{id}', name: 'course_details', methods: ['GET'])]
     public function getCourseDetails(Courses $course): JsonResponse
     {
