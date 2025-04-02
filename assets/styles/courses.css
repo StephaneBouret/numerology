@@ -2956,6 +2956,134 @@ button.btn.btn-abandonment:hover {
 }
 
 /*--------------------------------------------------------------
+ # Devices
+ --------------------------------------------------------------*/
+ .gopaxn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #D6D6D7;
+    border-radius: 0.5rem;
+}
+
+@media (max-width: 575.98px) {
+    .gopaxn {
+        margin-left: -20px;
+        margin-right: -20px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+}
+
+.j9g51z {
+    padding: 0 0;
+    margin-bottom: 0;
+    background-color: transparent;
+    border-bottom: none;
+    padding-top: 20px !important;
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+}
+
+.j9g51z:first-child {
+    border-radius: calc(0.5rem - 1px) calc(0.5rem - 1px) 0 0;
+}
+
+@media (min-width: 576px) {
+    .j9g51z {
+        padding-right: 24px !important;
+        padding-left: 24px !important;
+    }
+}
+
+.j38wrf {
+    margin-bottom: 0;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #06040E;
+    font-size: 0.9375rem;
+}
+
+.lpzawi {
+    word-break: break-word !important;
+    word-wrap: break-word !important;
+    margin-top: 4px !important;
+    color: #59585A !important;
+    margin-bottom: 0 !important;
+}
+
+.z9dxrx {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 20px !important;
+}
+
+@media (min-width: 576px) {
+    .z9dxrx {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+        padding-right: 24px !important;
+        padding-left: 24px !important;
+    }
+}
+
+.space-y-3>*:not(:last-child) {
+    margin-bottom: 12px !important;
+}
+
+.kj7asu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #EDEDED;
+    min-width: 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.5rem;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+.bbtm53 {
+    min-width: 2.25rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.375rem;
+}
+
+.j3xn7g {
+    --item-gap: 0 0.375rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 0;
+    padding-inline-start: 0;
+    list-style-type: none;
+}
+
+.w35bpn {
+    color: #59585A;
+}
+
+.jym04b {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jym04b:not(:first-child)::before {
+    content: "•";
+    margin: var(--item-gap);
+    color: #98989A;
+}
+
+/*--------------------------------------------------------------
 # root
 --------------------------------------------------------------*/
 :root {

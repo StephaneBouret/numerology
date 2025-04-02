@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes appareils
+{% endblock %}
+
+{% block body %}
+	<div class="ykzkxt d6i7ks">
+		<div class="d-flex">
+			<div class="w-100">
+				<div class="d-md-flex justify-content-md-between align-items-center spacer-section-checkout">
+					<div class="flex-fill mb-6 mb-md-0">
+						<h1 class="pr-md-6 bkicbc">Mes appareils</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<div class="gopaxn">
+					<div class="j9g51z">
+						<div class="d-flex justify-content-between align-items-center">
+							<div>
+								<div class="j38wrf">
+									Gérer vos appareils
+								</div>
+								<div class="lpzawi">
+									Dès que vous vous connectez pour la première fois à votre compte, vous enregistrez votre appareil en session. Vous pouvez avoir jusqu'à 2 appareils de connexion à tout moment.
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="z9dxrx">
+						<div class="space-y-3">
+							{% for device in devices %}
+								<div class="d-flex justify-content-between align-items-center">
+									<span class="d-flex" style="gap: 0.5rem">
+										<div class="kj7asu bbtm53">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16" class="svg-grey-soft">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 14.75C6.87559 14.75 5.95766 14.9639 5.33663 15.1597C4.94159 15.2843 4.52037 15.065 4.39581 14.67C4.27125 14.2749 4.49052 13.8537 4.88557 13.7292C5.61209 13.5001 6.68527 13.25 7.99999 13.25C8.76206 13.25 9.86001 13.3344 11.114 13.7291C11.5091 13.8534 11.7286 14.2745 11.6043 14.6696C11.4799 15.0647 11.0588 15.2842 10.6637 15.1599C9.59063 14.8221 8.65125 14.75 7.99999 14.75Z"></path>
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 11.0278C8.4142 11.0278 8.74999 11.3636 8.74999 11.7778V14C8.74999 14.4142 8.4142 14.75 7.99999 14.75C7.58577 14.75 7.24999 14.4142 7.24999 14V11.7778C7.24999 11.3636 7.58577 11.0278 7.99999 11.0278Z"></path>
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M3.33332 3.19446C2.76569 3.19446 2.30554 3.65461 2.30554 4.22224V10C2.30554 10.5676 2.76569 11.0278 3.33332 11.0278H12.6667C13.2343 11.0278 13.6944 10.5676 13.6944 10V4.22224C13.6944 3.65461 13.2343 3.19446 12.6667 3.19446H3.33332ZM0.805542 4.22224C0.805542 2.82618 1.93727 1.69446 3.33332 1.69446H12.6667C14.0627 1.69446 15.1944 2.82618 15.1944 4.22224V10C15.1944 11.3961 14.0627 12.5278 12.6667 12.5278H3.33332C1.93727 12.5278 0.805542 11.3961 0.805542 10V4.22224Z"></path>
+											</svg>
+										</div>
+										<ul class="j3xn7g w35bpn">
+											<li class="jym04b">
+												<span class="font-weight-bold text-grey-dark">
+													{{ device.browser }}
+													sur
+													{{ device.platform }}
+												</span>
+											</li>
+											<li class="jym04b">
+												<span>
+													{{ device.lastUsedAt|format_datetime(locale:'fr', timezone: 'Europe/Paris') }}
+												</span>
+											</li>
+										</ul>
+									</span>
+									<a href="{{ path('app_remove_device', {id: device.id}) }}" class="text-decoration-none" onclick="return confirm ('Supprimer cet appareil ?')">
+										❌
+									</a>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

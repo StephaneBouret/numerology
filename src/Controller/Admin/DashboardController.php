@@ -17,6 +17,7 @@ use App\Entity\NewsLetter;
 use App\Entity\Purchase;
 use App\Entity\Sections;
 use App\Entity\Testimonial;
+use App\Entity\UserDevice;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -62,6 +63,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Commentaires', 'fa-solid fa-comment', Comments::class);
         yield MenuItem::linkToCrud('Témoignages', 'fa-solid fa-face-smile', Testimonial::class);
         yield MenuItem::linkToCrud('Invitations', 'fas fa-envelope', Invitation::class);
+        yield MenuItem::linkToCrud('Appareils', 'fa-solid fa-desktop', UserDevice::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'home_index');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

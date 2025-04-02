@@ -130,6 +130,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\OneToMany(targetEntity: Testimonial::class, mappedBy: 'author', orphanRemoval: true)]
     private Collection $testimonials;
 
+    /**
+     * @var Collection<int, UserDevice>
+     */
+    #[ORM\OneToMany(targetEntity: UserDevice::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $userDevices;
+
     public function __construct()
     {
         $this->lessons = new ArrayCollection();
@@ -137,6 +143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         $this->likes = new ArrayCollection();
         $this->purchases = new ArrayCollection();
         $this->testimonials = new ArrayCollection();
+        $this->userDevices = new ArrayCollection();
     }
 
     public function __toString()
@@ -527,6 +534,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
             // set the owning side to null (unless already changed)
             if ($testimonial->getAuthor() === $this) {
                 $testimonial->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserDevice>
+     */
+    public function getUserDevices(): Collection
+    {
+        return $this->userDevices;
+    }
+
+    public function addUserDevice(UserDevice $userDevice): static
+    {
+        if (!$this->userDevices->contains($userDevice)) {
+            $this->userDevices->add($userDevice);
+            $userDevice->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserDevice(UserDevice $userDevice): static
+    {
+        if ($this->userDevices->removeElement($userDevice)) {
+            // set the owning side to null (unless already changed)
+            if ($userDevice->getUser() === $this) {
+                $userDevice->setUser(null);
             }
         }
 
