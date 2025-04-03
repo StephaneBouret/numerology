@@ -73,13 +73,13 @@ class Courses
     /**
      * @var Collection<int, Lesson>
      */
-    #[ORM\OneToMany(targetEntity: Lesson::class, mappedBy: 'courses')]
+    #[ORM\OneToMany(targetEntity: Lesson::class, mappedBy: 'courses', cascade: ['remove'])]
     private Collection $lessons;
 
     /**
      * @var Collection<int, Comments>
      */
-    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'course')]
+    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'course', cascade: ['remove'])]
     private Collection $comments;
 
     #[ORM\Column]
