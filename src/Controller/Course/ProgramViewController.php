@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-final class SectionsController extends AbstractController
+final class ProgramViewController extends AbstractController
 {
     public function __construct(protected CoursesRepository $coursesRepository, protected ProgramRepository $programRepository, protected SectionsRepository $sectionsRepository, protected LessonRepository $lessonRepository, protected SectionDurationService $sectionDurationService)
     {}
