@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\About;
+use App\Entity\Answer;
 use App\Entity\Category;
 use App\Entity\Comments;
 use App\Entity\Company;
@@ -15,6 +16,7 @@ use App\Entity\User;
 use App\Entity\Program;
 use App\Entity\NewsLetter;
 use App\Entity\Purchase;
+use App\Entity\Question;
 use App\Entity\Sections;
 use App\Entity\Testimonial;
 use App\Entity\UserDevice;
@@ -53,10 +55,16 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Programmes', 'fas fa-list-check', Program::class);
         yield MenuItem::linkToCrud('Sections', 'fa-fw fas fa-section', Sections::class);
         yield MenuItem::linkToCrud('Cours', 'fas fa-book-open', Courses::class);
+        yield MenuItem::subMenu('Quiz', 'fa-solid fa-question')->setSubItems([
+            MenuItem::linkToCrud('Questions', 'fa-regular fa-circle-question', Question::class),
+            MenuItem::linkToCrud('Réponses', 'fas fa-reply', Answer::class),
+        ]);
         yield MenuItem::linkToCrud('Navigation', 'fa-solid fa-route', Navigation::class);
         yield MenuItem::linkToCrud('Commandes', 'fa-solid fa-cart-shopping', Purchase::class);
-        yield MenuItem::linkToCrud('Catégories des faqs', 'fa-solid fa-list', Category::class);
-        yield MenuItem::linkToCrud('Questions des faqs', 'fa-solid fa-comments', FaqContent::class);
+        yield MenuItem::subMenu('FAQs', 'fa-solid fa-circle-question')->setSubItems([
+            MenuItem::linkToCrud('Catégories des faqs', 'fa-solid fa-list', Category::class),
+            MenuItem::linkToCrud('Questions des faqs', 'fa-solid fa-comments', FaqContent::class),
+        ]);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
         yield MenuItem::linkToCrud('Newsletter', 'fa-solid fa-envelope-open-text', NewsLetter::class);
         yield MenuItem::linkToCrud('Contacts', 'fa-regular fa-envelope', Contact::class);

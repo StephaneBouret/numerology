@@ -136,6 +136,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\OneToMany(targetEntity: UserDevice::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $userDevices;
 
+    /**
+     * @var Collection<int, QuizResult>
+     */
+    #[ORM\OneToMany(targetEntity: QuizResult::class, mappedBy: 'user')]
+    private Collection $quizResults;
+
     public function __construct()
     {
         $this->lessons = new ArrayCollection();
@@ -144,6 +150,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         $this->purchases = new ArrayCollection();
         $this->testimonials = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
+        $this->quizResults = new ArrayCollection();
     }
 
     public function __toString()
@@ -564,6 +571,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
             // set the owning side to null (unless already changed)
             if ($userDevice->getUser() === $this) {
                 $userDevice->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QuizResult>
+     */
+    public function getQuizResults(): Collection
+    {
+        return $this->quizResults;
+    }
+
+    public function addQuizResult(QuizResult $quizResult): static
+    {
+        if (!$this->quizResults->contains($quizResult)) {
+            $this->quizResults->add($quizResult);
+            $quizResult->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuizResult(QuizResult $quizResult): static
+    {
+        if ($this->quizResults->removeElement($quizResult)) {
+            // set the owning side to null (unless already changed)
+            if ($quizResult->getUser() === $this) {
+                $quizResult->setUser(null);
             }
         }
 
