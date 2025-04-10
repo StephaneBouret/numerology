@@ -1910,6 +1910,488 @@ button.btn.btn-abandonment:hover {
 }
 
 /*--------------------------------------------------------------
+# Quiz Section
+--------------------------------------------------------------*/
+.evm5cb {
+    margin-bottom: 0;
+    -webkit-padding-start: 0;
+    padding-inline-start: 0;
+    list-style-type: none;
+}
+
+.bulleted--muted {
+    color: #59585A;
+}
+
+.pgxsnw {
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    border-bottom: 0 !important;
+}
+
+.i1e2w9 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #D6D6D7 !important;
+    border-radius: 0.5rem !important;
+}
+
+@media (max-width: 575.98px) {
+    .i1e2w9 {
+        margin-left: -20px !important;
+        margin-right: -20px !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+    }
+}
+
+.xr8n0b {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 20px !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0;
+    background-color: transparent;
+    border-bottom: none;
+}
+
+@media (min-width: 576px) {
+    .xr8n0b {
+        padding-left: 28px !important;
+        padding-right: 28px !important;
+        padding-top: 24px !important;
+    }
+}
+
+.xr8n0b:first-child {
+    border-radius: calc(0.5rem - 1px) calc(0.5rem - 1px) 0 0;
+}
+
+.card-pretitle {
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 8px !important;
+    color: #59585A !important;
+}
+
+.v7kke8 {
+    color: #2867bc;
+}
+
+.qhlr2m {
+    margin-bottom: 0;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #06040E;
+    font-size: 1.125rem;
+}
+
+.qmxaxv {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 20px !important;
+}
+
+@media (min-width: 576px) {
+    .qmxaxv {
+        padding-left: 28px !important;
+        padding-right: 28px !important;
+        padding-bottom: 24px !important;
+        padding-top: 24px !important;
+    }
+}
+
+ol.answer-group {
+    counter-reset: listStyle;
+    padding-left: 0 !important;
+}
+
+.answer-group .answer {
+    display: flex;
+    justify-content: center;
+    counter-increment: listStyle;
+    list-style: none;
+    padding: 0.375rem;
+    transition: all 0.1s cubic-bezier(0.5, 0.2, 0.9, 0.4);
+    border-radius: 0.5rem !important;
+}
+
+.answer-group .answer label {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 400;
+    padding-top: 8px;
+    width: 100%;
+    padding-left: 0 !important;
+    margin-bottom: 0 !important;
+    line-height: 1.35rem;
+}
+
+.answer-group .answer label::before {
+    align-content: center;
+    align-items: center;
+    align-self: start;
+    display: flex;
+    justify-content: center;
+    background-color: #EDEDED;
+    content: counter(listStyle, upper-alpha);
+    line-height: 36px !important;
+    margin-top: -8px;
+    font-weight: 500 !important;
+    margin-right: 12px !important;
+    border-radius: 50% !important;
+    min-width: 2.25rem;
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+.answer-group .answer:hover:not(.selected, .correct, .incorrect) label::before,
+.answer-group .option-group input[type=radio]:hover+.answer.option:not(.selected, .correct, .incorrect) label::before,
+.option-group .answer-group input[type=radio]:hover+.answer.option:not(.selected, .correct, .incorrect) label::before,
+.answer-group .option-group input[type=radio]:hover+input.option[type=radio]+.answer.option:not(.selected, .correct, .incorrect) label::before,
+.option-group .answer-group input[type=radio]:hover+input.option[type=radio]+.answer.option:not(.selected, .correct, .incorrect) label::before,
+.answer-group .answer:focus:not(.selected, .correct, .incorrect) label::before,
+.answer-group trix-toolbar .answer.trix-input:not(.selected, .correct, .incorrect):focus label::before,
+trix-toolbar .answer-group .answer.trix-input:not(.selected, .correct, .incorrect):focus label::before,
+.answer-group trix-toolbar [data-toggle=popover][aria-expanded=true] select.answer.trix-input:not(.selected, .correct, .incorrect) label::before,
+trix-toolbar [data-toggle=popover][aria-expanded=true] .answer-group select.answer.trix-input:not(.selected, .correct, .incorrect) label::before,
+.answer-group [data-toggle=popover][aria-expanded=true] trix-toolbar select.answer.trix-input:not(.selected, .correct, .incorrect) label::before,
+[data-toggle=popover][aria-expanded=true] trix-toolbar .answer-group select.answer.trix-input:not(.selected, .correct, .incorrect) label::before,
+.answer-group [data-toggle=popover][aria-expanded=true] select.answer:not(.selected, .correct, .incorrect) label::before,
+[data-toggle=popover][aria-expanded=true] .answer-group select.answer:not(.selected, .correct, .incorrect) label::before,
+.answer-group .answer:active:not(.selected, .correct, .incorrect) label::before,
+.list-group.list-group-menu .list-group-item.active .list-group-icon:not(.image-overlay):not(.badge-img),
+.list-group.list-group-menu .list-group-item.active .list-group-icon-outline:not(.image-overlay):not(.badge-img),
+.list-group .list-group-item:hover .list-group-icon,
+.list-group .option-group input[type=radio]:hover+.list-group-item.option .list-group-icon,
+.option-group .list-group input[type=radio]:hover+.list-group-item.option .list-group-icon,
+.list-group .option-group input[type=radio]:hover+input.option[type=radio]+.list-group-item.option .list-group-icon,
+.option-group .list-group input[type=radio]:hover+input.option[type=radio]+.list-group-item.option .list-group-icon,
+.list-group .list-group-item:hover .list-group-icon-outline,
+.list-group .option-group input[type=radio]:hover+.list-group-item.option .list-group-icon-outline,
+.option-group .list-group input[type=radio]:hover+.list-group-item.option .list-group-icon-outline,
+.list-group .option-group input[type=radio]:hover+input.option[type=radio]+.list-group-item.option .list-group-icon-outline,
+.option-group .list-group input[type=radio]:hover+input.option[type=radio]+.list-group-item.option .list-group-icon-outline,
+.list-group .list-group-item:focus .list-group-icon,
+.list-group trix-toolbar .list-group-item.trix-input:focus .list-group-icon,
+trix-toolbar .list-group .list-group-item.trix-input:focus .list-group-icon,
+.list-group trix-toolbar [data-toggle=popover][aria-expanded=true] select.list-group-item.trix-input .list-group-icon,
+trix-toolbar [data-toggle=popover][aria-expanded=true] .list-group select.list-group-item.trix-input .list-group-icon,
+.list-group [data-toggle=popover][aria-expanded=true] trix-toolbar select.list-group-item.trix-input .list-group-icon,
+[data-toggle=popover][aria-expanded=true] trix-toolbar .list-group select.list-group-item.trix-input .list-group-icon,
+.list-group [data-toggle=popover][aria-expanded=true] select.list-group-item .list-group-icon,
+[data-toggle=popover][aria-expanded=true] .list-group select.list-group-item .list-group-icon,
+.list-group .list-group-item:focus .list-group-icon-outline,
+.list-group trix-toolbar .list-group-item.trix-input:focus .list-group-icon-outline,
+trix-toolbar .list-group .list-group-item.trix-input:focus .list-group-icon-outline,
+.list-group trix-toolbar [data-toggle=popover][aria-expanded=true] select.list-group-item.trix-input .list-group-icon-outline,
+trix-toolbar [data-toggle=popover][aria-expanded=true] .list-group select.list-group-item.trix-input .list-group-icon-outline,
+.list-group [data-toggle=popover][aria-expanded=true] trix-toolbar select.list-group-item.trix-input .list-group-icon-outline,
+[data-toggle=popover][aria-expanded=true] trix-toolbar .list-group select.list-group-item.trix-input .list-group-icon-outline,
+.list-group [data-toggle=popover][aria-expanded=true] select.list-group-item .list-group-icon-outline,
+[data-toggle=popover][aria-expanded=true] .list-group select.list-group-item .list-group-icon-outline,
+.list-group .list-group-item:active .list-group-icon,
+.list-group .list-group-item:active .list-group-icon-outline,
+.list-group .list-group-item.active .list-group-icon,
+.list-group .list-group-item.active .list-group-icon-outline,
+.icon-backdrop-inner-ring,
+.dropdown-item:hover .thumb,
+.dropdown-item:hover .media-library-results .result-thumbnail,
+.media-library-results .dropdown-item:hover .result-thumbnail,
+.dropdown-item:hover .media-library-results .result-icon,
+.media-library-results .dropdown-item:hover .result-icon,
+.dropdown-item:hover .uploader .uploader-thumbnail,
+.uploader .dropdown-item:hover .uploader-thumbnail,
+.dropdown-item:hover .uploader .uploader-icon,
+.uploader .dropdown-item:hover .uploader-icon,
+.option-group input[type=radio]:hover+.dropdown-item.option .thumb,
+.option-group input[type=radio]:hover+.dropdown-item.option .media-library-results .result-thumbnail,
+.media-library-results .option-group input[type=radio]:hover+.dropdown-item.option .result-thumbnail,
+.option-group input[type=radio]:hover+.dropdown-item.option .media-library-results .result-icon,
+.media-library-results .option-group input[type=radio]:hover+.dropdown-item.option .result-icon,
+.option-group input[type=radio]:hover+.dropdown-item.option .uploader .uploader-thumbnail,
+.uploader .option-group input[type=radio]:hover+.dropdown-item.option .uploader-thumbnail,
+.option-group input[type=radio]:hover+.dropdown-item.option .uploader .uploader-icon,
+.uploader .option-group input[type=radio]:hover+.dropdown-item.option .uploader-icon,
+.option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .thumb,
+.option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .media-library-results .result-thumbnail,
+.media-library-results .option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .result-thumbnail,
+.option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .media-library-results .result-icon,
+.media-library-results .option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .result-icon,
+.option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .uploader .uploader-thumbnail,
+.uploader .option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .uploader-thumbnail,
+.option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .uploader .uploader-icon,
+.uploader .option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .uploader-icon,
+.dropdown-item:hover .list-group .list-group-item .list-group-icon,
+.option-group input[type=radio]:hover+.dropdown-item.option .list-group .list-group-item .list-group-icon,
+.option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .list-group .list-group-item .list-group-icon,
+.dropdown-item:hover .list-group .list-group-item .list-group-icon-outline,
+.option-group input[type=radio]:hover+.dropdown-item.option .list-group .list-group-item .list-group-icon-outline,
+.option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .list-group .list-group-item .list-group-icon-outline,
+.list-group .list-group-item .dropdown-item:hover .list-group-icon,
+.list-group .list-group-item .option-group input[type=radio]:hover+.dropdown-item.option .list-group-icon,
+.option-group .list-group .list-group-item input[type=radio]:hover+.dropdown-item.option .list-group-icon,
+.list-group .list-group-item .option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .list-group-icon,
+.option-group .list-group .list-group-item input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .list-group-icon,
+.list-group .list-group-item .dropdown-item:hover .list-group-icon-outline,
+.list-group .list-group-item .option-group input[type=radio]:hover+.dropdown-item.option .list-group-icon-outline,
+.option-group .list-group .list-group-item input[type=radio]:hover+.dropdown-item.option .list-group-icon-outline,
+.list-group .list-group-item .option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .list-group-icon-outline,
+.option-group .list-group .list-group-item input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .list-group-icon-outline,
+.dropdown-item:focus .thumb,
+trix-toolbar .dropdown-item.trix-input:focus .thumb,
+trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .thumb,
+[data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .thumb,
+.dropdown-item:focus .media-library-results .result-thumbnail,
+trix-toolbar .dropdown-item.trix-input:focus .media-library-results .result-thumbnail,
+trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .media-library-results .result-thumbnail,
+[data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .media-library-results .result-thumbnail,
+.media-library-results .dropdown-item:focus .result-thumbnail,
+.media-library-results trix-toolbar .dropdown-item.trix-input:focus .result-thumbnail,
+trix-toolbar .media-library-results .dropdown-item.trix-input:focus .result-thumbnail,
+.media-library-results trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .result-thumbnail,
+trix-toolbar [data-toggle=popover][aria-expanded=true] .media-library-results select.dropdown-item.trix-input .result-thumbnail,
+.media-library-results [data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .result-thumbnail,
+[data-toggle=popover][aria-expanded=true] trix-toolbar .media-library-results select.dropdown-item.trix-input .result-thumbnail,
+.dropdown-item:focus .media-library-results .result-icon,
+trix-toolbar .dropdown-item.trix-input:focus .media-library-results .result-icon,
+trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .media-library-results .result-icon,
+[data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .media-library-results .result-icon,
+.media-library-results .dropdown-item:focus .result-icon,
+.media-library-results trix-toolbar .dropdown-item.trix-input:focus .result-icon,
+trix-toolbar .media-library-results .dropdown-item.trix-input:focus .result-icon,
+.media-library-results trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .result-icon,
+trix-toolbar [data-toggle=popover][aria-expanded=true] .media-library-results select.dropdown-item.trix-input .result-icon,
+.media-library-results [data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .result-icon,
+[data-toggle=popover][aria-expanded=true] trix-toolbar .media-library-results select.dropdown-item.trix-input .result-icon,
+.dropdown-item:focus .uploader .uploader-thumbnail,
+trix-toolbar .dropdown-item.trix-input:focus .uploader .uploader-thumbnail,
+trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .uploader .uploader-thumbnail,
+[data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .uploader .uploader-thumbnail,
+.uploader .dropdown-item:focus .uploader-thumbnail,
+.uploader trix-toolbar .dropdown-item.trix-input:focus .uploader-thumbnail,
+trix-toolbar .uploader .dropdown-item.trix-input:focus .uploader-thumbnail,
+.uploader trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .uploader-thumbnail,
+trix-toolbar [data-toggle=popover][aria-expanded=true] .uploader select.dropdown-item.trix-input .uploader-thumbnail,
+.uploader [data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .uploader-thumbnail,
+[data-toggle=popover][aria-expanded=true] trix-toolbar .uploader select.dropdown-item.trix-input .uploader-thumbnail,
+.dropdown-item:focus .uploader .uploader-icon,
+trix-toolbar .dropdown-item.trix-input:focus .uploader .uploader-icon,
+trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .uploader .uploader-icon,
+[data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .uploader .uploader-icon,
+.uploader .dropdown-item:focus .uploader-icon,
+.uploader trix-toolbar .dropdown-item.trix-input:focus .uploader-icon,
+trix-toolbar .uploader .dropdown-item.trix-input:focus .uploader-icon,
+.uploader trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .uploader-icon,
+trix-toolbar [data-toggle=popover][aria-expanded=true] .uploader select.dropdown-item.trix-input .uploader-icon,
+.uploader [data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .uploader-icon,
+[data-toggle=popover][aria-expanded=true] trix-toolbar .uploader select.dropdown-item.trix-input .uploader-icon,
+[data-toggle=popover][aria-expanded=true] select.dropdown-item .thumb,
+[data-toggle=popover][aria-expanded=true] select.dropdown-item .media-library-results .result-thumbnail,
+.media-library-results [data-toggle=popover][aria-expanded=true] select.dropdown-item .result-thumbnail,
+[data-toggle=popover][aria-expanded=true] select.dropdown-item .media-library-results .result-icon,
+.media-library-results [data-toggle=popover][aria-expanded=true] select.dropdown-item .result-icon,
+[data-toggle=popover][aria-expanded=true] select.dropdown-item .uploader .uploader-thumbnail,
+.uploader [data-toggle=popover][aria-expanded=true] select.dropdown-item .uploader-thumbnail,
+[data-toggle=popover][aria-expanded=true] select.dropdown-item .uploader .uploader-icon,
+.uploader [data-toggle=popover][aria-expanded=true] select.dropdown-item .uploader-icon,
+.dropdown-item:focus .list-group .list-group-item .list-group-icon,
+trix-toolbar .dropdown-item.trix-input:focus .list-group .list-group-item .list-group-icon,
+trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .list-group .list-group-item .list-group-icon,
+[data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .list-group .list-group-item .list-group-icon,
+[data-toggle=popover][aria-expanded=true] select.dropdown-item .list-group .list-group-item .list-group-icon,
+.dropdown-item:focus .list-group .list-group-item .list-group-icon-outline,
+trix-toolbar .dropdown-item.trix-input:focus .list-group .list-group-item .list-group-icon-outline,
+trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .list-group .list-group-item .list-group-icon-outline,
+[data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .list-group .list-group-item .list-group-icon-outline,
+[data-toggle=popover][aria-expanded=true] select.dropdown-item .list-group .list-group-item .list-group-icon-outline,
+.list-group .list-group-item .dropdown-item:focus .list-group-icon,
+.list-group .list-group-item trix-toolbar .dropdown-item.trix-input:focus .list-group-icon,
+trix-toolbar .list-group .list-group-item .dropdown-item.trix-input:focus .list-group-icon,
+.list-group .list-group-item trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .list-group-icon,
+trix-toolbar [data-toggle=popover][aria-expanded=true] .list-group .list-group-item select.dropdown-item.trix-input .list-group-icon,
+.list-group .list-group-item [data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .list-group-icon,
+[data-toggle=popover][aria-expanded=true] trix-toolbar .list-group .list-group-item select.dropdown-item.trix-input .list-group-icon,
+.list-group .list-group-item [data-toggle=popover][aria-expanded=true] select.dropdown-item .list-group-icon,
+[data-toggle=popover][aria-expanded=true] .list-group .list-group-item select.dropdown-item .list-group-icon,
+.list-group .list-group-item .dropdown-item:focus .list-group-icon-outline,
+.list-group .list-group-item trix-toolbar .dropdown-item.trix-input:focus .list-group-icon-outline,
+trix-toolbar .list-group .list-group-item .dropdown-item.trix-input:focus .list-group-icon-outline,
+.list-group .list-group-item trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .list-group-icon-outline,
+trix-toolbar [data-toggle=popover][aria-expanded=true] .list-group .list-group-item select.dropdown-item.trix-input .list-group-icon-outline,
+.list-group .list-group-item [data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .list-group-icon-outline,
+[data-toggle=popover][aria-expanded=true] trix-toolbar .list-group .list-group-item select.dropdown-item.trix-input .list-group-icon-outline,
+.list-group .list-group-item [data-toggle=popover][aria-expanded=true] select.dropdown-item .list-group-icon-outline,
+[data-toggle=popover][aria-expanded=true] .list-group .list-group-item select.dropdown-item .list-group-icon-outline,
+.dropdown-item:hover .icon,
+.option-group input[type=radio]:hover+.dropdown-item.option .icon,
+.option-group input[type=radio]:hover+input.option[type=radio]+.dropdown-item.option .icon,
+.dropdown-item:focus .icon,
+trix-toolbar .dropdown-item.trix-input:focus .icon,
+trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix-input .icon,
+[data-toggle=popover][aria-expanded=true] trix-toolbar select.dropdown-item.trix-input .icon,
+[data-toggle=popover][aria-expanded=true] select.dropdown-item .icon {
+    background-color: #fff !important;
+}
+
+.answer-group .answer:hover,
+.answer-group .option-group input[type=radio]:hover+.answer.option,
+.option-group .answer-group input[type=radio]:hover+.answer.option,
+.answer-group .option-group input[type=radio]:hover+input.option[type=radio]+.answer.option,
+.option-group .answer-group input[type=radio]:hover+input.option[type=radio]+.answer.option,
+.answer-group .answer:focus,
+.answer-group [data-toggle=popover][aria-expanded=true] select.answer,
+[data-toggle=popover][aria-expanded=true] .answer-group select.answer,
+.answer-group .answer:active {
+    background-color: #EDEDED;
+}
+
+.answer-group .answer input {
+    display: none;
+}
+
+.answer-group .answer.selected {
+    background-color: #EDEDED;
+    box-shadow: inset 0px 0px 0px 2px #06040E, inset 0px 0px 0px 4px #ffffff;
+}
+
+.answer-group .answer.selected label::before {
+    background-color: #06040E;
+    color: #ffffff;
+}
+
+.answer-group .answer.correct {
+    background-color: #EBF5F1;
+    box-shadow: inset 0px 0px 0px 2px #006D3C, inset 0px 0px 0px 4px #ffffff;
+    color: #012816;
+}
+
+.answer-group .answer.correct label::before {
+    background-color: #006D3C;
+    color: #ffffff;
+}
+
+.answer-group .answer label div {
+    margin-left: auto !important;
+}
+
+.answer-group .answer label div {
+    padding-left: 4px !important;
+}
+
+.answer-group .answer.incorrect {
+    background-color: #F6EBEB;
+    box-shadow: inset 0px 0px 0px 2px #A01910, inset 0px 0px 0px 4px #ffffff;
+    color: #380501;
+}
+
+.answer-group .answer.incorrect label::before {
+    background-color: #A01910;
+    color: #ffffff;
+}
+
+.pgb4wn {
+    padding: 0 0;
+    background-color: transparent;
+    border: 1px solid #D6D6D7;
+}
+
+.pgb4wn:last-child {
+    border-radius: 0 0 calc(0.5rem - 1px) calc(0.5rem - 1px);
+}
+
+.sp7tan {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+#submit-quiz-button,
+#next-question-button,
+#view-results-button {
+    background-color: #212529 !important;
+    border-color: #212529 !important;
+    color: #FFF !important;
+}
+
+.uvvne9 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #D6D6D7;
+    border-radius: 0.5rem
+}
+
+@media (max-width: 575.98px) {
+    .uvvne9 {
+        margin-left: -20px;
+        margin-right: -20px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+}
+
+.gnnea9 {
+    --item-gap: 0 0.375rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 0;
+    -webkit-padding-start: 0;
+    padding-inline-start: 0;
+    list-style-type: none;
+}
+
+.gnnea9>span:not(:first-child)::before {
+    content: "•";
+    margin: var(--item-gap);
+    color: #98989A;
+}
+
+.mr-2 {
+    margin-right: 8px !important;
+}
+
+.badge-red {
+    fill: #A01910;
+}
+
+.hzpmbv {
+    color: #212529 !important;
+    background-color: #EDEDED !important;
+    border-color: #EDEDED !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+}
+
+.hzpmbv svg+span {
+    margin-left: 0.25rem;
+}
+
+.hzpmbv:hover {
+    color: #212529 !important;
+    background-color: #d4d4d4 !important;
+    border-color: #d4d4d4 !important;
+}
+
+/*--------------------------------------------------------------
 # Purchase checkout
 --------------------------------------------------------------*/
 .ykzkxt {

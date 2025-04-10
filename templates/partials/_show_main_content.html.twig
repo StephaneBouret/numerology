@@ -1,5 +1,4 @@
-<div
-	class="main-content">
+<div class="main-content">
 	{{ render(controller('App\\Controller\\SearchController::searchBar')) }}
 	<div id="lesson-header">
 		<div class="d-flex">
@@ -49,29 +48,29 @@
 		</div>
 	</div>
 	<div id="lesson-content">
-	{% if is_granted('VIEW_COURSE', course) %}		
-		{% if course.contentType == constant('App\\Entity\\Courses::TYPE_TWIG') %}
-			{{ fileContent|raw }}
+		{% if is_granted('VIEW_COURSE', course) %}
+			{% if course.contentType == constant('App\\Entity\\Courses::TYPE_TWIG') %}
+				{{ fileContent|raw }}
+			{% endif %}
+			{% if course.contentType == constant('App\\Entity\\Courses::TYPE_LINK') %}
+				{{ fileContent|raw }}
+			{% endif %}
+			{% if course.contentType == constant('App\\Entity\\Courses::TYPE_QUIZ') %}
+				{% if quizResults is not empty %}
+					{{ include('partials/quiz/_results.html.twig', {
+						'quizResults': quizResults,
+						'totalQuestions': totalQuestions
+					}) }}
+				{% else %}
+					{% include "partials/quiz/_show.html.twig" %}
+				{% endif %}
+			{% endif %}
+			{% if course.contentType == constant('App\\Entity\\Courses::TYPE_VIDEO') %}
+				{% include "partials/_video.html.twig" %}
+			{% endif %}
+		{% else %}
+			{% include "partials/_locked.html.twig" %}
 		{% endif %}
-		{% if course.contentType == constant('App\\Entity\\Courses::TYPE_LINK') %}
-			{{ fileContent|raw }}
-		{% endif %}
-		{# {% if course.contentType == constant('App\\Entity\\Courses::TYPE_QUIZ') %}
-									{% if quizResults is not empty %}
-										{{ include('partials/quiz/_results.html.twig', {
-						        			'quizResults': quizResults,
-						        			'totalQuestions': totalQuestions
-						    			}) }}
-									{% else %}
-										{% include "partials/quiz/_show.html.twig" %}
-									{% endif %}
-								{% endif %} #}
-		{% if course.contentType == constant('App\\Entity\\Courses::TYPE_VIDEO') %}
-			{% include "partials/_video.html.twig" %}
-		{% endif %}
-	{% else %}
-		{% include "partials/_locked.html.twig" %}
-	{% endif %}
 	</div>
 	<div class="spacer-section"></div>
 	<div class="text-longform" data-controller="richtext">

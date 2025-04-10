@@ -1,0 +1,54 @@
+<div class="d-flex flex-wrap align-items-center mt-1 bulleted evm5cb">
+	<ul class="bulleted bulleted--muted evm5cb align-items-center">
+		<li class="bulleted-item">
+			<span>{{ totalQuestions }}
+				questions</span>
+		</li>
+	</ul>
+</div>
+<div class="uvvne9 mt-4">
+	<div class="xr8n0b">
+		<div class="d-flex justify-content-between align-items-center">
+			<div>
+				<div class="qhlr2m">Historique du quiz</div>
+			</div>
+		</div>
+	</div>
+	<div class="qmxaxv">
+		{% for result in quizResults %}
+			<div class="d-flex align-items-center mb-3">
+				<div class="mr-2">
+					{% if result.score == result.section.questions|length %}
+						<div style="margin-top: -3px;">
+							{% include "partials/buttons/_quiz_correct_svg.html.twig" %}
+						</div>
+					{% else %}
+						<div style="margin-top: -3px;" class="badge-red">
+							{% include "partials/buttons/_quiz_incorrect_svg.html.twig" %}
+						</div>
+					{% endif %}
+				</div>
+				<span class="gnnea9">
+					<span>{{ result.completedAt|format_datetime('long', 'none', locale='fr') }}</span>
+					<span class="text-muted">{{ result.score }}/{{ result.section.questions|length }}
+						correctes</span>
+				</span>
+			</div>
+		{% endfor %}
+	</div>
+</div>
+<div>
+	<div class="qmxaxv pe-0">
+		<nav class="btn-row sp7tan justify-content-end">
+			{% include "partials/_navigation.html.twig" %}
+			<span>
+				<a href="{{ path('courses_quiz_retry', {'program_slug': course.program.slug, 'section_slug': course.section.slug, 'slug': course.slug}) }}" class="hzpmbv btn btn-md btn-secondary btn-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16" class="">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M1.99977 15.75C1.58555 15.75 1.24977 15.4142 1.24977 15V10.9999C1.24977 10.5856 1.58555 10.2499 1.99977 10.2499H6.49977C6.91398 10.2499 7.24977 10.5856 7.24977 10.9999C7.24977 11.4141 6.91398 11.7499 6.49977 11.7499H3.69164C5.01046 12.9775 6.37715 13.5093 7.60582 13.6213C9.20371 13.7669 10.6254 13.2093 11.5047 12.4366C12.4169 11.6349 12.8503 10.761 13.0585 10.0954C13.163 9.76109 13.2107 9.47904 13.2324 9.28615C13.2432 9.1899 13.2474 9.11652 13.249 9.07078C13.2498 9.04793 13.25 9.03206 13.25 9.02378L13.25 9.01748C13.2403 8.60563 13.565 8.26263 13.9773 8.2503C14.3914 8.23792 14.7371 8.56352 14.7494 8.97755L13.9998 8.99997C14.7494 8.97755 14.7494 8.97718 14.7494 8.97755L14.7495 8.97907L14.7495 8.9808L14.7496 8.98487L14.7498 8.99544L14.75 9.02612C14.75 9.05072 14.7495 9.08357 14.7481 9.12401C14.7452 9.20484 14.7384 9.31634 14.723 9.45328C14.6924 9.72678 14.6273 10.1044 14.4901 10.5432C14.2146 11.4239 13.648 12.5499 12.4949 13.5634C11.3087 14.6058 9.48047 15.2983 7.4697 15.1151C5.90859 14.9728 4.26977 14.3067 2.74977 12.9213V15C2.74977 15.4142 2.41398 15.75 1.99977 15.75ZM2.0224 7.7497C1.60837 7.76208 1.2627 7.43648 1.25032 7.02245L1.99998 7.00003C1.25032 7.02245 1.25033 7.02282 1.25032 7.02245L1.25028 7.02093L1.25023 7.0192L1.25013 7.01513L1.24994 7.00456L1.24976 6.97388C1.24979 6.94928 1.25025 6.91643 1.25168 6.87599C1.25455 6.79516 1.26136 6.68366 1.27672 6.54672C1.30738 6.27322 1.37243 5.8956 1.50969 5.45679C1.78516 4.57612 2.35174 3.45009 3.50487 2.43665C4.69101 1.3942 6.51928 0.701709 8.53005 0.884931C10.0912 1.02718 11.73 1.69327 13.25 3.07868V1C13.25 0.585787 13.5858 0.25 14 0.25C14.4142 0.25 14.75 0.585787 14.75 1V5.00014C14.75 5.41435 14.4142 5.75014 14 5.75014H9.49998C9.08577 5.75014 8.74998 5.41435 8.74998 5.00014C8.74998 4.58592 9.08577 4.25014 9.49998 4.25014H12.3081C10.9893 3.02248 9.6226 2.4907 8.39393 2.37874C6.79604 2.23314 5.3743 2.79065 4.4951 3.56335C3.58289 4.36506 3.14947 5.23905 2.94128 5.9046C2.83671 6.23891 2.789 6.52096 2.76738 6.71385C2.75659 6.8101 2.75236 6.88348 2.75074 6.92922C2.74993 6.95207 2.74977 6.96794 2.74975 6.97623L2.74978 6.98248C2.75948 7.39435 2.43481 7.73737 2.0224 7.7497Z"></path>
+					</svg>
+					<span>Repasser le quiz</span>
+				</a>
+			</span>
+		</nav>
+	</div>
+</div>

@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\QuestionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\QuestionRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
@@ -112,5 +112,17 @@ class Question
         }
 
         return $this;
+    }
+
+    public function getCorrectAnswer(): ?Answer
+    {
+        foreach ($this->answers as $answer) {
+            // Supposons que vous ayez une méthode isCorrect() dans la classe Answer
+            if ($answer->isCorrect()) {
+                return $answer;
+            }
+        }
+
+        return null; // Si aucune réponse n'est correcte
     }
 }

@@ -12,11 +12,12 @@ use App\Repository\LessonRepository;
 use App\Repository\NavigationRepository;
 use App\Repository\SectionsRepository;
 use App\Service\CourseFileService;
+use App\Service\QuizResultService;
+use App\Service\QuizService;
 use App\Service\SectionDurationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ final class CoursesController extends AbstractController
 
     // #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette page')]
     #[Route('/courses/{program_slug}/{section_slug}/{slug}', name: 'courses_show', priority: -1)]
-    public function show($slug, Request $request, NavigationRepository $navigationRepository, CourseFileService $courseFileService, CommentsRepository $commentsRepository): Response
+    public function show($slug, $section_slug, Request $request, NavigationRepository $navigationRepository, CourseFileService $courseFileService, CommentsRepository $commentsRepository, QuizService $quizService, QuizResultService $quizResultService): Response
     {
         $currentUrl = $request->getUri();
         $response = new Response();
@@ -62,6 +63,28 @@ final class CoursesController extends AbstractController
 
         // On veut récupérer la leçon en-cours par l'utilisateur connecté
         $lesson = $this->lessonRepository->getLessonByUserByCourse($user, $course);
+
+        // Partie Quiz
+        // Récupération des questions du quiz pour la section en cours
+        $section = $this->sectionsRepository->findOneBy(['slug' => $section_slug]);
+        if (!$section) {
+            throw $this->createNotFoundException("La section demandée n'existe pas");
+        }
+        $quizData = $quizService->getQuizData($section);
+        // On récupère la dernière tentative de quiz de l'utilisateur pour cette section
+        $lastAttempt = $quizResultService->getLastAttemptId($user, $section_slug);
+        $lastAttemptId = $lastAttempt ? $lastAttempt['id'] : null;
+        // Initialisation de $attemptId à une valeur par défaut si aucune tentative n'est trouvée
+        $attemptId = $request->get('attemptId') ?? $lastAttemptId ?? 0;
+
+        // Condition pour afficher les résultats
+        $lastAttemptScore = $lastAttempt ? $lastAttempt['score'] : 0;
+        $displayResults = (!$attemptId && $lastAttemptScore > 0) || ($attemptId && $attemptId == $lastAttemptId && $lastAttemptScore > 0);
+
+        // Si on doit afficher les résultats, on récupère les résultats de la dernière tentative
+        $quizAttemptResults = $displayResults
+            ? $quizResultService->getQuizAttemptResults($user, $lastAttemptId)
+            : ['quizResults' => [], 'totalQuestions' => count($section->getQuestions())];
 
         $form = $this->createForm(ButtonFormType::class);
 
@@ -107,6 +130,13 @@ final class CoursesController extends AbstractController
             'countComments' => $countComments,
             'navigation' => $navigation,
             'sectionsTotalDuration' => $sectionsTotalDuration,
+            'questions' => $quizData['questions'],
+            'count' => $quizData['count'],
+            'csrf_token' => $quizData['csrf_token'],
+            'section' => $section,
+            'quizResults' => $quizAttemptResults['quizResults'],
+            'totalQuestions' => $quizAttemptResults['totalQuestions'],
+            'attemptId' => $attemptId,
         ], $response);
     }
 }
