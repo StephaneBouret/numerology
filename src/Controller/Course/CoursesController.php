@@ -75,7 +75,7 @@ final class CoursesController extends AbstractController
         $lastAttempt = $quizResultService->getLastAttemptId($user, $section_slug);
         $lastAttemptId = $lastAttempt ? $lastAttempt['id'] : null;
         // Initialisation de $attemptId à une valeur par défaut si aucune tentative n'est trouvée
-        $attemptId = $request->get('attemptId') ?? $lastAttemptId ?? 0;
+        $attemptId = $request->get('attemptId') ?? $lastAttemptId ?? 0; // Par défaut à 0
 
         // Condition pour afficher les résultats
         $lastAttemptScore = $lastAttempt ? $lastAttempt['score'] : 0;

@@ -6,7 +6,6 @@ use App\Repository\AnswerRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\SectionsRepository;
 use App\Service\QuizResultService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,8 +18,7 @@ class QuizController extends AbstractController
         Request $request,
         QuestionRepository $questionRepository,
         SectionsRepository $sectionsRepository,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         try {
             $data = json_decode($request->getContent(), true);
 
@@ -67,8 +65,12 @@ class QuizController extends AbstractController
     }
 
     #[Route('/quiz/finalize', name: 'quiz_finalize', methods: ['GET', 'POST'])]
-    public function finalizeQuiz(Request $request, EntityManagerInterface $em, AnswerRepository $answerRepository, SectionsRepository $sectionsRepository, QuizResultService $quizResultService): JsonResponse
-    {
+    public function finalizeQuiz(
+        Request $request,
+        AnswerRepository $answerRepository,
+        SectionsRepository $sectionsRepository,
+        QuizResultService $quizResultService
+    ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
         if ($data === null || empty($data['answers']) || empty($data['sectionId'])) {
@@ -95,12 +97,12 @@ class QuizController extends AbstractController
 
         // Calcul du score
         foreach ($data['answers'] as $answerData) {
-            if (empty($answerData['answerId'])) {
-                continue; // Si answerId est null ou vide, ignorer cette réponse
+            if (!isset($answerData['answerId']) || !isset($answerData['questionId'])) {
+                continue;
             }
 
             $selectedAnswer = $answerRepository->find($answerData['answerId']);
-            if ($selectedAnswer && $selectedAnswer->getIsCorrect()) {
+            if ($selectedAnswer && $selectedAnswer->isCorrect()) {
                 $score++;
             }
         }
@@ -112,7 +114,7 @@ class QuizController extends AbstractController
             'program_slug' => $programSlug,
             'section_slug' => $sectionSlug,
             'slug' => $courseSlug,
-            'attemptId' => $attemptId
+            'attemptId' => $attemptId,
         ]);
 
         return new JsonResponse([

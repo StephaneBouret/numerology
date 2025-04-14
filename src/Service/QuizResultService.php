@@ -2,19 +2,20 @@
 
 namespace App\Service;
 
+use App\Entity\User;
+use DateTimeImmutable;
 use App\Entity\QuizResult;
 use App\Entity\Sections;
-use App\Entity\User;
 use App\Repository\QuizResultRepository;
 use App\Repository\SectionsRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class QuizResultService
 {
     public function __construct(protected QuizResultRepository $quizResultRepository, protected EntityManagerInterface $em, protected SectionsRepository $sectionsRepository)
-    {}
+    {
+    }
 
     public function getQuizAttemptResults(User $user, int $attemptId): array
     {
@@ -86,14 +87,15 @@ class QuizResultService
         return $newAttempt->getId();
     }
 
-    public function getLastAttemptId(User $user, string $sectionSlug): ?int
+    public function getLastAttemptId(User $user, string $sectionSlug): ?array
     {
         $section = $this->sectionsRepository->findOneBy(['slug' => $sectionSlug]);
+
         if (!$section) {
             return null; // Gérer le cas où la section n'existe pas
         }
 
-        // récupérer la dernière tentative de quiz de l'utilisateur pour la section donnée
+        // Récupérer la dernière tentative de l'utilisateur pour cette section, sans filtrer par score
         $lastAttempt = $this->em->getRepository(QuizResult::class)
             ->createQueryBuilder('qr')
             ->where('qr.user = :user')

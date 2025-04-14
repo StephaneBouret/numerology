@@ -1,5 +1,5 @@
 <div class="d-flex flex-wrap align-items-center mt-1 bulleted evm5cb">
-	<ul class="bulleted bulleted-muted evm5cb align-items-center">
+	<ul class="bulleted bulleted--muted evm5cb align-items-center">
 		<li class="bulleted-item">
 			<span>{{ count }}
 				questions</span>
@@ -8,7 +8,7 @@
 </div>
 <!-- Élément caché pour stocker le sectionId et l'attemptId -->
 <div id="quiz-section-id" data-section-id="{{ section.id}}" data-attempt-id="{{ attemptId}}"></div>
-<form id="quiz-form" action="" method="POST">
+<form id="quiz-form" action="{{ path('quiz_submit') }}" method="POST">
 	<input type="hidden" name="_csrf_token" value="{{ csrf_token('quiz_submission') }}">
 	{% for question in questions %}
 		<div class="question card mt-4 pgxsnw {% if not loop.first %}d-none{% endif %}" data-question-id="{{ question.id }}">

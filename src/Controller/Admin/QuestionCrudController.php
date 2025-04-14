@@ -6,8 +6,8 @@ use App\Entity\Question;
 use App\Entity\Sections;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -49,12 +49,12 @@ class QuestionCrudController extends AbstractCrudController
                 ->setRequired(true)
                 ->setHelp('Sélectionnez la section à laquelle appartient cette question')
                 ->setQueryBuilder(
-                    fn(QueryBuilder $queryBuilder) => $queryBuilder->getEntityManager()->getRepository(Sections::class)->createQueryBuilder('s')->orderBy('s.name', 'ASC')
+                    fn (QueryBuilder $queryBuilder) => $queryBuilder->getEntityManager()->getRepository(Sections::class)->createQueryBuilder('s')->orderBy('s.name', 'ASC')
                 )
                 ->autocomplete(),
         ];
     }
-    
+
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
