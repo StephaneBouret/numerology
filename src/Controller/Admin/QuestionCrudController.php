@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 
 class QuestionCrudController extends AbstractCrudController
 {
@@ -44,6 +45,9 @@ class QuestionCrudController extends AbstractCrudController
                     ]])
                 ->setRequired(true)
                 ->setHelp('Le titre de la question est obligatoire !'),
+            BooleanField::new('multiple', 'Question à choix multiples ?')
+                ->renderAsSwitch(false)
+                ->setHelp('Cochez cette case si la question a plusieurs réponses possibles'),
             TextEditorField::new('explanation', 'Explication de la réponse'),
             AssociationField::new('section', 'Section associée')
                 ->setRequired(true)

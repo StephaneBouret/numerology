@@ -1995,6 +1995,14 @@ button.btn.btn-abandonment:hover {
     font-size: 1.125rem;
 }
 
+.avm7rj {
+    margin-bottom: 0;
+    color: #06040E;
+    font-size: 1rem;
+    font-weight: 600;
+    font-style: italic;
+}
+
 .qmxaxv {
     flex: 1 1 auto;
     min-height: 1px;
@@ -2389,6 +2397,35 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     color: #212529 !important;
     background-color: #d4d4d4 !important;
     border-color: #d4d4d4 !important;
+}
+
+.nane3u::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #FFF;
+    opacity: 0.5;
+    z-index: 4;
+}
+
+.nane3u .x5in8t {
+    position: absolute;
+    top: calc(40% - 1rem);
+    left: calc(40% - 1rem);
+    z-index: 5;
+}
+
+.quiz-form.loading {
+    opacity: 0.4;
+    pointer-events: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+    transition: opacity 0.3s ease;
 }
 
 /*--------------------------------------------------------------
@@ -2964,7 +3001,8 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     width: 90px;
     height: 90px;
     border-radius: 50%;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
     -o-object-position: center center;
     object-position: center center;
     margin: -40px 0 0 40px;
@@ -3440,7 +3478,7 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
 /*--------------------------------------------------------------
  # Devices
  --------------------------------------------------------------*/
- .gopaxn {
+.gopaxn {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -3545,7 +3583,8 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     flex-wrap: wrap;
     align-items: center;
     margin-bottom: 0;
-    padding-inline-start: 0;
+    -webkit-padding-start: 0;
+            padding-inline-start: 0;
     list-style-type: none;
 }
 

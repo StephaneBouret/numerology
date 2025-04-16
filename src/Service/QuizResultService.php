@@ -6,6 +6,7 @@ use App\Entity\User;
 use DateTimeImmutable;
 use App\Entity\QuizResult;
 use App\Entity\Sections;
+use App\Repository\AnswerRepository;
 use App\Repository\QuizResultRepository;
 use App\Repository\SectionsRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -87,7 +88,7 @@ class QuizResultService
         return $newAttempt->getId();
     }
 
-    public function getLastAttemptId(User $user, string $sectionSlug): ?array
+    public function getLastAttemptId(?User $user, string $sectionSlug): ?array
     {
         $section = $this->sectionsRepository->findOneBy(['slug' => $sectionSlug]);
 
@@ -141,5 +142,38 @@ class QuizResultService
         $this->em->flush();
 
         return $quizAttempt->getId();
+    }
+
+    public function calculateScore(array $answers, AnswerRepository $answerRepository): int
+    {
+        $score = 0;
+
+        foreach ($answers as $answerData) {
+            $questionId = $answerData['questionId'] ?? null;
+            $userAnswers = $answerData['answerId'] ?? null;
+
+            if (!$questionId || $userAnswers === null) {
+                continue;
+            }
+
+            $userAnswers = (array) $userAnswers;
+
+            $correctAnswers = $answerRepository->createQueryBuilder('a')
+                ->select('a.id')
+                ->where('a.question = :question')
+                ->andWhere('a.isCorrect = true')
+                ->setParameter('question', $questionId)
+                ->getQuery()
+                ->getSingleColumnResult();
+
+            sort($userAnswers);
+            sort($correctAnswers);
+
+            if ($userAnswers === $correctAnswers) {
+                $score++;
+            }
+        }
+
+        return $score;
     }
 }

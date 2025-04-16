@@ -26,40 +26,63 @@ class QuizController extends AbstractController
                 return new JsonResponse(['error' => 'Donnée JSON invalide'], 400);
             }
 
-            // Récupérer les données du payload
             $sectionId = $data['sectionId'] ?? null;
             $questionId = $data['questionId'] ?? null;
-            $answerId = $data['answerId'] ?? null;
+            $answerId = $data['answerId'] ?? null; // Peut être un entier ou un tableau
             $attemptId = $data['attemptId'] ?? 0;
 
-            if (!$sectionId || !$questionId || !$answerId) {
+            if (!$sectionId || !$questionId || $answerId === null) {
                 return new JsonResponse(['error' => 'Données manquantes'], 400);
             }
 
-            // Récupérer la section
             $section = $sectionsRepository->find($sectionId);
             if (!$section) {
                 return new JsonResponse(['error' => 'Section non trouvée'], 404);
             }
 
-            // Récupérer la question depuis la base de données
             $question = $questionRepository->find($questionId);
             if (!$question) {
                 return new JsonResponse(['error' => 'Question non trouvée'], 404);
             }
 
-            // Vérifier si la réponse de l'utilisateur est correcte
-            $correctAnswer = $question->getCorrectAnswer();
-            $isCorrect = ($answerId == $correctAnswer->getId());
+            $isMultiple = $question->isMultiple();
 
-            // Retourner la réponse avec le résultat de la validation
-            return new JsonResponse([
-                'correct' => $isCorrect,
-                'explanation' => $question->getExplanation(),
-                'attemptId' => $attemptId, // Retourner l'ID de la tentative
-            ]);
+            if ($isMultiple) {
+                // Réponses multiples : $answerId est un tableau
+                if (!is_array($answerId)) {
+                    return new JsonResponse(['error' => 'Format de réponse incorrect pour question multiple'], 400);
+                }
+
+                $correctAnswers = $question->getAnswers()
+                    ->filter(fn ($a) => $a->isCorrect())
+                    ->map(fn ($a) => $a->getId())
+                    ->toArray();
+
+                $userAnswers = array_map('intval', $answerId);
+                sort($userAnswers);
+                sort($correctAnswers);
+
+                $isCorrect = $userAnswers === $correctAnswers;
+
+                return new JsonResponse([
+                    'correct' => $isCorrect,
+                    'correctAnswers' => $correctAnswers,
+                    'explanation' => $question->getExplanation(),
+                    'attemptId' => $attemptId,
+                ]);
+            } else {
+                // Réponse unique
+                $correctAnswer = $question->getCorrectAnswer();
+                $isCorrect = ($answerId == $correctAnswer?->getId());
+
+                return new JsonResponse([
+                    'correct' => $isCorrect,
+                    'correctAnswers' => [$correctAnswer?->getId()],
+                    'explanation' => $question->getExplanation(),
+                    'attemptId' => $attemptId,
+                ]);
+            }
         } catch (\Exception $e) {
-            // Retourner une réponse JSON avec l'erreur
             return new JsonResponse(['error' => $e->getMessage()], 500);
         }
     }
@@ -78,38 +101,26 @@ class QuizController extends AbstractController
         }
 
         $user = $this->getUser();
-        $score = 0;
 
-        // Récupérer la section du quiz
         $section = $sectionsRepository->find($data['sectionId']);
         if (!$section) {
             return new JsonResponse(['error' => 'Section non trouvée'], 404);
         }
 
-        // Récupérer les slugs pour l'URL
+        // Calcul du score délégué au service
+        $score = $quizResultService->calculateScore($data['answers'], $answerRepository);
+
+        // Vérifier s'il existe une tentative incomplète (score 0)
+        $existingAttempt = $quizResultService->getLastAttemptId($user, $section->getSlug());
+
+        $attemptId = $quizResultService->handleQuizAttempt($existingAttempt, $user, $section, $score);
+
+        // Génération de l'URL de redirection vers la page de résultats
         $course = $section->getCourses()->last();
         $programSlug = $section->getProgram()->getSlug();
         $sectionSlug = $section->getSlug();
         $courseSlug = $course ? $course->getSlug() : null;
 
-        // Vérifier s'il existe une tentative incomplète (score 0)
-        $existingAttempt = $quizResultService->getLastAttemptId($user, $sectionSlug);
-
-        // Calcul du score
-        foreach ($data['answers'] as $answerData) {
-            if (!isset($answerData['answerId']) || !isset($answerData['questionId'])) {
-                continue;
-            }
-
-            $selectedAnswer = $answerRepository->find($answerData['answerId']);
-            if ($selectedAnswer && $selectedAnswer->isCorrect()) {
-                $score++;
-            }
-        }
-
-        $attemptId = $quizResultService->handleQuizAttempt($existingAttempt, $user, $section, $score);
-
-        // Génération de l'URL de redirection vers la page de résultats
         $redirectUrl = $this->generateUrl('courses_quiz_attempt', [
             'program_slug' => $programSlug,
             'section_slug' => $sectionSlug,

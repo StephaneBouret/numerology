@@ -33,6 +33,9 @@ class Question
     #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question', orphanRemoval: true)]
     private Collection $answers;
 
+    #[ORM\Column]
+    private ?bool $multiple = false;
+
     public function __construct()
     {
         $this->answers = new ArrayCollection();
@@ -124,5 +127,17 @@ class Question
         }
 
         return null; // Si aucune réponse n'est correcte
+    }
+
+    public function isMultiple(): ?bool
+    {
+        return $this->multiple;
+    }
+
+    public function setMultiple(bool $multiple): static
+    {
+        $this->multiple = $multiple;
+
+        return $this;
     }
 }

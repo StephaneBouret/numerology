@@ -6,12 +6,15 @@
 		</li>
 	</ul>
 </div>
+<div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+	<div class="progress-bar bg-dark" id="quiz-progress-bar" style="width: 0%"></div>
+</div>
 <!-- Élément caché pour stocker le sectionId et l'attemptId -->
 <div id="quiz-section-id" data-section-id="{{ section.id}}" data-attempt-id="{{ attemptId}}"></div>
-<form id="quiz-form" action="{{ path('quiz_submit') }}" method="POST">
+<form id="quiz-form" class="quiz-form" action="{{ path('quiz_submit') }}" method="POST">
 	<input type="hidden" name="_csrf_token" value="{{ csrf_token('quiz_submission') }}">
 	{% for question in questions %}
-		<div class="question card mt-4 pgxsnw {% if not loop.first %}d-none{% endif %}" data-question-id="{{ question.id }}">
+		<div class="question card mt-4 pgxsnw {% if not loop.first %}d-none{% endif %}" data-question-id="{{ question.id }}" data-multiple="{{ question.multiple ? '1' : '0' }}">
 			<div class="xr8n0b">
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
@@ -20,6 +23,9 @@
 							-
 							<span class="v7kke8">{{ question.title }}</span>
 						</div>
+						{% if question.multiple %}
+							<div class="avm7rj">Plusieurs réponses possibles</div>
+						{% endif %}
 					</div>
 				</div>
 			</div>
@@ -27,12 +33,17 @@
 				<ol class="answer-group">
 					{% for answer in question.answers %}
 						<li class="answer">
-							<input type="radio" name="question_{{ question.id }}" id="answer_{{ answer.id }}" value="{{ answer.id }}">
+							{% if question.multiple %}
+								<input type="checkbox" name="question_{{ question.id }}[]" id="answer_{{ answer.id }}" value="{{ answer.id }}">
+							{% else %}
+								<input type="radio" name="question_{{ question.id }}" id="answer_{{ answer.id }}" value="{{ answer.id }}">
+							{% endif %}
 							<label for="answer_{{ answer.id }}">{{ answer.content }}</label>
 						</li>
 					{% endfor %}
 				</ol>
 				<div class="explanation d-none">{{ question.explanation|raw }}</div>
+				<div class="feedback text-danger fw-bold d-none mt-2"></div>
 			</div>
 		</div>
 	{% endfor %}
@@ -63,3 +74,11 @@
 		</div>
 	</div>
 </form>
+<div id="quiz-loading-spinner" class="text-center d-none mt-4 nane3u">
+	<div class="x5in8t">
+		<div class="spinner-border text-dark" role="status">
+			<span class="visually-hidden">Chargement...</span>
+		</div>
+		<p class="mt-2">Chargement des résultats...</p>
+	</div>
+</div>
