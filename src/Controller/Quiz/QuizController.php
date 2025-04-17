@@ -107,13 +107,16 @@ class QuizController extends AbstractController
             return new JsonResponse(['error' => 'Section non trouvée'], 404);
         }
 
+        $startedAtString = $data['startedAt'] ?? null;
+        $startedAt = $startedAtString ? new \DateTimeImmutable($startedAtString) : null;
+
         // Calcul du score délégué au service
         $score = $quizResultService->calculateScore($data['answers'], $answerRepository);
 
         // Vérifier s'il existe une tentative incomplète (score 0)
         $existingAttempt = $quizResultService->getLastAttemptId($user, $section->getSlug());
 
-        $attemptId = $quizResultService->handleQuizAttempt($existingAttempt, $user, $section, $score);
+        $attemptId = $quizResultService->handleQuizAttempt($existingAttempt, $user, $section, $score, $startedAt);
 
         // Génération de l'URL de redirection vers la page de résultats
         $course = $section->getCourses()->last();

@@ -1,8 +1,9 @@
 <?php
  
  namespace App\Controller\Quiz;
- 
- use App\Service\LessonService;
+
+use App\Repository\SectionsRepository;
+use App\Service\LessonService;
  use App\Service\QuizResultService;
  use Symfony\Component\HttpFoundation\Response;
  use Symfony\Component\Routing\Attribute\Route;
@@ -11,7 +12,7 @@
  
  class QuizResultsController extends AbstractController
  {
-     public function __construct(protected QuizResultService $quizResultService, protected LessonService $lessonService)
+     public function __construct(protected QuizResultService $quizResultService, protected LessonService $lessonService, protected SectionsRepository $sectionsRepository)
      {}
  
      #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette page')]
@@ -36,9 +37,12 @@
      public function retryQuiz($program_slug, $section_slug, $slug): Response
      {
          $user = $this->getUser();
+
+         $section = $this->sectionsRepository->findOneBy(['slug' => $section_slug]);
  
          // Création d'une nouvelle tentative de quiz
-         $newAttemptId = $this->quizResultService->createNewAttempt($user, $section_slug, true);
+        //  $newAttemptId = $this->quizResultService->createNewAttempt($user, $section_slug, true);
+        $newAttemptId = $this->quizResultService->handleQuizAttempt(null, $user, $section, 0, new \DateTimeImmutable());
  
          // Redirige vers la page de quiz avec le nouvel ID de tentative
          return $this->redirectToRoute('courses_show', [

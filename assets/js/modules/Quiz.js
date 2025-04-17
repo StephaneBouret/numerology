@@ -16,6 +16,8 @@ export default class Quiz {
         this.sectionId = this.sectionElement.dataset.sectionId;
         this.questions = document.querySelectorAll('.question');
 
+        this.startedAtKey = `quiz_${this.sectionId}_startedAt`;       
+
         // ➕ Récupération de la progression
         this.answers = this.loadAnswersFromLocalStorage();
         this.currentQuestionIndex = this.findFirstUnansweredIndex() ?? 0;
@@ -113,7 +115,11 @@ export default class Quiz {
             });
             selectedAnswer.parentElement.classList.add('selected');
         }
-        // this.saveAnswersToLocalStorage();
+
+        if (!localStorage.getItem(this.startedAtKey)) {
+            const startedAt = new Date().toISOString();
+            localStorage.setItem(this.startedAtKey, startedAt);
+        }
 
         this.submitButton.classList.remove('disabled');
         this.submitButton.disabled = false;
@@ -167,16 +173,6 @@ export default class Quiz {
                     li.classList.remove('correct', 'incorrect');
                 });
 
-                // if (Array.isArray(data.correctAnswers)) {
-                //     selectedAnswerInputs.forEach(input => {
-                //         const isCorrect = data.correctAnswers.includes(parseInt(input.value, 10));
-                //         input.parentElement.classList.add(isCorrect ? 'correct' : 'incorrect');
-                //     });
-                // } else {
-                //     selectedAnswerInputs.forEach(input => {
-                //         input.parentElement.classList.add(data.correct ? 'correct' : 'incorrect');
-                //     });
-                // }
                 if (Array.isArray(data.correctAnswers)) {
                     const selectedIds = selectedValues.map(v => parseInt(v, 10));
                     const correctSet = new Set(data.correctAnswers);
@@ -257,6 +253,8 @@ export default class Quiz {
             };
         });
 
+        const startedAt = localStorage.getItem(this.startedAtKey);
+
         // 👉 Afficher le spinner
         if (this.spinner) this.spinner.classList.remove('d-none');
         const form = document.querySelector('.quiz-form');
@@ -270,7 +268,8 @@ export default class Quiz {
                 },
                 body: JSON.stringify({
                     sectionId: this.sectionId,
-                    answers: answers
+                    answers: answers,
+                    startedAt: startedAt,
                 })
             })
             .then(response => response.json())
@@ -335,6 +334,7 @@ export default class Quiz {
     clearLocalStorage() {
         localStorage.removeItem(this.getAnswersKey());
         localStorage.removeItem(this.getIndexKey());
+        localStorage.removeItem(this.startedAtKey);
     }
 
     findFirstUnansweredIndex() {

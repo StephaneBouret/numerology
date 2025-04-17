@@ -33,7 +33,23 @@
 					<span class="fw-bold">{{ (result.score / result.section.questions|length) * 100}}%</span>
 					<span class="text-muted">{{ result.score }}/{{ result.section.questions|length }}
 						correctes</span>
-				</span>
+					{% if result.startedAt and result.completedAt %}
+						{% set interval = result.startedAt.diff(result.completedAt) %}
+						<span class="text-muted ms-2 d-inline-flex align-items-center" style="font-size: 0.875rem;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+								<path d="M8 3.5a.5.5 0 0 1 .5.5v4l3 1.5a.5.5 0 0 1-.5.866l-3.5-1.75A.5.5 0 0 1 7.5 8V4a.5.5 0 0 1 .5-.5z"/>
+								<path d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16zM1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8z"/>
+							</svg>
+							Durée :
+							{% if interval.h > 0 %}
+								{{ interval.h }}h
+							{% endif %}
+							{% if interval.i > 0 %}
+								{{ interval.i }}min
+							{% endif %}
+							{{ interval.s }}s
+						</span>
+					{% endif %}
 			</div>
 		{% endfor %}
 	</div>
