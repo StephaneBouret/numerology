@@ -13,7 +13,7 @@ class QuizResult
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $completedAt = null;
 
     #[ORM\Column]
@@ -25,6 +25,9 @@ class QuizResult
     #[ORM\ManyToOne(inversedBy: 'quizResults')]
     private ?Sections $section = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $startedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,7 +38,7 @@ class QuizResult
         return $this->completedAt;
     }
 
-    public function setCompletedAt(\DateTimeImmutable $completedAt): static
+    public function setCompletedAt(?\DateTimeImmutable $completedAt): static
     {
         $this->completedAt = $completedAt;
 
@@ -74,6 +77,18 @@ class QuizResult
     public function setSection(?Sections $section): static
     {
         $this->section = $section;
+
+        return $this;
+    }
+
+    public function getStartedAt(): ?\DateTimeImmutable
+    {
+        return $this->startedAt;
+    }
+
+    public function setStartedAt(?\DateTimeImmutable $startedAt): static
+    {
+        $this->startedAt = $startedAt;
 
         return $this;
     }

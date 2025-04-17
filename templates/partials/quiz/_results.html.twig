@@ -30,6 +30,7 @@
 				</div>
 				<span class="gnnea9">
 					<span>{{ result.completedAt|format_datetime('long', 'none', locale='fr') }}</span>
+					<span class="fw-bold">{{ (result.score / result.section.questions|length) * 100}}%</span>
 					<span class="text-muted">{{ result.score }}/{{ result.section.questions|length }}
 						correctes</span>
 				</span>

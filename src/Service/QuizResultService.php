@@ -37,12 +37,19 @@ class QuizResultService
         $course = $section->getCourses()->last();
         $courseSlug = $course ? $course->getSlug() : null;
 
+        // $duration = null;
+        // if ($quizResult->getStartedAt() && $quizResult->getCompletedAt()) {
+        //     $interval = $quizResult->getStartedAt()->diff($quizResult->getCompletedAt());
+        //     $duration = $interval->format('%h heures %i minutes %s secondes');
+        // }
+
         return [
             'quizResults' => $quizResults,
             'totalQuestions' => $totalQuestions,
             'program_slug' => $programSlug,
             'section_slug' => $sectionSlug,
             'slug' => $courseSlug,
+            // 'duration' => $duration,
         ];
     }
 
