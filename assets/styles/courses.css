@@ -2422,9 +2422,15 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     opacity: 0.4;
     pointer-events: none;
     -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: opacity 0.3s ease;
+}
+
+.question.loading {
+    opacity: 0.5;
+    pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
@@ -3002,7 +3008,7 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     height: 90px;
     border-radius: 50%;
     -o-object-fit: cover;
-       object-fit: cover;
+    object-fit: cover;
     -o-object-position: center center;
     object-position: center center;
     margin: -40px 0 0 40px;
@@ -3584,7 +3590,7 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     align-items: center;
     margin-bottom: 0;
     -webkit-padding-start: 0;
-            padding-inline-start: 0;
+    padding-inline-start: 0;
     list-style-type: none;
 }
 

@@ -41,7 +41,6 @@ use App\Service\LessonService;
          $section = $this->sectionsRepository->findOneBy(['slug' => $section_slug]);
  
          // Création d'une nouvelle tentative de quiz
-        //  $newAttemptId = $this->quizResultService->createNewAttempt($user, $section_slug, true);
         $newAttemptId = $this->quizResultService->handleQuizAttempt(null, $user, $section, 0, new \DateTimeImmutable());
  
          // Redirige vers la page de quiz avec le nouvel ID de tentative

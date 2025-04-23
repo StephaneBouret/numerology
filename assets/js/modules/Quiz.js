@@ -152,6 +152,12 @@ export default class Quiz {
 
         this.saveAnswersToLocalStorage();
 
+        currentQuestion.classList.add('loading');
+
+        currentQuestion.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+            input.disabled = true;
+        })
+
         fetch("/quiz/submit", {
                 method: 'POST',
                 headers: {
@@ -220,6 +226,9 @@ export default class Quiz {
             })
             .catch(error => {
                 console.error('Erreur lors de la soumission de la réponse:', error);
+            })
+            .finally(() => {
+                currentQuestion.classList.remove('loading');
             });
     }
 
