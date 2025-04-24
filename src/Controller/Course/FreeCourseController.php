@@ -25,7 +25,9 @@ final class FreeCourseController extends AbstractController
             throw $this->createNotFoundException("Le programme demandé n'existe pas");
         }
 
-        $sections = $this->sectionsRepository->findAll();
+        $sections = $this->sectionsRepository->findBy([
+            'program' => $program
+        ]);
 
         $sectionsTotalDuration = $this->sectionDurationService->calculateTotalDuration($sections);
 

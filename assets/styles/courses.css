@@ -101,6 +101,16 @@
     }
 }
 
+.program-content {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .program-content {
+        width: 50%;
+    }
+}
+
 .program-img {
     -o-object-fit: cover;
     object-fit: cover;

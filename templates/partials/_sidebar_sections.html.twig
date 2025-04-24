@@ -2,11 +2,10 @@
 	<ol class="sticky-contents pl-0 list-unstyled">
 		<li class="list-group list-group-xs list-group-menu mb-6">
 			<section class="d-flex align-items-start">
-				{% if nbrLessonsDone == nbrCourses %}
-					{% set opacity = 'opacity-2' %}
-				{% else %}
-					{% set opacity = '' %}
-				{% endif %}
+				{% set isCompleted = nbrLessonsDone == nbrCourses and nbrCourses > 0 %}
+				{% set opacity = isCompleted ? 'opacity-2' : '' %}
+				{% set display = isCompleted ? 'd-none' : '' %}
+				{% set completed = isCompleted ? '' : 'd-none' %}
 				<div class="{{ opacity }}">
 					<a href="{{ path('app_sections', {'slug': program.slug}) }}" class="thumb thumb-lg thumb-photo thumb-link thumb-program-numerology"></a>
 				</div>
@@ -18,32 +17,25 @@
 							</a>
 						</h1>
 						{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_GUEST') or (app.user and app.user.purchases|filter(purchase => purchase.program == program and purchase.status == constant('App\\Entity\\Purchase::STATUS_PAID'))|length > 0) %}
-						<div class="bulleted">
-							<span class="bulleted-item w-100 mt-2">
-								{% if nbrLessonsDone == nbrCourses %}
-									{% set display = 'd-none' %}
-									{% set completed = '' %}
-								{% else %}
-									{% set display = '' %}
-									{% set completed = 'd-none' %}
-								{% endif %}
-								<div class="d-flex align-items-start flex-column {{ display }}">
-									<div class="d-block w-100">
-										<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ nbrLessonsDone }}" aria-valuemin="0" aria-valuemax="{{ nbrCourses }}">
-											<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ (nbrLessonsDone / nbrCourses)*100 }}%"></div>
+							<div class="bulleted">
+								<span class="bulleted-item w-100 mt-2">
+									<div class="d-flex align-items-start flex-column {{ display }}">
+										<div class="d-block w-100">
+											<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ nbrLessonsDone }}" aria-valuemin="0" aria-valuemax="{{ nbrCourses }}">
+												<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ (nbrLessonsDone / nbrCourses)*100 }}%"></div>
+											</div>
 										</div>
+										<span>{{ nbrLessonsDone }}/{{ nbrCourses }}
+											complété(s)</span>
 									</div>
-									<span>{{ nbrLessonsDone }}/{{ nbrCourses }}
-										complété(s)</span>
-								</div>
-								<div class="d-flex align-items-center {{ completed }}">
-									{% include "partials/buttons/_completed_svg.html.twig" %}
-									<span>
-										Complété
-									</span>
-								</div>
-							</span>
-						</div>
+									<div class="d-flex align-items-center {{ completed }}">
+										{% include "partials/buttons/_completed_svg.html.twig" %}
+										<span>
+											Complété
+										</span>
+									</div>
+								</span>
+							</div>
 						{% else %}
 							{% include "partials/_title_section_if_pending.html.twig" %}
 						{% endif %}
@@ -56,7 +48,8 @@
 				<nav aria-label="{{ s.name }}">
 					<header class="d-flex align-items-center n2ymm7">
 						<a href="{{ path('courses_section', {'program_slug': s.program.slug, 'slug': s.slug}) }}">
-							<h2 class="h4 text-md mb-2">{{ s.name }} ({{ sectionsTotalDuration[s.id] | format_duration }})</h2>
+							<h2 class="h4 text-md mb-2">{{ s.name }}
+								({{ sectionsTotalDuration[s.id] | format_duration }})</h2>
 						</a>
 						<span class="icon closed f4lgy4" data-bs-toggle="collapse" data-bs-target="#collapse-{{ s.id }}" aria-expanded="false" aria-controls="collapse-{{ s.id }}">
 							{% include "partials/buttons/_closed_svg.html.twig" %}

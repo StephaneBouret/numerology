@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Courses;
+use App\Entity\Program;
 use App\Entity\Sections;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -37,6 +38,17 @@ class CoursesRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
 
         return $result;
+    }
+
+    public function countByProgram(Program $program): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->join('c.section', 's')
+            ->where('s.program = :program')
+            ->setParameter('program', $program)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function countCoursesBySections(): array

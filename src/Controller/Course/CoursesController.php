@@ -10,6 +10,7 @@ use App\Repository\CommentsRepository;
 use App\Repository\CoursesRepository;
 use App\Repository\LessonRepository;
 use App\Repository\NavigationRepository;
+use App\Repository\ProgramRepository;
 use App\Repository\SectionsRepository;
 use App\Service\CourseFileService;
 use App\Service\QuizResultService;
@@ -24,20 +25,24 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class CoursesController extends AbstractController
 {
-    public function __construct(protected CoursesRepository $coursesRepository, protected SectionsRepository $sectionsRepository, protected EntityManagerInterface $em, protected LessonRepository $lessonRepository, protected SectionDurationService $sectionDurationService)
+    public function __construct(protected CoursesRepository $coursesRepository, protected SectionsRepository $sectionsRepository, protected EntityManagerInterface $em, protected LessonRepository $lessonRepository, protected SectionDurationService $sectionDurationService, protected ProgramRepository $programRepository)
     {
     }
 
     // #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette page')]
     #[Route('/courses/{program_slug}/{section_slug}/{slug}', name: 'courses_show', priority: -1)]
-    public function show($slug, $section_slug, Request $request, NavigationRepository $navigationRepository, CourseFileService $courseFileService, CommentsRepository $commentsRepository, QuizService $quizService, QuizResultService $quizResultService): Response
+    public function show($slug, $section_slug, $program_slug, Request $request, NavigationRepository $navigationRepository, CourseFileService $courseFileService, CommentsRepository $commentsRepository, QuizService $quizService, QuizResultService $quizResultService): Response
     {
         $currentUrl = $request->getUri();
         $response = new Response();
-        $response->headers->setCookie(new Cookie('url_visited', $currentUrl, strtotime('+1 month')));
+        $response->headers->setCookie(new Cookie('url_visited_' . $program_slug, $currentUrl, strtotime('+1 month')));
 
         /** @var User */
         $user = $this->getUser();
+
+        $program = $this->programRepository->findOneBy([
+            'slug' => $program_slug
+        ]);
 
         $course = $this->coursesRepository->findOneBy([
             'slug' => $slug
@@ -54,7 +59,10 @@ final class CoursesController extends AbstractController
         // Nombre de leçons effectuées par l'utilisateur connecté
         $nbrLessonsDone = $user ? $this->lessonRepository->countLessonsDoneByUser($user) : 0;
 
-        $sections = $this->sectionsRepository->findAll();
+        // $sections = $this->sectionsRepository->findAll();
+        $sections = $this->sectionsRepository->findBy([
+            'program' => $program
+        ]);
         $sectionsTotalDuration = $this->sectionDurationService->calculateTotalDuration($sections);
 
         if (!$course) {

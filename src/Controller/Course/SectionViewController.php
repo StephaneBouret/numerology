@@ -5,6 +5,7 @@ namespace App\Controller\Course;
 use App\Entity\User;
 use App\Repository\LessonRepository;
 use App\Repository\CoursesRepository;
+use App\Repository\ProgramRepository;
 use App\Repository\SectionsRepository;
 use App\Service\SectionDurationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,16 +15,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class SectionViewController extends AbstractController
 {
-    public function __construct(protected CoursesRepository $coursesRepository, protected SectionsRepository $sectionsRepository, protected EntityManagerInterface $em, protected LessonRepository $lessonRepository, protected SectionDurationService $sectionDurationService)
+    public function __construct(protected CoursesRepository $coursesRepository, protected SectionsRepository $sectionsRepository, protected EntityManagerInterface $em, protected LessonRepository $lessonRepository, protected SectionDurationService $sectionDurationService, protected ProgramRepository $programRepository)
     {
     }
 
     #[Route('/courses/{program_slug}/{slug}', name: 'courses_section', priority: -1)]
-    public function section($slug): Response
+    public function section($slug, $program_slug): Response
     {
         /** @var User */
         $user = $this->getUser();
-        $sections = $this->sectionsRepository->findAll();
+        $program = $this->programRepository->findOneBy([
+            'slug' => $program_slug
+        ]);
+        $sections = $this->sectionsRepository->findBy([
+            'program' => $program
+        ]);
         $section = $this->sectionsRepository->findOneBy([
             'slug' => $slug
         ]);
@@ -33,8 +39,8 @@ final class SectionViewController extends AbstractController
         $sectionsTotalDuration = $this->sectionDurationService->calculateTotalDuration($sections);
 
         $count = $this->coursesRepository->countNumberCoursesBySection($section);
-        $nbrCourses = $this->coursesRepository->countAll();
-        $nbrLessonsDone = $user ? $this->lessonRepository->countLessonsDoneByUser($user) : 0;
+        $nbrCourses = $this->coursesRepository->countByProgram($program);
+        $lessonsDoneForProgram = $user ? $this->lessonRepository->countLessonsDoneByUserAndProgram($user, $program) : 0;
 
         if (!$section) {
             throw $this->createNotFoundException("La section demandée n'existe pas");
@@ -45,7 +51,7 @@ final class SectionViewController extends AbstractController
             'sections' => $sections,
             'count' => $count,
             'nbrCourses' => $nbrCourses,
-            'nbrLessonsDone' => $nbrLessonsDone,
+            'nbrLessonsDone' => $lessonsDoneForProgram,
             // 'lessons' => $this->lessonRepository->findBy(['user' => $user->getId()]),
             'lessons' => $user ? $this->lessonRepository->findBy(['user' => $user->getId()]) : [],
             'sectionsTotalDuration' => $sectionsTotalDuration,

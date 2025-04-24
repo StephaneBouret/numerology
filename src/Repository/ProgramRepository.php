@@ -16,6 +16,18 @@ class ProgramRepository extends ServiceEntityRepository
         parent::__construct($registry, Program::class);
     }
 
+    public function findAllWithSectionsAndCourses(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.sections', 's')
+            ->addSelect('s')
+            ->leftJoin('s.courses', 'c')
+            ->addSelect('c')
+            ->orderBy('p.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Program[] Returns an array of Program objects
     //     */

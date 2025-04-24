@@ -8,27 +8,28 @@ use App\Repository\LessonRepository;
 use App\Repository\ProgramRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class ProgramListController extends AbstractController
 {
-    // #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette page')]
     #[Route('/courses', name: 'app_courses_list')]
     public function list(ProgramRepository $programRepository, CoursesRepository $coursesRepository, LessonRepository $lessonRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        $programs = $programRepository->findBy([], ['name' => 'ASC']);
+        $programs = $programRepository->findAllWithSectionsAndCourses();
 
-        // Total des cours en BDD
-        $nbrCourses = $coursesRepository->countAll();
+        // Total des cours par programme en BDD
+        $nbrCoursesByProgram = [];
+        foreach ($programs as $program) {
+            $nbrCoursesByProgram[$program->getId()] = $coursesRepository->countByProgram($program);
+        }
         // Nombre de leçons effectuées par l'utilisateur connecté
-        $nbrLessonsDone = $lessonRepository->countLessonsDoneByUser($user);
+        $nbrLessonsDone = $lessonRepository->countLessonsDoneByUserGroupedByProgram($user);
 
         return $this->render('courses/list.html.twig', [
             'programs' => $programs,
-            'nbrCourses' => $nbrCourses,
+            'nbrCoursesByProgram' => $nbrCoursesByProgram,
             'nbrLessonsDone' => $nbrLessonsDone
         ]);
     }

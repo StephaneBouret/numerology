@@ -34,17 +34,34 @@
 						<div class="tab-pane fade profile-overview active show" id="my-programs">
 							{% if hasAccess %}
 								{% for prg in programs %}
-									{% if app.request.cookies.get('url_visited') %}
-										{% set url = app.request.cookies.get('url_visited') %}
+									{% set cookieKey = 'url_visited_' ~ prg.slug %}
+									{% set cookieUrl = app.request.cookies.get(cookieKey) %}
+
+									{% if cookieUrl %}
+										{% set url = cookieUrl %}
 									{% else %}
-										{% set url = app.request.schemeAndHttpHost ~ '/courses/formation-en-numerologie/a-propos-de-cette-formation' %}
-									{% endif %}
-									<article class="mb-6 d-flex align-items-center">
-										{% if nbrLessonsDone == nbrCourses %}
-											{% set opacity = 'opacity-2' %}
+										{% set firstSection = null %}
+										{% set firstCourse = null %}
+										{% for section in prg.sections %}
+											{% if section.courses is not empty %}
+												{% set firstSection = section %}
+												{% set firstCourse = section.courses|first %}
+											{% endif %}
+										{% endfor %}
+										{% if firstSection and firstCourse %}
+											{% set url = path('courses_show', {program_slug: prg.slug, section_slug: firstSection.slug, slug: firstCourse.slug}) %}
 										{% else %}
-											{% set opacity = '' %}
+											{% set url = path('app_sections', { slug: prg.slug }) %}
 										{% endif %}
+									{% endif %}
+
+									{% set lessonsDone = nbrLessonsDone[prg.id] ?? 0 %}
+									{% set totalCourses = nbrCoursesByProgram[prg.id] ?? 0 %}
+									{% set progressPercent = totalCourses > 0 ? (lessonsDone / totalCourses * 100)|round(0, 'floor') : 0 %}
+									{% set isCompleted = lessonsDone == totalCourses and totalCourses > 0 %}
+									{% set opacity = isCompleted ? 'opacity-2' : '' %}
+
+									<article class="mb-6 d-flex align-items-center">
 										<div class="{{ opacity }}">
 											<a class="thumb thumb-lg thumb-photo thumb-link thumb-program-numerology" href="{{ relative_path(url) }}"></a>
 										</div>
@@ -56,23 +73,16 @@
 											</header>
 											<div class="bulleted">
 												<span class="bulleted-item w-100 mt-2">
-													{% if nbrLessonsDone == nbrCourses %}
-														{% set display = 'd-none' %}
-														{% set completed = '' %}
-													{% else %}
-														{% set display = '' %}
-														{% set completed = 'd-none' %}
-													{% endif %}
-													<div class="d-flex align-items-start flex-column {{ display }}">
+													<div class="d-flex align-items-start flex-column {{ not isCompleted ? '' : 'd-none' }}">
 														<div class="d-block w-100">
-															<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ nbrLessonsDone }}" aria-valuemin="0" aria-valuemax="{{ nbrCourses }}">
-																<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ (nbrLessonsDone / nbrCourses)*100 }}%"></div>
+															<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ lessonsDone }}" aria-valuemin="0" aria-valuemax="{{ totalCourses }}">
+																<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ progressPercent }}%"></div>
 															</div>
 														</div>
-														<span>{{ nbrLessonsDone }}/{{ nbrCourses }}
+														<span>{{ lessonsDone }}/{{ totalCourses }}
 															complété(s)</span>
 													</div>
-													<div class="d-flex align-items-center {{ completed }}">
+													<div class="d-flex align-items-center {{ isCompleted ? '' : 'd-none' }}">
 														{% include "partials/buttons/_completed_svg.html.twig" %}
 														<span>
 															Complété
@@ -107,7 +117,7 @@
 														<span>Cours</span>
 													</li>
 													<li class="rs8f42">
-														<span>{{ nbrCourses }}
+														<span>{{ nbrCoursesByProgram[prg.id] }}
 															Leçons</span>
 													</li>
 												</ul>

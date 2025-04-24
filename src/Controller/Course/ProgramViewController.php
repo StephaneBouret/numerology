@@ -10,7 +10,6 @@ use App\Repository\SectionsRepository;
 use App\Service\SectionDurationService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class ProgramViewController extends AbstractController
@@ -18,7 +17,6 @@ final class ProgramViewController extends AbstractController
     public function __construct(protected CoursesRepository $coursesRepository, protected ProgramRepository $programRepository, protected SectionsRepository $sectionsRepository, protected LessonRepository $lessonRepository, protected SectionDurationService $sectionDurationService)
     {}
 
-    // #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette page')]
     #[Route('/courses/{slug}', name: 'app_sections', priority: -1)]
     public function index($slug): Response
     {
@@ -34,18 +32,20 @@ final class ProgramViewController extends AbstractController
 
         $this->denyAccessUnlessGranted('PROGRAM_VIEW', $program, "Vous n'avez pas accès à ce programme");
 
-        $sections = $this->sectionsRepository->findAll();
+        $sections = $this->sectionsRepository->findBy([
+            'program' => $program
+        ]);
         $sectionsTotalDuration = $this->sectionDurationService->calculateTotalDuration($sections);
-        $nbrCourses = $this->coursesRepository->countAll();
+        $nbrCourses = $this->coursesRepository->countByProgram($program);
         $coursesBySection = $this->coursesRepository->countCoursesBySections();
-        $nbrLessonsDone = $user ? $this->lessonRepository->countLessonsDoneByUser($user) : 0;
+        $lessonsDoneForProgram = $user ? $this->lessonRepository->countLessonsDoneByUserAndProgram($user, $program) : 0;
 
         return $this->render('sections/section.html.twig', [
             'program' => $program,
             'sections' => $sections,
             'coursesBySection' => $coursesBySection,
             'nbrCourses' => $nbrCourses,
-            'nbrLessonsDone' => $nbrLessonsDone,
+            'nbrLessonsDone' => $lessonsDoneForProgram,
             // 'lessons' => $this->lessonRepository->findBy(['user' => $user->getId()]),
             'lessons' => $user ? $this->lessonRepository->findBy(['user' => $user->getId()]) : [],
             'sectionsTotalDuration' => $sectionsTotalDuration,
