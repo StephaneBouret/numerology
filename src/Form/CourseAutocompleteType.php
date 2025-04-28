@@ -10,9 +10,14 @@ class CourseAutocompleteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $programSlug = $options['program_slug'] ?? null;
+
         $builder->add('name', CoursesAutocompleteField::class, [
             'label' => false,
             'multiple' => false,
+            'extra_options' => [
+                'program_slug' => $programSlug,
+            ],
         ]);
     }
 
@@ -20,6 +25,7 @@ class CourseAutocompleteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => null,
+            'program_slug' => null,
         ]);
     }
 }

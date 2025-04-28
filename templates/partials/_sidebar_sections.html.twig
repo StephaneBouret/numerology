@@ -7,7 +7,9 @@
 				{% set display = isCompleted ? 'd-none' : '' %}
 				{% set completed = isCompleted ? '' : 'd-none' %}
 				<div class="{{ opacity }}">
-					<a href="{{ path('app_sections', {'slug': program.slug}) }}" class="thumb thumb-lg thumb-photo thumb-link thumb-program-numerology"></a>
+					<a href="{{ path('app_sections', {'slug': program.slug}) }}" class="thumb thumb-lg thumb-photo thumb-link">
+						<img src="{{ vich_uploader_asset(program, 'imageFile') }}" alt="{{ program.name }}" class="thumb-img">
+					</a>
 				</div>
 				<div class="ml-3">
 					<header>

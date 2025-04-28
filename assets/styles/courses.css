@@ -889,8 +889,19 @@
     background-size: cover;
 }
 
+.thumb-img {
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
 .ml-3 {
     margin-left: 12px !important;
+}
+
+.minw315 {
+    min-width: 315px;
 }
 
 .ml30 {

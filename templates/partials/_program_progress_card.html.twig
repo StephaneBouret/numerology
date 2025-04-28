@@ -1,0 +1,60 @@
+{% set cookieKey = 'url_visited_' ~ prg.slug %}
+{% set cookieUrl = app.request.cookies.get(cookieKey) %}
+
+{% if cookieUrl %}
+	{% set url = cookieUrl %}
+{% else %}
+	{% set firstSection = null %}
+	{% set firstCourse = null %}
+	{% for section in prg.sections %}
+		{% if section.courses is not empty %}
+			{% set firstSection = section %}
+			{% set firstCourse = section.courses|first %}
+		{% endif %}
+	{% endfor %}
+	{% if firstSection and firstCourse %}
+		{% set url = path('courses_show', {program_slug: prg.slug, section_slug: firstSection.slug, slug: firstCourse.slug}) %}
+	{% else %}
+		{% set url = path('app_sections', { slug: prg.slug }) %}
+	{% endif %}
+{% endif %}
+
+{% set lessonsDone = nbrLessonsDone[prg.id] ?? 0 %}
+{% set totalCourses = nbrCoursesByProgram[prg.id] ?? 0 %}
+{% set progressPercent = totalCourses > 0 ? (lessonsDone / totalCourses * 100)|round(0, 'floor') : 0 %}
+{% set isCompleted = lessonsDone == totalCourses and totalCourses > 0 %}
+{% set opacity = isCompleted ? 'opacity-2' : '' %}
+
+<article class="mb-6 d-flex align-items-center">
+	<div class="{{ opacity }}">
+		<a class="thumb thumb-lg thumb-photo thumb-link" href="{{ relative_path(url) }}">
+            <img src="{{ vich_uploader_asset(prg, 'imageFile') }}" alt="{{ prg.name }}" class="thumb-img">
+        </a>
+	</div>
+	<div class="ml-3 minw315">
+		<header>
+			<h1 class="title mb-0 qpguv1">
+				<a class="text-grey-dark text-decoration-none" href="{{ relative_path(url) }}">{{ prg.name }}</a>
+			</h1>
+		</header>
+		<div class="bulleted">
+			<span class="bulleted-item w-100 mt-2">
+				<div class="d-flex align-items-start flex-column {{ not isCompleted ? '' : 'd-none' }}">
+					<div class="d-block w-100">
+						<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ lessonsDone }}" aria-valuemin="0" aria-valuemax="{{ totalCourses }}">
+							<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ progressPercent }}%"></div>
+						</div>
+					</div>
+					<span>{{ lessonsDone }}/{{ totalCourses }}
+						complété(s)</span>
+				</div>
+				<div class="d-flex align-items-center {{ isCompleted ? '' : 'd-none' }}">
+					{% include "partials/buttons/_completed_svg.html.twig" %}
+					<span>
+						Complété
+					</span>
+				</div>
+			</span>
+		</div>
+	</div>
+</article>

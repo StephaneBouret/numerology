@@ -55,18 +55,23 @@ class NavigationCrudController extends AbstractCrudController
     }
 
     #[Route('/admin/navigation/create', name: 'navigation_create')]
-    public function createNavigation(ProgramRepository $programRepository, EntityManagerInterface $em, AdminUrlGenerator $adminUrlGenerator): Response
+    public function createNavigation(EntityManagerInterface $em, AdminUrlGenerator $adminUrlGenerator): Response
     {
-        $program = $programRepository->find(1);
-        $staticPath = "/courses/" . $program->getSlug();
-
         // Supprimer la table avant l'ajout de nouvelles entrées
         $this->navigationRepository->truncateTable();
 
-        foreach ($this->coursesRepository->findAll() as $courses) {
+        $courses = $this->coursesRepository->findAll();
+        $staticPath = "/courses/";
+
+        foreach ($courses as $course) {
+            $section = $course->getSection();
+            $program = $section->getProgram();
+
+            $path = $staticPath . $program->getSlug() . "/" . $section->getSlug() . "/" . $course->getSlug();
             $navigation = new Navigation();
-            $navigation->setPath($staticPath . "/" . $courses->getSection()->getSlug() . "/" . $courses->getSlug())
-                ->setCourse($courses);
+            $navigation->setPath($path)
+                ->setCourse($course);
+
             $em->persist($navigation);
         }
 

@@ -30,81 +30,31 @@
 			<div class="xo2a4n">
 				<div class="ixxz17">
 					<div class="tab-content pt-2 mt-2">
-						{% set hasAccess = is_granted('ROLE_ADMIN') or is_granted('ROLE_GUEST') or (app.user and app.user.purchases|filter(purchase => purchase.program in programs and purchase.status == constant('App\\Entity\\Purchase::STATUS_PAID'))|length > 0) %}
 						<div class="tab-pane fade profile-overview active show" id="my-programs">
-							{% if hasAccess %}
+							{% set paidPurchasedPrograms = programs|filter(prg => prg in app.user.purchases|filter(p => p.status == constant('App\\Entity\\Purchase::STATUS_PAID'))|map(p => p.program)) %}
+							{% set purchasedPrograms = programs|filter(prg => prg in paidPurchasedPrograms) %}
+							{% set hasAdminAccess = is_granted('ROLE_ADMIN') or is_granted('ROLE_GUEST') %}
+							{% if hasAdminAccess %}
 								{% for prg in programs %}
-									{% set cookieKey = 'url_visited_' ~ prg.slug %}
-									{% set cookieUrl = app.request.cookies.get(cookieKey) %}
-
-									{% if cookieUrl %}
-										{% set url = cookieUrl %}
-									{% else %}
-										{% set firstSection = null %}
-										{% set firstCourse = null %}
-										{% for section in prg.sections %}
-											{% if section.courses is not empty %}
-												{% set firstSection = section %}
-												{% set firstCourse = section.courses|first %}
-											{% endif %}
-										{% endfor %}
-										{% if firstSection and firstCourse %}
-											{% set url = path('courses_show', {program_slug: prg.slug, section_slug: firstSection.slug, slug: firstCourse.slug}) %}
-										{% else %}
-											{% set url = path('app_sections', { slug: prg.slug }) %}
-										{% endif %}
-									{% endif %}
-
-									{% set lessonsDone = nbrLessonsDone[prg.id] ?? 0 %}
-									{% set totalCourses = nbrCoursesByProgram[prg.id] ?? 0 %}
-									{% set progressPercent = totalCourses > 0 ? (lessonsDone / totalCourses * 100)|round(0, 'floor') : 0 %}
-									{% set isCompleted = lessonsDone == totalCourses and totalCourses > 0 %}
-									{% set opacity = isCompleted ? 'opacity-2' : '' %}
-
-									<article class="mb-6 d-flex align-items-center">
-										<div class="{{ opacity }}">
-											<a class="thumb thumb-lg thumb-photo thumb-link thumb-program-numerology" href="{{ relative_path(url) }}"></a>
-										</div>
-										<div class="ml-3">
-											<header>
-												<h1 class="title mb-0 qpguv1">
-													<a class="text-grey-dark text-decoration-none" href="{{ relative_path(url) }}">{{ prg.name }}</a>
-												</h1>
-											</header>
-											<div class="bulleted">
-												<span class="bulleted-item w-100 mt-2">
-													<div class="d-flex align-items-start flex-column {{ not isCompleted ? '' : 'd-none' }}">
-														<div class="d-block w-100">
-															<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ lessonsDone }}" aria-valuemin="0" aria-valuemax="{{ totalCourses }}">
-																<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ progressPercent }}%"></div>
-															</div>
-														</div>
-														<span>{{ lessonsDone }}/{{ totalCourses }}
-															complété(s)</span>
-													</div>
-													<div class="d-flex align-items-center {{ isCompleted ? '' : 'd-none' }}">
-														{% include "partials/buttons/_completed_svg.html.twig" %}
-														<span>
-															Complété
-														</span>
-													</div>
-												</span>
-											</div>
-										</div>
-									</article>
+									{% include "partials/_program_progress_card.html.twig" %}
+								{% endfor %}
+							{% elseif purchasedPrograms|length > 0 %}
+								{% for prg in purchasedPrograms %}
+									{% include "partials/_program_progress_card.html.twig" %}
 								{% endfor %}
 							{% else %}
 								<h5 class="card-sub-title">Pas de programme acheté</h5>
 							{% endif %}
 						</div>
 						<div class="tab-pane fade profile-overview pt-3" id="next-programs">
-							{% if not hasAccess %}
-								{% for prg in programs %}
+							{% set otherPrograms = programs|filter(prg => prg not in paidPurchasedPrograms) %}
+							{% if not hasAdminAccess and otherPrograms|length > 0 %}
+								{% for prg in otherPrograms %}
 									<article class="mb-6 d-flex align-items-center">
 										<div>
 											<a class="thumb thumb-lg thumb-photo thumb-link thumb-program-numerology" href="{{ path('app_program', {'slug': prg.slug}) }}"></a>
 										</div>
-										<div class="ml-3">
+										<div class="ml-3 minw315">
 											<header class="mb-1">
 												<h1 class="title mb-0 qpguv1">
 													<a class="text-grey-dark text-decoration-none" href="{{ path('app_program', {'slug': prg.slug}) }}">{{ prg.name }}</a>

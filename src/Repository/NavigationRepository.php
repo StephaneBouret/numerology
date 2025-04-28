@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Navigation;
+use App\Entity\Program;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -28,6 +29,18 @@ class NavigationRepository extends ServiceEntityRepository
             ->select('n.path')
             ->getQuery()
             ->getSingleColumnResult();
+    }
+
+    public function findByProgram(Program $program): array
+    {
+        return $this->createQueryBuilder('n')
+            ->join('n.course', 'c')
+            ->join('c.section', 's')
+            ->where('s.program = :program')
+            ->setParameter('program', $program)
+            ->orderBy('n.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**

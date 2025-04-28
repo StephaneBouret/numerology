@@ -15,6 +15,12 @@ final class PurchaseCheckoutController extends AbstractController
     public function index($slug, ProgramRepository $programRepository, PurchaseRepository $purchaseRepository): Response
     {
         $user = $this->getUser();
+
+        if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_GUEST')) {
+            $this->addFlash('warning', 'Vous n\'êtes pas autorisé à accéder à cette page');
+            return $this->redirectToRoute('home_index');
+        }
+        
         $program = $programRepository->findOneBy([
             'slug' => $slug
         ]);

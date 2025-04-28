@@ -50,14 +50,14 @@ final class CoursesController extends AbstractController
         // 🔒 Vérification des permissions via le Voter
         // $this->denyAccessUnlessGranted('VIEW_COURSE', $course, 'Vous n\'avez pas accès à ce cours.');
 
-        $navigation = $navigationRepository->findAll();
+        $navigation = $navigationRepository->findByProgram($program);
 
         $content = $courseFileService->getFileContent($course);
 
         // Total des cours en BDD
-        $nbrCourses = $this->coursesRepository->countAll();
+        $nbrCourses = $this->coursesRepository->countByProgram($program);
         // Nombre de leçons effectuées par l'utilisateur connecté
-        $nbrLessonsDone = $user ? $this->lessonRepository->countLessonsDoneByUser($user) : 0;
+        $lessonsDoneForProgram = $user ? $this->lessonRepository->countLessonsDoneByUserAndProgram($user, $program) : 0;
 
         // $sections = $this->sectionsRepository->findAll();
         $sections = $this->sectionsRepository->findBy([
@@ -130,7 +130,7 @@ final class CoursesController extends AbstractController
             'lesson' => $lesson,
             'form' => $form,
             'nbrCourses' => $nbrCourses,
-            'nbrLessonsDone' => $nbrLessonsDone,
+            'nbrLessonsDone' => $lessonsDoneForProgram,
             // 'lessons' => $this->lessonRepository->findBy(['user' => $user->getId()]),
             'lessons' => $user ? $this->lessonRepository->findBy(['user' => $user->getId()]) : [],
             'fileContent' => $content,

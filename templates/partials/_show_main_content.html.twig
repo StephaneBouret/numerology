@@ -1,5 +1,7 @@
 <div class="main-content">
-	{{ render(controller('App\\Controller\\SearchController::searchBar')) }}
+	{{ render(controller('App\\Controller\\SearchController::searchBar', {
+		program_slug: app.request.attributes.get('program_slug')
+	})) }}
 	<div id="lesson-header">
 		<div class="d-flex">
 			<div class="w-100">

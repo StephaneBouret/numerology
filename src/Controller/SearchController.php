@@ -13,9 +13,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class SearchController extends AbstractController
 {
     #[Route('/search', name: 'search')]
-    public function searchBar(Request $request): Response
+    public function searchBar(Request $request, string $program_slug): Response
     {
-        $form = $this->createForm(CourseAutocompleteType::class);
+        $form = $this->createForm(CourseAutocompleteType::class, null, [
+            'program_slug' => $program_slug,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

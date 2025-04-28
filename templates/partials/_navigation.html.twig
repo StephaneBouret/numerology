@@ -1,5 +1,5 @@
 {% for nav in navigation %}
-	{% if course.id == nav.id %}
+	{% if course.id == nav.course.id %}
 		{% if loop.index > 1 %}
 			{% set prevPath = navigation[loop.index - 2].path %}
 			<span>
