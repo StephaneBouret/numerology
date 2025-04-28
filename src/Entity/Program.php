@@ -22,7 +22,7 @@ class Program
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom du programme est obligatoire !")]
-    #[Assert\Length(min: 3, minMessage: "Le nom du programme doit avoir au moins {{ limit }} caractères")]
+    #[Assert\Length(min: 3, minMessage: "Le nom du programme doit avoir au moins {{ limit }} caractères", max: 30, maxMessage: "Le nom du programme ne peut excéder {{ limit }} caractères")]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -62,10 +62,6 @@ class Program
     #[ORM\Column]
     private ?int $price = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank(message: "Le contenu est obligatoire !")]
-    private ?string $content = null;
-
     /**
      * @var Collection<int, Sections>
      */
@@ -84,11 +80,33 @@ class Program
     #[ORM\OneToMany(targetEntity: Purchase::class, mappedBy: 'program')]
     private Collection $purchases;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $satisfiedTitle = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $satisfiedContent = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $showTitle = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $showContent = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $detailTitle = null;
+
+    /**
+     * @var Collection<int, ProgramDetail>
+     */
+    #[ORM\OneToMany(targetEntity: ProgramDetail::class, mappedBy: 'program', cascade: ['persist', 'remove'])]
+    private Collection $details;
+
     public function __construct()
     {
         $this->sections = new ArrayCollection();
         $this->courses = new ArrayCollection();
         $this->purchases = new ArrayCollection();
+        $this->details = new ArrayCollection();
     }
 
     public function __toString()
@@ -186,18 +204,6 @@ class Program
         return $this;
     }
 
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(string $content): static
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Sections>
      */
@@ -282,6 +288,96 @@ class Program
             // set the owning side to null (unless already changed)
             if ($purchase->getProgram() === $this) {
                 $purchase->setProgram(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSatisfiedTitle(): ?string
+    {
+        return $this->satisfiedTitle;
+    }
+
+    public function setSatisfiedTitle(?string $satisfiedTitle): static
+    {
+        $this->satisfiedTitle = $satisfiedTitle;
+
+        return $this;
+    }
+
+    public function getSatisfiedContent(): ?string
+    {
+        return $this->satisfiedContent;
+    }
+
+    public function setSatisfiedContent(?string $satisfiedContent): static
+    {
+        $this->satisfiedContent = $satisfiedContent;
+
+        return $this;
+    }
+
+    public function getShowTitle(): ?string
+    {
+        return $this->showTitle;
+    }
+
+    public function setShowTitle(?string $showTitle): static
+    {
+        $this->showTitle = $showTitle;
+
+        return $this;
+    }
+
+    public function getShowContent(): ?string
+    {
+        return $this->showContent;
+    }
+
+    public function setShowContent(?string $showContent): static
+    {
+        $this->showContent = $showContent;
+
+        return $this;
+    }
+
+    public function getDetailTitle(): ?string
+    {
+        return $this->detailTitle;
+    }
+
+    public function setDetailTitle(?string $detailTitle): static
+    {
+        $this->detailTitle = $detailTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProgramDetail>
+     */
+    public function getDetails(): Collection
+    {
+        return $this->details;
+    }
+
+    public function addDetail(ProgramDetail $detail): static
+    {
+        if (!$this->details->contains($detail)) {
+            $this->details->add($detail);
+            $detail->setProgram($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDetail(ProgramDetail $detail): static
+    {
+        if ($this->details->removeElement($detail)) {
+            // set the owning side to null (unless already changed)
+            if ($detail->getProgram() === $this) {
+                $detail->setProgram(null);
             }
         }
 

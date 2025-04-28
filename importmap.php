@@ -40,6 +40,10 @@ return [
         'path' => './assets/js/admin_custom.js',
         'entrypoint' => true,
     ],
+    'admin_check_name' => [
+        'path' => './assets/js/admin_check_name.js',
+        'entrypoint' => true,
+    ],
     '@fortawesome/fontawesome-free/css/all.css' => [
         'version' => '6.6.0',
         'type' => 'css',

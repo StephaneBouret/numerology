@@ -38,13 +38,10 @@
 		<div class="container-programs">
 			<div class="text-start">
 				<header>
-					<h2 class="title-program show-title-program">Maîtriser la numérologie 💪</h2>
+					<h2 class="title-program show-title-program">{{ program.satisfiedTitle }}</h2>
 				</header>
 				<div class="content-program font-18">
-					Cette formation a été conçue, pensée et réalisée pour&nbsp;<strong>réellement comprendre la numérologie</strong>
-					! Elle comprend donc
-					<strong>un guide complet (pour débutants et intermédiaires) à la numérologie</strong>.<br><br>Le tout pour
-					<strong>50 heures de contenus vidéos</strong>, des articles, des ressources et des exercices corrigés !
+					{{ program.satisfiedContent|raw }}
 				</div>
 			</div>
 		</div>
@@ -53,30 +50,10 @@
 		<div class="container-programs">
 			<div class="text-start">
 				<header>
-					<h2 class="title-program show-title-program">Le guide complet Numérologie : Créer un e-commerce de A à Z avec le Framework Symfony en 50H de vidéos</h2>
+					<h2 class="title-program show-title-program">{{ program.showTitle }}</h2>
 				</header>
 				<div class="content-program font-18">
-					<div>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, nemo.
-						<strong>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum vel voluptatibus autem. Hic, voluptates.</strong>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis, consectetur. :
-					</div>
-					<ul>
-						<li>Lorem, ipsum.</li>
-						<li>Lorem ipsum dolor sit amet.</li>
-						<li>Lorem, ipsum dolor.</li>
-						<li>Lorem ipsum dolor sit.</li>
-						<li>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</li>
-					</ul>
-					<div>
-						On passera donc par l'ensemble des étapes classiques...
-					</div>
-					<div>
-						<br>Les notions sont distillées tout au long des vidéos et ne sont abordées que lorsqu'on en a vraiment besoin et qu'on peut donc les mettre immédiatement en pratique.
-					</div>
-					<div>
-						<br>Alors embarquez avec moi et vous aurez alors des bases solides pour continuer par vous même votre apprentissage de toutes les subtilités de la numérologie !
-					</div>
+					{{ program.showContent|raw }}
 				</div>
 			</div>
 		</div>
