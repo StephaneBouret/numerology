@@ -45,12 +45,19 @@ class NavigationCrudController extends AbstractCrudController
             ->displayIf(fn() => $this->navigationRepository->count([]) === 0 || ($this->navigationRepository->count([]) < $this->coursesRepository->count([]) || !$namesMatch))
             ->createAsGlobalAction();
 
+        $truncateNavigation = Action::new('truncateNavigation', 'Vider la navigation')
+            ->linkToCrudAction('truncateNavigation')
+            ->addCssClass('btn btn-danger')
+            ->displayIf(fn() => $this->navigationRepository->count([]) > 0)
+            ->createAsGlobalAction();
+
         $actions = parent::configureActions($actions);
         $actions->disable(Action::EDIT)
             ->disable(Action::DETAIL)
             ->disable(Action::NEW)
             ->disable(Action::DELETE)
-            ->add(Crud::PAGE_INDEX, $createNavigation);
+            ->add(Crud::PAGE_INDEX, $createNavigation)
+            ->add(Crud::PAGE_INDEX, $truncateNavigation);
         return $actions;
     }
 
@@ -79,6 +86,17 @@ class NavigationCrudController extends AbstractCrudController
         $this->addFlash('success', 'La navigation a bien été modifiée');
 
         // Redirection vers la page d'index du NavigationCrudController
+        $url = $adminUrlGenerator->setController(self::class)
+            ->setAction(Action::INDEX)
+            ->generateUrl();
+                    
+        return $this->redirect($url);
+    }
+
+    public function truncateNavigation(AdminUrlGenerator $adminUrlGenerator): Response
+    {
+        $this->navigationRepository->truncateTable();
+        $this->addFlash('success', 'La table de navigation a été vidée');
         $url = $adminUrlGenerator->setController(self::class)
             ->setAction(Action::INDEX)
             ->generateUrl();

@@ -31,7 +31,7 @@ final class TestimonialController extends AbstractController
 
         $avgRating = $this->testimonialRepository->getAvgRatings();
         $totalCount = $this->testimonialRepository->getTotalCount();
-        $percentages = $ratingService->calculateRatingPercentages($this->testimonialRepository->findAll());
+        $percentages = $ratingService->calculateRatingPercentages($this->testimonialRepository->findBy(['isApproved' => true]));
 
         /** @var User */
         $user = $this->getUser();

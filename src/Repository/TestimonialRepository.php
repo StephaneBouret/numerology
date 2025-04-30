@@ -25,6 +25,7 @@ class TestimonialRepository extends ServiceEntityRepository
     {
         $avgRating = $this->createQueryBuilder('t')
             ->select('AVG(t.rating) as avgRating')
+            ->where('t.isApproved = true')
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -40,6 +41,7 @@ class TestimonialRepository extends ServiceEntityRepository
     {
         return (int) $this->createQueryBuilder('t')
             ->select('COUNT(t.id)')
+            ->where('t.isApproved = true')
             ->getQuery()
             ->getSingleScalarResult();
     }

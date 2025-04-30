@@ -51,7 +51,10 @@
 						<header class="pb7jep">
 							<a class="lk25pol" href="{{ path('courses_section', {'program_slug': program.slug, 'slug': section.slug}) }}">
 								<h2>{{ section.name }}
-									({{ sectionsTotalDuration[section.id] | format_duration }})</h2>
+									{% if sectionsTotalDuration[section.id] is defined and sectionsTotalDuration[section.id] !=0 %}
+										({{ sectionsTotalDuration[section.id] | format_duration }})
+									{% endif %}
+								</h2>
 							</a>
 							<div class="text-longform text-lg text-muted mb-2">
 								<div>

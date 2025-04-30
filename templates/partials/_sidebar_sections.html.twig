@@ -51,7 +51,10 @@
 					<header class="d-flex align-items-center n2ymm7">
 						<a href="{{ path('courses_section', {'program_slug': s.program.slug, 'slug': s.slug}) }}">
 							<h2 class="h4 text-md mb-2">{{ s.name }}
-								({{ sectionsTotalDuration[s.id] | format_duration }})</h2>
+								{% if sectionsTotalDuration[s.id] is defined and sectionsTotalDuration[s.id] !=0 %}
+									({{ sectionsTotalDuration[s.id] | format_duration }})
+								{% endif %}
+							</h2>
 						</a>
 						<span class="icon closed f4lgy4" data-bs-toggle="collapse" data-bs-target="#collapse-{{ s.id }}" aria-expanded="false" aria-controls="collapse-{{ s.id }}">
 							{% include "partials/buttons/_closed_svg.html.twig" %}

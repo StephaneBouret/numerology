@@ -900,6 +900,12 @@
     margin-left: 12px !important;
 }
 
+.r4x24e {
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
 .minw315 {
     min-width: 315px;
 }

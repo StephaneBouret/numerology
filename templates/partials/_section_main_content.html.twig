@@ -1,5 +1,4 @@
-<div
-	class="main-content">
+<div class="main-content">
 	{{ render(controller('App\\Controller\\SearchController::searchBar', {
 		program_slug: app.request.attributes.get('program_slug')
 	})) }}
@@ -19,7 +18,10 @@
 						</ol>
 					</nav>
 					<h1 class="pr-md-6 d-md-block fw-semibold d-none">{{ section.name }}
-						({{ sectionsTotalDuration[section.id] | format_duration }})</h1>
+						{% if sectionsTotalDuration[section.id] is defined and sectionsTotalDuration[section.id] !=0 %}
+							({{ sectionsTotalDuration[section.id] | format_duration }})
+						{% endif %}
+					</h1>
 					{% include "partials/_dropdown_menu_content.html.twig" %}
 				</div>
 				<div class="mt-n2 mt-md-0">
