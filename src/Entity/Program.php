@@ -101,12 +101,19 @@ class Program
     #[ORM\OneToMany(targetEntity: ProgramDetail::class, mappedBy: 'program', cascade: ['persist', 'remove'])]
     private Collection $details;
 
+    /**
+     * @var Collection<int, Certificate>
+     */
+    #[ORM\OneToMany(targetEntity: Certificate::class, mappedBy: 'program')]
+    private Collection $certificates;
+
     public function __construct()
     {
         $this->sections = new ArrayCollection();
         $this->courses = new ArrayCollection();
         $this->purchases = new ArrayCollection();
         $this->details = new ArrayCollection();
+        $this->certificates = new ArrayCollection();
     }
 
     public function __toString()
@@ -378,6 +385,36 @@ class Program
             // set the owning side to null (unless already changed)
             if ($detail->getProgram() === $this) {
                 $detail->setProgram(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Certificate>
+     */
+    public function getCertificates(): Collection
+    {
+        return $this->certificates;
+    }
+
+    public function addCertificate(Certificate $certificate): static
+    {
+        if (!$this->certificates->contains($certificate)) {
+            $this->certificates->add($certificate);
+            $certificate->setProgram($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCertificate(Certificate $certificate): static
+    {
+        if ($this->certificates->removeElement($certificate)) {
+            // set the owning side to null (unless already changed)
+            if ($certificate->getProgram() === $this) {
+                $certificate->setProgram(null);
             }
         }
 

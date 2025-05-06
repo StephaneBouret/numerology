@@ -327,4 +327,21 @@ class Courses
 
         return $this;
     }
+
+    public function isCompletedByUser(User $user): bool
+    {
+        $userLessons = $this->lessons->filter(fn(Lesson $lesson) => $lesson->getUser() === $user);
+    
+        if ($userLessons->isEmpty()) {
+            return false;
+        }
+    
+        foreach ($userLessons as $lesson) {
+            if ($lesson->getStatus() !== Lesson::STATUS_DONE) {
+                return false;
+            }
+        }
+    
+        return true;
+    }
 }

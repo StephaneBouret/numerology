@@ -142,6 +142,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\OneToMany(targetEntity: QuizResult::class, mappedBy: 'user')]
     private Collection $quizResults;
 
+    /**
+     * @var Collection<int, Certificate>
+     */
+    #[ORM\OneToMany(targetEntity: Certificate::class, mappedBy: 'user')]
+    private Collection $certificates;
+
     public function __construct()
     {
         $this->lessons = new ArrayCollection();
@@ -151,6 +157,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         $this->testimonials = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
         $this->quizResults = new ArrayCollection();
+        $this->certificates = new ArrayCollection();
     }
 
     public function __toString()
@@ -601,6 +608,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
             // set the owning side to null (unless already changed)
             if ($quizResult->getUser() === $this) {
                 $quizResult->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Certificate>
+     */
+    public function getCertificates(): Collection
+    {
+        return $this->certificates;
+    }
+
+    public function addCertificate(Certificate $certificate): static
+    {
+        if (!$this->certificates->contains($certificate)) {
+            $this->certificates->add($certificate);
+            $certificate->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCertificate(Certificate $certificate): static
+    {
+        if ($this->certificates->removeElement($certificate)) {
+            // set the owning side to null (unless already changed)
+            if ($certificate->getUser() === $this) {
+                $certificate->setUser(null);
             }
         }
 

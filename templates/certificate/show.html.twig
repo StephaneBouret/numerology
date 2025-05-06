@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Certificat de réussite du programme
+	{{ program.name }}
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid container-padding">
+		<div class="tps8en">
+			<div class="zwg2r4">
+				<div class="certificate">
+					<header class="certificate-header">
+						<img src="{{ asset('img/logo.png') }}" alt="L'univers des nombres" class="certificate-logo">
+						<div class="certificate-info">
+							<p class="mb-0">N° de certificat :
+								{{ certificate.uuid }}</p>
+							<p class="mb-0">Url du certificat :
+								<a href="{{ path('app_certificate_show', {'uuid': certificate.uuid}) }}" class="gv7hiw">lun.nbr/{{ certificate.uuid }}</a>
+							</p>
+						</div>
+					</header>
+					<h2 class="certificate-subtitle">Certificat de fin de formation</h2>
+					<h1 class="certificate-title">{{ program.name }}</h1>
+					<footer class="certificate-footer">
+						<h2 class="certificate-learner">{{ user.firstname }}
+							{{ user.lastname }}</h2>
+						<p class="mb-0">
+							<strong>Date</strong>
+							:
+							{{ certificate.createdAt|format_datetime('long', 'none', locale: 'fr') }}
+						</p>
+						<p>
+							<strong>Longueur</strong>
+							:
+							{{ durationHours }}
+							heures au total
+						</p>
+					</footer>
+				</div>
+				<div class="xaie0a">
+					<span>
+						Le document ci-dessus certifie que
+						<strong>{{ user.firstname }}
+							{{ user.lastname }}</strong>
+						a validé le cours
+						{{ program.name }}
+						le
+						<strong>{{ certificate.createdAt|date('d/m/Y') }}</strong>. Le certificat indique que le participant a suivi et validé le cours dans son intégralité. La durée du cours représente le nombre total d'heures de vidéo du cours au moment le plus récent auquel le participant a terminé le cours.
+					</span>
+				</div>
+			</div>
+			<div class="qc6ue1">
+				<h1 class="pr-md-6 fw-semibold">Titulaire du certificat :</h1>
+				<div class="p06yyh">
+					<div class="sc-gravatar">
+						<img src="{{ vich_uploader_asset(app.user.avatar, 'imageFile') }}" class="sc-img-gravatar">
+					</div>
+					<div class="j35wup">
+						<a href="{{path('app_profile')}}" class="ub9umq">{{ user.firstname }}
+							{{ user.lastname }}</a>
+					</div>
+				</div>
+				<h2 class="ati55z">Plus d'information sur le programme</h2>
+				<div class="tntc4p">
+					<div class="w-100">
+						<a href="{{ path('app_program', {'slug': program.slug}) }}" class="s8f8io text-decoration-none">
+							<img src="{{ vich_uploader_asset(program, 'imageFile') }}" alt="{{ program.name }}" class="va71lx">
+						</a>
+					</div>
+					<div class="w-100 jz6zbt">
+						<h3 class="akwm7q">
+							<a href="{{ path('app_program', {'slug': program.slug}) }}" class="ufhrnr">{{ program.name }}</a>
+						</h3>
+					</div>
+				</div>
+				<div class="d-flex flex-wrap">
+					<div class="bf98vc"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
