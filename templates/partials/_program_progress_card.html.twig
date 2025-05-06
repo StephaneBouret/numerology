@@ -28,8 +28,8 @@
 <article class="mb-6 d-flex align-items-center">
 	<div class="{{ opacity }}">
 		<a class="thumb thumb-lg thumb-photo thumb-link" href="{{ relative_path(url) }}">
-            <img src="{{ vich_uploader_asset(prg, 'imageFile') }}" alt="{{ prg.name }}" class="thumb-img">
-        </a>
+			<img src="{{ vich_uploader_asset(prg, 'imageFile') }}" alt="{{ prg.name }}" class="thumb-img">
+		</a>
 	</div>
 	<div class="ml-3 minw315">
 		<header>
@@ -57,4 +57,7 @@
 			</span>
 		</div>
 	</div>
+	{% if isCompleted %}
+		{% include "partials/_certificate_button.html.twig" %}
+	{% endif %}
 </article>

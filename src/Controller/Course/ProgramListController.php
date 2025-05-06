@@ -17,6 +17,10 @@ final class ProgramListController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('home_index');
+        }
+
         $programs = $programRepository->findAllWithSectionsAndCourses();
 
         // Total des cours par programme en BDD

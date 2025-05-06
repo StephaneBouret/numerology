@@ -21,7 +21,6 @@ export default class Comments {
     
                     if (collapseComment) {
                         collapseComment.classList.add('show');
-                        collapseComment.style.display = 'block'; // Rendre visible le formulaire de commentaire
     
                         if (textAreaComment) {
                             setTimeout(() => {
@@ -45,7 +44,6 @@ export default class Comments {
                 const textAreaComment = document.getElementById('comments_form_content');
                 if (div) {
                     div.classList.remove('show');
-                    div.style.display = 'none';
                 }
 
                 if (textAreaComment) {

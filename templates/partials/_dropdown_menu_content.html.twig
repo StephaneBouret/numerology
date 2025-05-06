@@ -3,6 +3,51 @@
 		<span class="h1">{{ section.name }}</span>
 	</button>
 	<ul class="dropdown-menu px-3 py-2">
+		<li class="list-group list-group-xs list-group-menu mb-6">
+			<section class="d-flex align-items-start">
+				{% set isCompleted = nbrLessonsDone == nbrCourses and nbrCourses > 0 %}
+				{% set opacity = isCompleted ? 'opacity-2' : '' %}
+				{% set display = isCompleted ? 'd-none' : '' %}
+				{% set completed = isCompleted ? '' : 'd-none' %}
+				<div class="{{ opacity }}">
+					<a href="{{ path('app_sections', {'slug': section.program.slug}) }}" class="thumb thumb-lg thumb-photo thumb-link">
+						<img src="{{ vich_uploader_asset(section.program, 'imageFile') }}" alt="{{ section.program.name }}" class="thumb-img">
+					</a>
+				</div>
+				<div class="ml-3">
+					<header>
+						<h1 class="h4-title">
+							<a class="text-grey-dark text-decoration-none" href="{{ path('app_sections', {'slug': section.program.slug}) }}">
+								{{ section.program.name }}
+							</a>
+						</h1>
+						{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_GUEST') or (app.user and app.user.purchases|filter(purchase => purchase.program == section.program and purchase.status == constant('App\\Entity\\Purchase::STATUS_PAID'))|length > 0) %}
+							<div class="bulleted">
+								<span class="bulleted-item w-100 mt-2">
+									<div class="d-flex align-items-start flex-column {{ display }}">
+										<div class="d-block w-100">
+											<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ nbrLessonsDone }}" aria-valuemin="0" aria-valuemax="{{ nbrCourses }}">
+												<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ (nbrLessonsDone / nbrCourses)*100 }}%"></div>
+											</div>
+										</div>
+										<span>{{ nbrLessonsDone }}/{{ nbrCourses }}
+											complété(s)</span>
+									</div>
+									<div class="d-flex align-items-center {{ completed }}">
+										{% include "partials/buttons/_completed_svg.html.twig" %}
+										<span>
+											Complété
+										</span>
+									</div>
+								</span>
+							</div>
+						{% else %}
+							{% include "partials/_title_if_pending.html.twig" %}
+						{% endif %}
+					</header>
+				</div>
+			</section>
+		</li>
 		{% for s in sections %}
 			<li class="list-group list-group-menu list-group-xs mb-6">
 				<nav aria-label="{{ s.name }}">

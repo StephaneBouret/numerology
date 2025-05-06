@@ -43,6 +43,9 @@
 						{% endif %}
 					</header>
 				</div>
+				{% if isCompleted %}
+                    {{ include('partials/_certificate_button.html.twig', {'prg': program}) }}
+                {% endif %}
 			</section>
 		</li>
 		{% for s in sections %}

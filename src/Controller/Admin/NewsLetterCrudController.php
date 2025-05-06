@@ -29,14 +29,14 @@ class NewsLetterCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         $actions = parent::configureActions($actions);
-        $actions->disable(Action::NEW, Action::EDIT);
+        $actions->disable(Action::NEW);
         return $actions;
     }
 
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
+            IdField::new('id')->onlyOnIndex(),
             EmailField::new('email', 'Email :'),
             TextField::new('firstname', 'Prénom :'),
             TextField::new('lastname', 'Nom :'),
