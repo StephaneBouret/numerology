@@ -1,0 +1,46 @@
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+			{{include('certificate/pdf_styles.css.twig')}}</style>
+	</head>
+	<body>
+		<table style="width: 100%">
+			<tr>
+				<td style="text-align: left;">
+					<img src="{{ logo }}" alt="Logo" class="certificate-logo">
+				</td>
+				<td style="text-align: right; font-size: 0.65rem;">
+					<p class="meta mb-0">
+						<strong>N° de certificat :</strong>
+						{{ certificate.uuid }}</p>
+					<p class="meta mb-0">
+						<strong>Url du certificat :</strong>
+						lun.nbr/{{ certificate.uuid }}</p>
+				</td>
+			</tr>
+		</table>
+
+		<div class="text-left mt-3">
+			<p class="certificate-subtitle">Certificat de fin de formation</p>
+			<h1 class="certificate-title">{{ program.name }}</h1>
+		</div>
+
+		<div class="text-left">
+			<p class="certificate-learner">
+				{{ certificate.firstname ?? user.firstname }}
+				{{ certificate.lastname ?? user.lastname }}
+			</p>
+			<div style="margin-top: 0.5rem;">
+				<p class="meta">
+					<strong>Date :</strong>
+					{{ certificate.createdAt|format_datetime('long', 'none', locale='fr') }}</p>
+				<p class="meta">
+					<strong>Longueur :</strong>
+					{{ durationHours }}
+					heures au total</p>
+			</div>
+		</div>
+	</body>
+</html>

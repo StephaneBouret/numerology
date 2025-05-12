@@ -22,8 +22,8 @@
 					<h2 class="certificate-subtitle">Certificat de fin de formation</h2>
 					<h1 class="certificate-title">{{ program.name }}</h1>
 					<footer class="certificate-footer">
-						<h2 class="certificate-learner">{{ user.firstname }}
-							{{ user.lastname }}</h2>
+						<h2 class="certificate-learner">{{ certificate.firstname ?? user.firstname  }}
+							{{ certificate.lastname ?? user.lastname  }}</h2>
 						<p class="mb-0">
 							<strong>Date</strong>
 							:
@@ -40,8 +40,8 @@
 				<div class="xaie0a">
 					<span>
 						Le document ci-dessus certifie que
-						<strong>{{ user.firstname }}
-							{{ user.lastname }}</strong>
+						<strong>{{ certificate.firstname ?? user.firstname }}
+							{{ certificate.lastname ?? user.lastname }}</strong>
 						a validé le cours
 						{{ program.name }}
 						le
@@ -56,8 +56,8 @@
 						<img src="{{ vich_uploader_asset(app.user.avatar, 'imageFile') }}" class="sc-img-gravatar">
 					</div>
 					<div class="j35wup">
-						<a href="{{path('app_profile')}}" class="ub9umq">{{ user.firstname }}
-							{{ user.lastname }}</a>
+						<span class="ub9umq">{{ user.firstname }}
+							{{ user.lastname }}</span>
 					</div>
 				</div>
 				<h2 class="ati55z">Plus d'information sur le programme</h2>
@@ -74,9 +74,28 @@
 					</div>
 				</div>
 				<div class="d-flex flex-wrap">
-					<div class="bf98vc"></div>
+					<div class="bf98vc">
+						<a href="{{path('app_certificate_print', { 'uuid': certificate.uuid })}}" class="oiq8m1 ldn-btn-medium ldn-heading-sm text-decoration-none">
+							<svg aria-hidden="true" focusable="false" class="ldn-svg-icon ldn-svg-icon-xsmall">
+								<path xmlns="http://www.w3.org/2000/svg" fill="#5ec5af" d="M14 2H6c-1.11 0-2 .89-2 2v16c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V8l-6-6m-2 17l-4-4h2.5v-3h3v3H16l-4 4m1-10V3.5L18.5 9H13Z"/>
+							</svg>
+							<span>Télécharger</span>
+						</a>
+					</div>
+				</div>
+				<div>
+					<span>
+						<button type="button" class="ldn-btn ldn-btn-link ldn-heading-sm" data-bs-toggle="modal" data-bs-target="#editNameModal">
+							Mettez à jour votre certificat</button>
+						en corrigeant votre prénom et/ou votre nom
+					</span>
 				</div>
 			</div>
 		</div>
 	</div>
+    {% include "partials/_modal_edit_name_certificate.html.twig" %}
+{% endblock %}
+
+{% block importmap %}
+    {{ importmap(['app', 'certificate_name']) }}
 {% endblock %}

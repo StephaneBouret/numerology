@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\CertificateNameType;
 use App\Repository\CertificateRepository;
 use App\Repository\ProgramRepository;
 use App\Service\CertificateService;
@@ -9,6 +10,8 @@ use App\Service\CompletionService;
 use App\Service\ProgramDurationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -78,5 +81,34 @@ final class CertificateController extends AbstractController
             'program' => $program,
             'durationHours' => $durationHours,
         ]);
+    }
+
+    #[Route('/certificate/{uuid}/update-name', name: 'app_certificate_update_name', methods: ['POST'])]
+    public function updateName(string $uuid, Request $request): JsonResponse
+    {
+        $certificate = $this->certificateRepository->findOneBy(['uuid' => $uuid]);
+
+        if (!$certificate) {
+            return new JsonResponse(['success' => false, 'message' => 'Certificat introuvable.'], 404);
+        }
+
+        $form = $this->createForm(CertificateNameType::class, $certificate);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $firstname = ucfirst($form->get('firstname')->getData());
+            $lastname = mb_strtoupper($form->get('lastname')->getData());
+            $certificate->setFirstname($firstname)
+                        ->setLastname($lastname);
+            $this->em->flush();
+
+            return new JsonResponse(['success' => true]);
+        }
+
+        return new JsonResponse([
+            'success' => false,
+            'message' => 'Formulaire invalide.',
+            'errors' => (string) $form->getErrors(true, false)
+        ], 400);
     }
 }

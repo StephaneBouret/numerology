@@ -6,6 +6,7 @@ use App\Repository\CertificateRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CertificateRepository::class)]
 #[UniqueEntity(fields: ['uuid'], message: 'Ce certificat existe déjà')]
@@ -29,6 +30,18 @@ class Certificate
     #[ORM\ManyToOne(inversedBy: 'certificates')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le prénom est obligatoire")]
+    #[Assert\Length(min: 2, max: 50)]
+    #[Assert\Regex(pattern: '/^[A-Za-zÀ-ÿ\'\- ]+$/u', message: "Le prénom ne peut contenir que des lettres, espaces, tirets ou apostrophes")]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le nom est obligatoire")]
+    #[Assert\Length(min: 2, max: 50)]
+    #[Assert\Regex(pattern: '/^[A-Za-zÀ-ÿ\'\- ]+$/u', message: "Le nom ne peut contenir que des lettres, espaces, tirets ou apostrophes")]
+    private ?string $lastname = null;
 
     public function __construct()
     {
@@ -85,6 +98,30 @@ class Certificate
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(?string $firstname): static
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(?string $lastname): static
+    {
+        $this->lastname = $lastname;
 
         return $this;
     }

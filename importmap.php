@@ -44,6 +44,10 @@ return [
         'path' => './assets/js/admin_check_name.js',
         'entrypoint' => true,
     ],
+    'certificate_name' => [
+        'path' => './assets/js/certificate_name_update.js',
+        'entrypoint' => true,
+    ],
     '@fortawesome/fontawesome-free/css/all.css' => [
         'version' => '6.6.0',
         'type' => 'css',

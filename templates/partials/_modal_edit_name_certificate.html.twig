@@ -1,0 +1,37 @@
+<!-- Modal de modification du nom -->
+<div class="modal fade" id="editNameModal" tabindex="-1" aria-labelledby="editNameModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<form id="certificate-name-form">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editNameModalLabel">Mise à jour de votre certificat</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+				<div class="modal-body">
+					<p class="mb-0">
+						<span>Confirmez que votre nom est bien
+							<strong>{{ certificate.firstname ?? user.firstname }}
+								{{ certificate.lastname ?? user.lastname }}</strong>
+						</span>
+					</p>
+					<p class="h5ihvf">
+						<span>Ce n'est pas correct&nbsp;?
+							<span class="ayqj2m">Mettez à jour votre prénom et votre nom</span>, puis enregistrez les modifications ici.</span>
+					</p>
+					<div class="mb-3">
+						<label for="firstname" class="form-label">Prénom</label>
+						<input type="text" class="form-control" id="firstname" name="certificate_name[firstname]" value="{{ certificate.firstname ?? user.firstname }}">
+					</div>
+					<div class="mb-3">
+						<label for="lastname" class="form-label">Nom</label>
+						<input type="text" class="form-control" id="lastname" name="certificate_name[lastname]" value="{{ certificate.lastname ?? user.lastname }}">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-primary">Enregistrer</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
