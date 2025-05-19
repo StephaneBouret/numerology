@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\About;
 use App\Entity\Answer;
 use App\Entity\Category;
+use App\Entity\Certificate;
 use App\Entity\Comments;
 use App\Entity\Company;
 use App\Entity\Contact;
@@ -72,6 +73,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Témoignages', 'fa-solid fa-face-smile', Testimonial::class);
         yield MenuItem::linkToCrud('Invitations', 'fas fa-envelope', Invitation::class);
         yield MenuItem::linkToCrud('Appareils', 'fa-solid fa-desktop', UserDevice::class);
+        yield MenuItem::linkToCrud('Certificats', 'fa-solid fa-certificate', Certificate::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'home_index');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

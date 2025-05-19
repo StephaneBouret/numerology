@@ -27,8 +27,13 @@ function initializeValidation() {
     fields.forEach(field => {
         const element = document.querySelector(field.id);
         if (element) {
-            element.removeEventListener("input", field.handler); // Empêche les doublons
+            // Supprimer les écouteurs précédents (au cas où)
+            element.removeEventListener("input", field.handler);
+            element.removeEventListener("change", field.handler);
+
+            // Ajouter les deux types d'écouteurs
             element.addEventListener("input", field.handler);
+            element.addEventListener("change", field.handler);
         }
     });
 
@@ -83,6 +88,7 @@ function checkLastname() {
 function checkEmail() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     email = emailRegex.test(this.value);
+    checkAll();
 }
 
 function checkAdress() {
@@ -99,7 +105,7 @@ function checkPostalCode() {
 
 function checkCity() {
     const cityValue = this.value; // Obtenez la valeur actuelle
-    const cityRegex = /^\s*[a-zA-Z]{1}[0-9a-zA-Z][0-9a-zA-Z '-.=#/]*$/gmi;
+    const cityRegex = /^\s*\p{L}{1}[\p{L}\p{N} '-.=#/]*$/gmu;
     city = cityRegex.test(cityValue);
     checkAll();
 }
