@@ -20,6 +20,10 @@ return [
         'path' => './assets/js/register.js',
         'entrypoint' => true,
     ],
+    'location' => [
+        'path' => './assets/js/location.js',
+        'entrypoint' => true,
+    ],
     'resetpw' => [
         'path' => './assets/js/resetpw.js',
         'entrypoint' => true,

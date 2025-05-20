@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Google\GoogleService;
 use App\Security\EmailVerifier;
 use App\Service\AvatarService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +27,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/inscription', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, AvatarService $avatarService): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, AvatarService $avatarService, GoogleService $googleService): Response
     {
         $session = $this->requestStack->getSession();
         $targetPath = $request->query->get('target', $session->get('_security.main.target_path'));
@@ -74,6 +75,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
+            'google_api_key' => $googleService->getGoogleKey(),
         ]);
     }
 
