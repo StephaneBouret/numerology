@@ -3053,6 +3053,11 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     color: #555555;
 }
 
+.monvxp {
+    font-size: 0.875rem;
+    margin: 10px 0 5px 10px;
+}
+
 .zripw3 {
     position: relative;
     margin: -40px 0 0 145px;

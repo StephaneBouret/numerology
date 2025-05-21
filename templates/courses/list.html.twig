@@ -52,7 +52,9 @@
 								{% for prg in otherPrograms %}
 									<article class="mb-6 d-flex align-items-center">
 										<div>
-											<a class="thumb thumb-lg thumb-photo thumb-link thumb-program-numerology" href="{{ path('app_program', {'slug': prg.slug}) }}"></a>
+											<a class="thumb thumb-lg thumb-photo thumb-link" href="{{ path('app_program', {'slug': prg.slug}) }}">
+												<img src="{{ vich_uploader_asset(prg, 'imageFile') }}" alt="{{ prg.name }}" class="thumb-img">
+											</a>
 										</div>
 										<div class="ml-3 minw315">
 											<header class="mb-1">

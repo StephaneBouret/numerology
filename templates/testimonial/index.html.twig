@@ -62,8 +62,11 @@
 							<div class="zripw3">
 								{% include "partials/_rating.html.twig" with {'rating': testimonial.rating } %}
 							</div>
+							<div class="d-flex align-items-center">
 							<h3 class="ik2fic">{{ testimonial.author.firstname }}
 								{{ testimonial.author.lastname }}</h3>
+							<span class="monvxp">{{ testimonial.createdAt|format_datetime('short', 'none', locale: 'fr') }}</span>
+							</div>
 						</div>
 					</div>
 				{% endfor %}

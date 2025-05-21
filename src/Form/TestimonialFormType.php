@@ -18,6 +18,9 @@ class TestimonialFormType extends AbstractType
         $builder
             ->add('rating', HiddenType::class, [
                 'label' => false,
+                    'attr' => [
+                        'value' => 5, // Valeur par défaut
+                    ],
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Votre commentaire',
