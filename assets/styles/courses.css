@@ -3924,6 +3924,16 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     height: 1.6rem;
 }
 
+/* Optionnel : masque les suggestions Google après sélection */
+.pac-container {
+    z-index: 9999 !important;
+}
+
+/* Masque manuellement si besoin après sélection */
+input.pac-target-input:focus:not(:placeholder-shown) + .pac-container {
+    display: none !important;
+}
+
 /*--------------------------------------------------------------
 # root
 --------------------------------------------------------------*/

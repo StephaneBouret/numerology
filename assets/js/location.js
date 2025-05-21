@@ -40,6 +40,10 @@ function fillInAddress(place) {
         const inputElement = getFormInputElement(componentType);
         if (inputElement) {
             inputElement.value = getComponentText(componentType);
+
+            // Déclenche les événements 'input' et 'change'
+            inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+            inputElement.dispatchEvent(new Event('change', { bubbles: true }));
         }
     }
 }
@@ -57,8 +61,9 @@ async function initAutocomplete() {
     } = await APILoader.importLibrary('places');
 
     const input = getFormInputElement('adress');
+    input.setAttribute('autocomplete', 'off'); // désactive l'autofill natif
 
-    const autocomplete = new Autocomplete(getFormInputElement('adress'), {
+    autocomplete = new Autocomplete(getFormInputElement('adress'), {
         fields: ['address_components', 'geometry', 'name'],
         types: ['address'],
         // componentRestrictions: { country: 'fr' }
@@ -70,7 +75,20 @@ async function initAutocomplete() {
             window.alert(`Aucun détail pour : '${place.name}'`);
             return;
         }
+
         fillInAddress(place);
+
+        const input = getFormInputElement('adress');
+        input.blur(); // Pour forcer la fermeture
+
+        // Supprime/masque les suggestions après un court délai
+        setTimeout(() => {
+            const pacContainers = document.querySelectorAll('.pac-container');
+            pacContainers.forEach(container => {
+                container.parentNode?.removeChild(container); // supprime complètement
+            });
+        }, 200);
+
         document.getElementById('additional-fields').style.display = 'block';
     });
 }
