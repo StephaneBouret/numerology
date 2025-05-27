@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Service\AvatarService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -11,7 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-    public function __construct(protected UserPasswordHasherInterface $passwordHasher)
+    public function __construct(protected UserPasswordHasherInterface $passwordHasher, protected AvatarService $avatarService)
     {
     }
 
@@ -39,6 +40,7 @@ class AppFixtures extends Fixture
             ->setPassword($hash);
 
         $manager->persist($admin);
+        $this->avatarService->createAndAssignAvatar($admin);
 
         $users = [];
         for ($u = 0; $u < 5; $u++) {
@@ -60,6 +62,7 @@ class AppFixtures extends Fixture
                 ->setPassword($hash);
 
             $manager->persist($user);
+            $this->avatarService->createAndAssignAvatar($user);
             $users[] = $user;
         }
 

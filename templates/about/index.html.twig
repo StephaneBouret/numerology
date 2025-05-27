@@ -9,7 +9,8 @@
 			<div class="container-about">
 				<section class="wrap-about">
 					<div class="img-about">
-						<img src="{{ vich_uploader_asset(trainer, 'imageFile') }}" alt="Qui suis-je ?" class="about-img">
+						{% set trainerImage = vich_uploader_asset(trainer, 'imageFile') %}
+						<img src="{{ trainerImage ? trainerImage : asset('img/france-tuncq-pict.jpg') }}" alt="Qui suis-je ?" class="about-img">
 					</div>
 					<div class="content-about text-center">
 						<header>
