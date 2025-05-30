@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     avatars_directory: '%kernel.project_dir%/public/images/avatars'
+    maintenanceFilePath: '%env(bool:APP_MAINTENANCE)%'
     app.hostname: '%env(APP_HOSTNAME)%'
 
 services:
@@ -59,6 +60,10 @@ services:
     App\EventListener\VideoDurationListener:
         tags:
             - { name: kernel.event_listener, event: vich_uploader.post_upload }
+    
+    App\EventListener\MaintenanceListener:
+        arguments:
+            - '%maintenanceFilePath%'
 
     App\Command\GenerateSitemapCommand:
         arguments:

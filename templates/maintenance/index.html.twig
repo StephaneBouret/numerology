@@ -1,0 +1,25 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Mode de maintenance
+{% endblock %}
+
+{% block body %}
+	<div class="container text-center mt-5">
+		<h1 class="display-4">Découvez la puissance de la Numérologie</h1>
+		<p class="lead mt-3">
+			Apprenez à décrypter les chiffres et leur signification pour mieux vous comprendre et guider votre vie.
+									        Nos formations complètes arrivent très bientôt !
+		</p>
+
+		<div class="mt-4">
+			<a href="#newsletter" class="btn btn-primary btn-lg">Soyez informé du lancement</a>
+		</div>
+
+		<section id="newsletter" class="mt-5">
+			<h2>Restez informé !</h2>
+			<p>Inscrivez-vous à notre newsletter et soyez parmi les premiers à découvrir nos formations.</p>
+			<a href="{{ path('app_newsletter') }}" class="btn btn-dark">S'inscrire</a>
+		</section>
+	</div>
+{% endblock %}
