@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Repository\SettingRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,24 +15,32 @@ use Twig\Environment;
 #[AsEventListener(event: RequestEvent::class)]
 class MaintenanceListener
 {
-    public function __construct(protected bool $maintenance, protected Security $security, protected Environment $twig, protected RouterInterface $router, protected CacheInterface $cache)
-    {}
+    public function __construct(
+        private readonly SettingRepository $settingRepository,
+        private readonly CacheInterface $cache,
+        private readonly Security $security,
+        private readonly Environment $twig,
+        private readonly RouterInterface $router
+    ) {
+    }
 
     public function __invoke(RequestEvent $event)
     {
         $request = $event->getRequest();
-
-        if (!$this->maintenance) {
-            return;
-        }
+        $route = $request->attributes->get('_route');
 
         if ($request->isXmlHttpRequest()) {
             return;
         }
 
+        // Autorise les routes du profiler
+        if (str_starts_with($request->getPathInfo(), '/_wdt') || str_starts_with($request->getPathInfo(), '/_profiler')) {
+            return;
+        }
+
         $maintenance = $this->cache->get('maintenance_mode', function (ItemInterface $item) {
             $item->expiresAfter(300);
-            return true;
+            return $this->settingRepository->findOneBy(['settingKey' => 'maintenance'])?->getValue() ?? false;
         });
 
         $adminRoutes = ['/admin', '/login', '/2fa', '/2fa_check', '/contact'];
@@ -51,7 +60,7 @@ class MaintenanceListener
                 $this->twig->render('maintenance/index.html.twig'),
                 Response::HTTP_SERVICE_UNAVAILABLE
             );
-            // $response->headers->set('Symfony-Debug-Toolbar-Replace', '1');
+
             $event->setResponse($response);
             $event->stopPropagation();
         }

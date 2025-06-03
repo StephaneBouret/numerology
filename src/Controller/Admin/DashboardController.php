@@ -19,6 +19,7 @@ use App\Entity\NewsLetter;
 use App\Entity\Purchase;
 use App\Entity\Question;
 use App\Entity\Sections;
+use App\Entity\Setting;
 use App\Entity\Testimonial;
 use App\Entity\UserDevice;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,6 +75,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Invitations', 'fas fa-envelope', Invitation::class);
         yield MenuItem::linkToCrud('Appareils', 'fa-solid fa-desktop', UserDevice::class);
         yield MenuItem::linkToCrud('Certificats', 'fa-solid fa-certificate', Certificate::class);
+        yield MenuItem::linkToCrud('Maintenance', 'fas fa-cogs', Setting::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'home_index');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

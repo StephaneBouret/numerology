@@ -2,17 +2,23 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Company;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use App\Entity\Company;
 use libphonenumber\PhoneNumberUtil;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 
-class CompanyFixtures extends Fixture
+class CompanyFixtures extends Fixture implements FixtureGroupInterface
 {
     public function __construct(protected SluggerInterface $sluggger)
     {
+    }
+
+    public static function getGroups(): array
+    {
+        return ['company'];
     }
 
     public function load(ObjectManager $manager): void

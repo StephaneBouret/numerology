@@ -2,18 +2,24 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\User;
 use App\Service\AvatarService;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 use libphonenumber\PhoneNumberUtil;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class AppFixtures extends Fixture
+class UserFixtures extends Fixture implements FixtureGroupInterface
 {
     public function __construct(protected UserPasswordHasherInterface $passwordHasher, protected AvatarService $avatarService)
     {
+    }
+
+    public static function getGroups(): array
+    {
+        return ['user'];
     }
 
     public function load(ObjectManager $manager): void
