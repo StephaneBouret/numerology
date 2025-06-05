@@ -12,6 +12,7 @@ use App\Entity\Contact;
 use App\Entity\Courses;
 use App\Entity\FaqContent;
 use App\Entity\Invitation;
+use App\Entity\LaunchNotification;
 use App\Entity\Navigation;
 use App\Entity\User;
 use App\Entity\Program;
@@ -76,6 +77,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Appareils', 'fa-solid fa-desktop', UserDevice::class);
         yield MenuItem::linkToCrud('Certificats', 'fa-solid fa-certificate', Certificate::class);
         yield MenuItem::linkToCrud('Maintenance', 'fas fa-cogs', Setting::class);
+        yield MenuItem::linkToCrud('Notif. Lancement', 'fas fa-rocket', LaunchNotification::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'home_index');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

@@ -177,4 +177,8 @@ return [
         'path' => './assets/js/countTestimonial.js',
         'entrypoint' => true,
     ],
+    'launchNotification' => [
+        'path' => './assets/js/launchNotification.js',
+        'entrypoint' => true,
+    ],
 ];

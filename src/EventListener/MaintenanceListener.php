@@ -43,7 +43,7 @@ class MaintenanceListener
             return $this->settingRepository->findOneBy(['settingKey' => 'maintenance'])?->getValue() ?? false;
         });
 
-        $adminRoutes = ['/admin', '/login', '/2fa', '/2fa_check', '/contact'];
+        $adminRoutes = ['/admin', '/login', '/2fa', '/2fa_check', '/contact', '/maintenance', '/api/launch-notification'];
 
         foreach ($adminRoutes as $route) {
             if (str_starts_with($request->getPathInfo(), $route)) {

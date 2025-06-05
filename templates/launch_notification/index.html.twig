@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Maintenance - Soyez notifié
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<section class="newsletter jyoYKi">
+			<div class="container-news">
+				<div id="launch-response" class="mb-3"></div>
+				<section class="wrap-news">
+					<div class="content-news text-center">
+						<header>
+							<h2 class="title-news">Lancement prochain : soyez informé(e) !</h2>
+						</header>
+						<div class="form-news">
+                        <form id="launch-form" data-api="{{ path('app_launch_notification') }}">                        
+							{{ form_start(form, { 'attr': {'id': 'launch-form'} }) }}
+							{{ form_errors(form.email) }}
+							<div class="content-sign-up-form">
+								<div class="input-row">
+									{{ form_widget(form.email, { 'attr': {'class': 'input-email'} }) }}
+								</div>
+								{{ form_rest(form) }}
+								<button type="submit" id="submit-button" class="submit-news">
+									<span class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+									<span class="button-text">Être notifié</span>
+								</button>
+							</div>
+							{{ form_end(form) }}
+                        </form>
+						</div>
+					</div>
+				</section>
+			</div>
+		</section>
+	</div>
+	{% include "shared/_footer.html.twig" %}
+{% endblock %}
+
+{% block importmap %}
+    {{ importmap(['app', 'launchNotification']) }}
+{% endblock %}
