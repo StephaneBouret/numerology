@@ -98,7 +98,7 @@ class ProfileController extends AbstractController
 
     #[Route('profile/user/{id}/delete', name: 'app_user_delete')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour accéder à cette page')]
-    public function delete(Request $request, User $user, UserRepository $userRepository)
+    public function delete(Request $request, User $user, EntityManagerInterface $em)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -106,10 +106,11 @@ class ProfileController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $this->container->get('security.token_storage')->setToken(null);
-            $userRepository->remove($user, true);
+            $em->remove($user);
+            $em->flush();
             $this->addFlash('success', 'Votre compte a bien été supprimé !');
         }
 
-        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('home_index', [], Response::HTTP_SEE_OTHER);
     }
 }
