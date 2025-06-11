@@ -31,7 +31,8 @@ final class NewsletterController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $new->setEmail($form->get('email')->getData())
+            $inputEmail = $form->get('email')->getData();
+            $new->setEmail($inputEmail)
                 ->setFirstname($user->getFirstname())
                 ->setLastname($user->getLastname());
 
@@ -41,10 +42,13 @@ final class NewsletterController extends AbstractController
             $mail->sendMail(
                 null,
                 'Inscription à la newsletter',
-                'contact@numerology.fr',
+                'contact@luniversdesnombres.com',
                 'Inscription à la newsletter de numérologie',
                 'newsletter',
-                ['user' => $user]
+                [
+                    'user' => $user,
+                    'inputEmail' => $inputEmail,
+                ]
             );
 
             $this->addFlash('success', 'Votre demande a bien été envoyée');

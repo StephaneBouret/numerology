@@ -12,16 +12,42 @@ let pass = false;
 // Fonction pour initialiser la validation des champs
 function initializeValidation() {
     // Liste des champs et des fonctions de validation
-    const fields = [
-        { id: "#registration_form_firstname", handler: checkFirstname},
-        { id: "#registration_form_lastname", handler: checkLastname },
-        { id: "#registration_form_email", handler: checkEmail },
-        { id: "#registration_form_adress", handler: checkAdress },
-        { id: "#registration_form_postalCode", handler: checkPostalCode },
-        { id: "#registration_form_phone", handler: checkPhone },
-        { id: "#registration_form_city", handler: checkCity },
-        { id: "#registration_form_agreeTerms", handler: checkRgpd },
-        { id: "#registration_form_plainPassword", handler: checkPass },
+    const fields = [{
+            id: "#registration_form_firstname",
+            handler: checkFirstname
+        },
+        {
+            id: "#registration_form_lastname",
+            handler: checkLastname
+        },
+        {
+            id: "#registration_form_email",
+            handler: checkEmail
+        },
+        {
+            id: "#registration_form_adress",
+            handler: checkAdress
+        },
+        {
+            id: "#registration_form_postalCode",
+            handler: checkPostalCode
+        },
+        {
+            id: "#registration_form_phone",
+            handler: checkPhone
+        },
+        {
+            id: "#registration_form_city",
+            handler: checkCity
+        },
+        {
+            id: "#registration_form_agreeTerms",
+            handler: checkRgpd
+        },
+        {
+            id: "#registration_form_plainPassword",
+            handler: checkPass
+        },
     ];
 
     fields.forEach(field => {
@@ -45,13 +71,48 @@ function initializeValidation() {
 document.addEventListener("DOMContentLoaded", () => {
     initializeValidation(); // Initialisation lors du chargement de la page
 
+    // Génération du mot de passe
+    const generateBtn = document.querySelector("#generate-password");
+    const passwordInput = document.querySelector("#registration_form_plainPassword");
+
+    if (generateBtn && passwordInput) {
+        generateBtn.addEventListener("click", () => {
+            const icon = generateBtn.querySelector("i");
+            const label = generateBtn.querySelector("span");
+
+            icon.classList.remove("bi-shuffle");
+            icon.classList.add("bi-arrow-repeat", "spin");
+
+            const newPassword = generateStrongPassword(24);
+            passwordInput.value = newPassword;
+            passwordInput.dispatchEvent(new Event('input'));
+
+            navigator.clipboard.writeText(newPassword).then(() => {
+                icon.className = "bi bi-clipboard-check text-success";
+                label.textContent = "Copié !";
+
+                setTimeout(() => {
+                    label.textContent = "Générer";
+                    icon.className = "bi bi-shuffle";
+                }, 2000);
+            }).catch(() => {
+                icon.className = "bi bi-exclamation-triangle text-danger";
+                label.textContent = "Erreur";
+
+                setTimeout(() => {
+                    label.textContent = "Générer";
+                    icon.className = "bi bi-shuffle";
+                }, 2000);
+            });
+        });
+    }
+
     const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
             if (mutation.type === "childList") {
                 // Si le formulaire est ajouté ou mis à jour
                 const form = document.querySelector("#registration_form");
                 if (form && mutation.target.contains(form)) {
-                    console.log("Formulaire détecté ou mis à jour");
                     initializeValidation();
                 }
             }
@@ -64,16 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
         subtree: true, // Observer tous les noeuds enfants
     })
 });
-
-// document.querySelector("#registration_form_firstname").addEventListener("input", checkFirstname);
-// document.querySelector("#registration_form_lastname").addEventListener("input", checkLastname);
-// document.querySelector("#registration_form_email").addEventListener("input", checkEmail);
-// document.querySelector("#registration_form_adress").addEventListener("input", checkAdress);
-// document.querySelector("#registration_form_postalCode").addEventListener("input", checkPostalCode);
-// document.querySelector("#registration_form_phone").addEventListener("input", checkPhone);
-// document.querySelector("#registration_form_city").addEventListener("input", checkCity);
-// document.querySelector("#registration_form_agreeTerms").addEventListener("input", checkRgpd);
-// document.querySelector('#registration_form_plainPassword').addEventListener("input", checkPass);
 
 function checkFirstname() {
     firstname = this.value.length > 2;
@@ -122,9 +173,10 @@ function checkRgpd() {
 }
 
 function checkAll() {
-    document.querySelector("#submit-button").setAttribute("disabled", "disabled");
-    if (email && firstname && lastname && adress && postalCode && city && phone && pass && rgpd) {    
-        document.querySelector("#submit-button").removeAttribute("disabled");
+    const submitBtn = document.querySelector("#submit-button");
+    submitBtn.setAttribute("disabled", "disabled");
+    if (email && firstname && lastname && adress && postalCode && city && phone && pass && rgpd) {
+        submitBtn.removeAttribute("disabled");
     }
 }
 
@@ -176,7 +228,6 @@ function checkPass() {
     }
 
     entropyElement.textContent = entropy;
-
     checkAll();
 }
 
@@ -237,15 +288,30 @@ function evaluatePasswordStrength(password) {
     // Formule de calcul de l'entropie
     let entropy = chars * Math.log2(pool) + (length - chars) * Math.log2(chars);
 
-    if (entropy >= 120) {
-        return PasswordStrength.STRENGTH_VERY_STRONG;
-    } else if (entropy >= 100) {
-        return PasswordStrength.STRENGTH_STRONG;
-    } else if (entropy >= 80) {
-        return PasswordStrength.STRENGTH_MEDIUM;
-    } else if (entropy >= 60) {
-        return PasswordStrength.STRENGTH_WEAK;
-    } else {
-        return PasswordStrength.STRENGTH_VERY_WEAK;
+    if (entropy >= 120) return PasswordStrength.STRENGTH_VERY_STRONG;
+    if (entropy >= 100) return PasswordStrength.STRENGTH_STRONG;
+    if (entropy >= 80) return PasswordStrength.STRENGTH_MEDIUM;
+    if (entropy >= 60) return PasswordStrength.STRENGTH_WEAK;
+    return PasswordStrength.STRENGTH_VERY_WEAK;
+}
+
+// Génération de mot de passe sécurisé
+function generateStrongPassword(length = 16) {
+    const lowercase = "abcdefghijklmnopqrstuvwxyz";
+    const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "0123456789";
+    const symbols = "!@#$%^&*()_+{}[]<>?=-";
+    const all = lowercase + uppercase + numbers + symbols;
+
+    let password = "";
+    password += lowercase[Math.floor(Math.random() * lowercase.length)];
+    password += uppercase[Math.floor(Math.random() * uppercase.length)];
+    password += numbers[Math.floor(Math.random() * numbers.length)];
+    password += symbols[Math.floor(Math.random() * symbols.length)];
+
+    for (let i = 4; i < length; i++) {
+        password += all[Math.floor(Math.random() * all.length)];
     }
+
+    return password.split('').sort(() => Math.random() - 0.5).join('');
 }

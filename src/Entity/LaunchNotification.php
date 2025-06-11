@@ -21,6 +21,9 @@ class LaunchNotification
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column]
+    private ?bool $isSent = false;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -51,6 +54,18 @@ class LaunchNotification
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getIsSent(): ?bool
+    {
+        return $this->isSent;
+    }
+
+    public function setIsSent(bool $isSent): static
+    {
+        $this->isSent = $isSent;
 
         return $this;
     }

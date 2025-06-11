@@ -14,10 +14,10 @@ function getFormInputElement(componentType) {
 }
 
 function fillInAddress(place) {
-    function getComponentName(componentType) {
+    function getComponentName(type) {
         for (const component of place.address_components || []) {
-            if (component.types.includes(componentType)) {
-                return SHORT_NAME_ADDRESS_COMPONENT_TYPES.has(componentType) ?
+            if (component.types.includes(type)) {
+                return SHORT_NAME_ADDRESS_COMPONENT_TYPES.has(type) ?
                     component.short_name :
                     component.long_name;
             }
@@ -25,25 +25,25 @@ function fillInAddress(place) {
         return '';
     }
 
-    function getComponentText(componentType) {
-        if (componentType === 'adress') {
+    function getComponentText(type) {
+        if (type === 'adress') {
             return `${getComponentName('street_number')} ${getComponentName('route')}`;
-        } else if (componentType === 'city') {
+        } else if (type === 'city') {
             return getComponentName('locality') || getComponentName('administrative_area_level_1');
-        } else if (componentType === 'postalCode') {
+        } else if (type === 'postalCode') {
             return getComponentName('postal_code'); // Capture directe du code postal
         }
         return '';
     }
 
-    for (const componentType of ADDRESS_COMPONENT_TYPES_IN_FORM) {
-        const inputElement = getFormInputElement(componentType);
-        if (inputElement) {
-            inputElement.value = getComponentText(componentType);
+    for (const type of ADDRESS_COMPONENT_TYPES_IN_FORM) {
+        const input = getFormInputElement(type);
+        if (input) {
+            input.value = getComponentText(type);
 
             // Déclenche les événements 'input' et 'change'
-            inputElement.dispatchEvent(new Event('input', { bubbles: true }));
-            inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
         }
     }
 }
@@ -63,7 +63,7 @@ async function initAutocomplete() {
     const input = getFormInputElement('adress');
     input.setAttribute('autocomplete', 'off'); // désactive l'autofill natif
 
-    autocomplete = new Autocomplete(getFormInputElement('adress'), {
+    autocomplete = new Autocomplete(input, {
         fields: ['address_components', 'geometry', 'name'],
         types: ['address'],
         // componentRestrictions: { country: 'fr' }
@@ -78,35 +78,45 @@ async function initAutocomplete() {
 
         fillInAddress(place);
 
-        const input = getFormInputElement('adress');
+        // Active les champs ville et code postal
+        const cityInput = getFormInputElement('city');
+        const postalInput = getFormInputElement('postalCode');
+
+        cityInput.disabled = false;
+        postalInput.disabled = false;
+
+        document.getElementById('additional-fields').style.display = 'block';
         input.blur(); // Pour forcer la fermeture
 
         // Supprime/masque les suggestions après un court délai
         setTimeout(() => {
-            const pacContainers = document.querySelectorAll('.pac-container');
-            pacContainers.forEach(container => {
-                container.parentNode?.removeChild(container); // supprime complètement
-            });
+            document.querySelectorAll('.pac-container').forEach(c => c.remove());
         }, 200);
-
-        document.getElementById('additional-fields').style.display = 'block';
     });
 }
 
 function setupAutocompleteTrigger() {
-    const input = getFormInputElement('adress');
+    const addressInput = getFormInputElement('adress');
+    const cityInput = getFormInputElement('city');
+    const postalInput = getFormInputElement('postalCode');
 
-    input.addEventListener('input', () => {
-        if (input.value.length >= 3 && !initialized) {
+    // Désactive les champs jusqu'à la sélection
+    cityInput.disabled = true;
+    postalInput.disabled = true;
+
+    addressInput.addEventListener('input', () => {
+        if (addressInput.value.length >= 3 && !initialized) {
             initAutocomplete();
         }
     });
 
-    input.addEventListener('blur', () => {
+    addressInput.addEventListener('blur', () => {
         if (!autocomplete?.getPlace?.()) {
             // Réinitialisation si aucune sélection faite
-            getFormInputElement('city').value = '';
-            getFormInputElement('postalCode').value = '';
+            cityInput.value = '';
+            postalInput.value = '';
+            cityInput.disabled = true;
+            postalInput.disabled = true;
             document.getElementById('additional-fields').style.display = 'none';
         }
     });
