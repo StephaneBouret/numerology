@@ -12,12 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class NewsletterController extends AbstractController
 {
     #[Route('/newsletter', name: 'app_newsletter')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour accéder à cette page')]
-    public function index(Request $request, EntityManagerInterface $em, SendMailService $mail): Response
+    public function index(Request $request, EntityManagerInterface $em, SendMailService $mail, TranslatorInterface $translator): Response
     {
         /** @var User */
         $user = $this->getUser();
@@ -51,7 +52,8 @@ final class NewsletterController extends AbstractController
                 ]
             );
 
-            $this->addFlash('success', 'Votre demande a bien été envoyée');
+            $message = $translator->trans('Your request has been sent');
+            $this->addFlash('success', $message);
             return $this->redirectToRoute('home_index');
         }
 

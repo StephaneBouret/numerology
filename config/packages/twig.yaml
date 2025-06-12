@@ -4,6 +4,7 @@ twig:
     globals:
         companyRepository: '@App\Repository\CompanyRepository'
         appName: "L'univers des nombres"
+        locales: '%app.locales%'
 
 when@test:
     twig:

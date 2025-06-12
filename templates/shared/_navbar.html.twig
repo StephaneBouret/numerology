@@ -11,33 +11,39 @@
 			<ul class="navbar-nav me-auto">
 				<li class="nav-item">
 					{% if app.user %}
-						<a class="nav-link" href="{{ path('app_courses_list') }}">🎓 Formations</a>
+						<a class="nav-link" href="{{ path('app_courses_list') }}">🎓
+							{% trans %}Trainings{% endtrans %}</a>
 					{% else %}
-						<a class="nav-link" href="/">🎓 Formations</a>
+						<a class="nav-link" href="/">🎓
+							{% trans %}Trainings{% endtrans %}</a>
 					{% endif %}
 				</li>
 				{% if app.user %}
 					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_newsletter') }}">💌 Newsletter</a>
+						<a class="nav-link" href="{{ path('app_newsletter') }}">💌
+							{% trans %}Newsletter{% endtrans %}</a>
 					</li>
 				{% endif %}
 				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_about') }}">👨‍💻 Qui suis-je ?</a>
+					<a class="nav-link" href="{{ path('app_about') }}">👨‍💻
+						{% trans %}About Me{% endtrans %}</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_testimonial') }}">💬 Témoignages</a>
+					<a class="nav-link" href="{{ path('app_testimonial') }}">💬
+						{% trans %}Testimonials{% endtrans %}</a>
 				</li>
 				<li class="nav-item">
 					<a href="{{ path('app_contact') }}" class="nav-link">
-						📣 Contact
+						📣
+						{% trans %}Contact{% endtrans %}
 					</a>
 				</li>
 			</ul>
-			<ul class="navbar-nav">
+			<ul class="navbar-nav align-items-center">
 				{% if app.user %}
 					{% if is_granted('ROLE_ADMIN') %}
 						<li class="nav-item">
-							<a href="{{ path('admin') }}" class="nav-link">Administration</a>
+							<a href="{{ path('admin') }}" class="nav-link">{% trans %}Administration{% endtrans %}</a>
 						</li>
 					{% endif %}
 					<div class="btn-group">
@@ -48,27 +54,34 @@
 						</button>
 						<ul class="dropdown-menu dropdown-menu-lg-end py-0">
 							<li class="py-2 px-2">
-								<a class="dropdown-item dropdown-user" href="{{path('app_profile')}}">Profil</a>
+								<a class="dropdown-item dropdown-user" href="{{path('app_profile')}}">{% trans %}Profile{% endtrans %}</a>
 							</li>
 							{% if app.user.purchases is not empty %}
 								<li class="py-2 px-2">
-									<a class="dropdown-item dropdown-user" href="{{path('app_purchase_list')}}">Mes commandes</a>
+									<a class="dropdown-item dropdown-user" href="{{path('app_purchase_list')}}">{% trans %}My orders{% endtrans %}</a>
 								</li>
 							{% endif %}
 							{% if app.user %}
 								<li class="py-2 px-2">
-									<a class="dropdown-item dropdown-user" href="{{path('app_device')}}">Mes appareils</a>
+									<a class="dropdown-item dropdown-user" href="{{path('app_device')}}">{% trans %}My devices{% endtrans %}</a>
 								</li>
 							{% endif %}
 							<div class="space-between"></div>
 							<li class="py-2 px-2">
-								<a class="dropdown-item dropdown-user color-btn-logout" href="{{ path('app_logout') }}">Se déconnecter</a>
+								<a class="dropdown-item dropdown-user color-btn-logout" href="{{ path('app_logout') }}">{% trans %}Logout{% endtrans %}</a>
 							</li>
 						</ul>
 					</div>
 				{% else %}
+					<li class="nav-item me-2">
+						<a href="{{ path('app_login') }}" class="btn btn-primary btn-connect">{% trans %}Login{% endtrans %}</a>
+					</li>
 					<li class="nav-item">
-						<a href="{{ path('app_login') }}" class="btn btn-primary btn-connect">Se connecter</a>
+						{% for locale in locales %}
+							{% if locale != app.request.locale %}
+								<a href="{{ path('change_locale', {locale: locale}) }}">{{ locale }}</a>
+							{% endif %}
+						{% endfor %}
 					</li>
 				{% endif %}
 			</ul>
