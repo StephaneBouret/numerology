@@ -76,14 +76,16 @@
 					<li class="nav-item me-2">
 						<a href="{{ path('app_login') }}" class="btn btn-primary btn-connect">{% trans %}Login{% endtrans %}</a>
 					</li>
-					<li class="nav-item">
-						{% for locale in locales %}
-							{% if locale != app.request.locale %}
-								<a href="{{ path('change_locale', {locale: locale}) }}">{{ locale }}</a>
-							{% endif %}
-						{% endfor %}
-					</li>
 				{% endif %}
+				<li class="nav-item">
+					{% for locale in locales %}
+						{% if locale != app.request.locale %}
+							<a href="{{ path('change_locale', {locale: locale}) }}" class="dropdown-item">
+								<span class="fi fi-{{ locale == 'en' ? 'gb' : locale }}"></span>
+							</a>
+						{% endif %}
+					{% endfor %}
+				</li>
 			</ul>
 		</div>
 	</div>

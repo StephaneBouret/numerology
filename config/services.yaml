@@ -64,3 +64,7 @@ services:
     App\Command\GenerateSitemapCommand:
         arguments:
             $hostname: '%app.hostname%'
+
+    Gedmo\Translatable\TranslatableListener:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }

@@ -7,11 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ProgramRepository::class)]
+#[Gedmo\TranslationEntity(class: ProgramTranslation::class)]
 #[Vich\Uploadable]
 class Program
 {
@@ -20,6 +22,7 @@ class Program
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Gedmo\Translatable]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom du programme est obligatoire !")]
     #[Assert\Length(min: 3, minMessage: "Le nom du programme doit avoir au moins {{ limit }} caractères", max: 30, maxMessage: "Le nom du programme ne peut excéder {{ limit }} caractères")]
@@ -28,6 +31,7 @@ class Program
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[Gedmo\Translatable]
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "La description est obligatoire !")]
     private ?string $description = null;
@@ -80,18 +84,23 @@ class Program
     #[ORM\OneToMany(targetEntity: Purchase::class, mappedBy: 'program')]
     private Collection $purchases;
 
+    #[Gedmo\Translatable]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $satisfiedTitle = null;
 
+    #[Gedmo\Translatable]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $satisfiedContent = null;
 
+    #[Gedmo\Translatable]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $showTitle = null;
 
+    #[Gedmo\Translatable]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $showContent = null;
 
+    #[Gedmo\Translatable]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $detailTitle = null;
 
@@ -107,6 +116,18 @@ class Program
     #[ORM\OneToMany(targetEntity: Certificate::class, mappedBy: 'program')]
     private Collection $certificates;
 
+    /**
+     * @var Collection<int, ProgramTranslation>
+     */
+    #[ORM\OneToMany(
+        targetEntity: ProgramTranslation::class,
+        mappedBy: "object",
+        cascade: ["persist", "remove"],
+        orphanRemoval: true
+    )]
+    #[ORM\JoinColumn(nullable: false)]
+    private Collection $translations;
+
     public function __construct()
     {
         $this->sections = new ArrayCollection();
@@ -114,6 +135,7 @@ class Program
         $this->purchases = new ArrayCollection();
         $this->details = new ArrayCollection();
         $this->certificates = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
     public function __toString()
@@ -162,7 +184,7 @@ class Program
         return $this;
     }
 
-            /**
+    /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the update. If this
      * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
@@ -415,6 +437,33 @@ class Program
             // set the owning side to null (unless already changed)
             if ($certificate->getProgram() === $this) {
                 $certificate->setProgram(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTranslations(): Collection
+    {
+        return $this->translations;
+    }
+
+    public function addTranslation(ProgramTranslation $translation): static
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations->add($translation);
+            $translation->setObject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTranslation(ProgramTranslation $translation): static
+    {
+        if ($this->translations->removeElement($translation)) {
+            // Supprime la relation inverse
+            if ($translation->getObject() === $this) {
+                $translation->setObject(null);
             }
         }
 

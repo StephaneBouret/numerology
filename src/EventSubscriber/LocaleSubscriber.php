@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -9,7 +10,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 readonly class LocaleSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly string $defaultLocale = 'en'
+        private TranslatableListener $translatableListener,
+        private string $defaultLocale = 'en'
     )
     {}
 
@@ -21,11 +23,15 @@ readonly class LocaleSubscriber implements EventSubscriberInterface
         }
 
         // On vérifie si la langue est passée en paramètre de l'URL
-        if ($locale = $request->query->get('_locale')) {
-            $request->setLocale($locale);
-        } else {
-            $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
-        }
+        // if ($locale = $request->query->get('_locale')) {
+        //     $request->setLocale($locale);
+        // } else {
+        //     $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
+        // }
+        $locale = $request->query->get('_locale') ?? $request->getSession()->get('_locale', $this->defaultLocale);
+        $request->setLocale($locale);
+
+        $this->translatableListener->setTranslatableLocale($locale);
     }
 
     public static function getSubscribedEvents(): array
