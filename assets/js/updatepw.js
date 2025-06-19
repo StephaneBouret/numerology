@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function checkAll(){
-    document.querySelector("#submit-update-pw").setAttribute("disabled", "disabled");    
+    document.querySelector("#submit-update-pw").setAttribute("disabled", "disabled"); 
+       
     if(pass){
         document.querySelector("#submit-update-pw").removeAttribute("disabled");
     }
@@ -32,9 +33,7 @@ function checkPass(){
     // On évalue la force du mot de passe
     let entropy = evaluatePasswordStrength(mdp);
 
-    updateEntropy(entropyElement, entropy, pass);
+    pass = updateEntropy(entropyElement, entropy);
 
     checkAll();
 }
-
-evaluatePasswordStrength(pass);

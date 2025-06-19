@@ -96,7 +96,7 @@ export function generateStrongPassword(length = 24) {
     // return password.split('').sort(() => Math.random() - 0.5).join('');
 }
 
-export function updateEntropy(entropyElement, entropy, setPassFlag) {
+export function updateEntropy(entropyElement, entropy) {
     entropyElement.classList.remove(
         "text-very-weak",
         "text-weak",
@@ -105,33 +105,32 @@ export function updateEntropy(entropyElement, entropy, setPassFlag) {
         "text-very-strong"
     );
 
+    let isStrongEnough = false;
+
     switch (entropy) {
         case 'Très faible':
             entropyElement.classList.add("text-very-weak");
-            setPassFlag = false;
             break;
         case 'Faible':
             entropyElement.classList.add("text-weak");
-            setPassFlag = false;
             break;
         case 'Moyen':
             entropyElement.classList.add("text-medium");
-            setPassFlag = false;
             break;
         case 'Fort':
             entropyElement.classList.add("text-strong");
-            setPassFlag = true;
+            isStrongEnough = true;
             break;
         case 'Très fort':
             entropyElement.classList.add("text-very-strong");
-            setPassFlag = true;
+            isStrongEnough = true;
             break;
         default:
             entropyElement.classList.add("text-very-weak");
-            setPassFlag = false;
     }
 
     entropyElement.textContent = entropy;
+    return isStrongEnough;
 }
 
 export function bindPasswordGenerator(generateBtn, passwordInput) {

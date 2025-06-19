@@ -43,6 +43,7 @@
 														{{ form_row(registrationForm.city, {'attr': {'class': 'form-control-login'}}) }} #}
 							<gmpx-api-loader key="{{ google_api_key }}" solution-channel="GMP_QB_addressselection_v3_cAC"></gmpx-api-loader>
 							{{ form_row(registrationForm.adress, {'attr': {'class': 'form-control-login'}}) }}
+							<a href="#" id="reset-address" class="small text-muted d-block mt-1">Changer l'adresse</a>
 							<div id="additional-fields" style="display: none;">
 								{{ form_row(registrationForm.postalCode, {'attr': {'class': 'form-control-login'}}) }}
 								{{ form_row(registrationForm.city, {'attr': {'class': 'form-control-login'}}) }}

@@ -150,7 +150,7 @@ function checkRgpd() {
 
 function checkAll() {
     const submitBtn = document.querySelector("#submit-button");
-    submitBtn.setAttribute("disabled", "disabled");
+    submitBtn.setAttribute("disabled", "disabled");    
     if (email && firstname && lastname && adress && postalCode && city && phone && pass && rgpd) {
         submitBtn.removeAttribute("disabled");
     }
@@ -166,9 +166,7 @@ function checkPass() {
     // On évalue la force du mot de passe
     let entropy = evaluatePasswordStrength(mdp);
 
-    updateEntropy(entropyElement, entropy, pass);
+    pass = updateEntropy(entropyElement, entropy);
 
     checkAll();
 }
-
-evaluatePasswordStrength(pass);
