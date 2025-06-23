@@ -68,3 +68,5 @@ services:
     Gedmo\Translatable\TranslatableListener:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    App\Service\DeviceService: ~

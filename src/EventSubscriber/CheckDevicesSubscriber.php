@@ -6,15 +6,14 @@ use App\Entity\User;
 use App\Entity\UserDevice;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Exception\TooManySessionsException;
+use App\Service\DeviceService;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use UAParser\Parser;
 
 class CheckDevicesSubscriber implements EventSubscriberInterface
 {
@@ -26,6 +25,7 @@ class CheckDevicesSubscriber implements EventSubscriberInterface
         private EntityManagerInterface $em,
         protected RouterInterface $router,
         protected Security $security,
+        private DeviceService $deviceService,
     ) {
     }
 
@@ -41,14 +41,12 @@ class CheckDevicesSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $deviceFingerprint = $this->generateDeviceFingerprint($request);
-        $deviceType = $this->getDeviceType($request);
-        $userAgent = $request->headers->get('User-Agent');
+        $deviceFingerprint = $this->deviceService->generateDeviceFingerprint($request);
+        $deviceType = $this->deviceService->getDeviceType($request);
+        $browserInfo = $this->deviceService->getBrowserAndPlatform($request);
 
-        $parser = Parser::create();
-        $ua = $parser->parse($userAgent);
-        $browser = $ua->ua->family;   // Exemple: Chrome, Firefox
-        $platform = $ua->os->family;  // Exemple: Windows, macOS, Android
+        $browser = $browserInfo['browser'];
+        $platform = $browserInfo['platform'];
 
         $deviceRepository = $this->em->getRepository(UserDevice::class);
         $existingDevice = $deviceRepository->findOneBy(['user' => $user, 'deviceFingerprint' => $deviceFingerprint]);
@@ -97,11 +95,16 @@ class CheckDevicesSubscriber implements EventSubscriberInterface
 
         $request = $event->getRequest();
         $currentRoute = $request->attributes->get('_route');
-        if ($currentRoute === 'error_too_many_sessions' || $currentRoute === '2fa_login' || $currentRoute === '2fa_login_check') {
+        if (in_array($currentRoute, [
+            'error_too_many_sessions',
+            '2fa_login',
+            '2fa_login_check',
+            'app_remove_device',
+        ])) {
             return; // Empêche une boucle infinie
         }
 
-        $deviceFingerprint = $this->generateDeviceFingerprint($request);
+        $deviceFingerprint = $this->deviceService->generateDeviceFingerprint($request);
         $deviceRepository = $this->em->getRepository(UserDevice::class);
         $existingDevices = $deviceRepository->findBy(['user' => $user]);
 
@@ -125,23 +128,5 @@ class CheckDevicesSubscriber implements EventSubscriberInterface
             LoginSuccessEvent::class => 'onLoginSuccessEvent',
             RequestEvent::class => 'onKernelRequestEvent'
         ];
-    }
-
-    private function generateDeviceFingerprint(Request $request): string
-    {
-        return hash(
-            'sha256',
-            $request->headers->get('User-Agent') . 
-            $request->headers->get('Sec-Ch-Ua-Platform') // Plateforme (Windows, macOs, Android)
-        );
-    }
-
-    private function getDeviceType(Request $request): string
-    {
-        $userAgent = $request->headers->get('User-Agent');
-        if (preg_match('/ipad|android(?!.*mobile)|tablet|kindle|silk/i', $userAgent)) {
-            return 'tablet';
-        }
-        return preg_match('/mobile|iphone|android/i', $userAgent) ? 'mobile' : 'desktop';
     }
 }
