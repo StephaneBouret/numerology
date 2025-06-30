@@ -2,9 +2,166 @@
 # Homepage
 --------------------------------------------------------------*/
 .services,
-.show-program {
+.show-program,
+.cpkw17 {
     position: relative;
     background-color: rgb(255, 255, 255);
+}
+
+.nvtq2t {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+    .nvtq2t {
+        padding-top: 5rem;
+        padding-bottom: 5rem;
+    }
+}
+
+.vzvqmm {
+    padding-bottom: 2.5rem;
+    max-width: 64rem;
+}
+
+@media (min-width: 768px) {
+    .vzvqmm {
+        padding-bottom: 4rem;
+    }
+}
+
+.fz3kww {
+    letter-spacing: .025em;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 700;
+    color: #54c1a9;
+}
+
+.xakfwk {
+    font-size: 3rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -.05em;
+}
+
+@media (min-width: 768px) {
+    .xakfwk {
+        font-size: 3.75rem;
+        line-height: 1;
+    }
+}
+
+.muexhr {
+    max-width: 48rem;
+}
+
+.m47hpr {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+}
+
+.cdpoze {
+    display: flex;
+    margin: auto;
+    max-width: 20rem;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .cdpoze {
+        flex-direction: row;
+        max-width: 28rem;
+        justify-content: center;
+    }
+}
+
+.gda1kl {
+    display: flex;
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .gda1kl {
+        width: auto;
+    }
+}
+
+.p0opb0 {
+    display: inline-flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border-width: 1px;
+    --tw-border-opacity: 1;
+    border-color: rgb(156 163 175 / var(--tw-border-opacity, 1));
+    background-color: transparent;
+    padding: .875rem 1.5rem;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+    line-height: 1.375;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .2s;
+    transition-timing-function: cubic-bezier(.4, 0, 1, 1);
+    color: var(--aw-color-text-page);
+    width: 100%;
+    text-decoration: none;
+}
+
+.d2hxcr {
+    display: inline-flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border-width: 1px;
+    --tw-border-opacity: 1;
+    border-color: rgb(156 163 175 / var(--tw-border-opacity, 1));
+    border-style: solid;
+    border-color: #e5e7eb;
+    background-color: transparent;
+}
+
+.d2hxcr:hover
+ {
+    --tw-border-opacity: 1;
+    border-color: rgb(75 85 99 / var(--tw-border-opacity, 1));
+    --tw-bg-opacity: 1;
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+}
+
+@media (min-width: 640px) {
+
+    .p0opb0,
+    .d2hxcr {
+        margin-bottom: 0;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+.rqxyoh {
+    border-color: #54c1a9;
+    background-color: #54c1a9;
+    font-weight: 600;
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.rqxyoh:hover {
+    border-color: #195c4d;
+    background-color: #195c4d;
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 .container-programs {
@@ -154,6 +311,10 @@
     line-height: 1.75;
     text-transform: none;
     font-weight: 500 !important;
+}
+
+.x7x136 {
+    color: #FFF;
 }
 
 .show-program {
@@ -3935,7 +4096,7 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
 }
 
 /* Masque manuellement si besoin après sélection */
-input.pac-target-input:focus:not(:placeholder-shown) + .pac-container {
+input.pac-target-input:focus:not(:placeholder-shown)+.pac-container {
     display: none !important;
 }
 
