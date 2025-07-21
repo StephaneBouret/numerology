@@ -78,7 +78,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Certificats', 'fa-solid fa-certificate', Certificate::class);
         yield MenuItem::linkToCrud('Maintenance', 'fas fa-cogs', Setting::class);
         yield MenuItem::linkToCrud('Notif. Lancement', 'fas fa-rocket', LaunchNotification::class);
-        yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'home_index');
+        yield MenuItem::linkToUrl('Retour au site', 'fas fa-home', $this->generateUrl('home_index'));
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 }
