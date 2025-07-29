@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\About;
 use App\Entity\Answer;
+use App\Entity\AppointmentType;
 use App\Entity\Category;
 use App\Entity\Certificate;
 use App\Entity\Comments;
@@ -78,6 +79,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Certificats', 'fa-solid fa-certificate', Certificate::class);
         yield MenuItem::linkToCrud('Maintenance', 'fas fa-cogs', Setting::class);
         yield MenuItem::linkToCrud('Notif. Lancement', 'fas fa-rocket', LaunchNotification::class);
+        yield MenuItem::linkToCrud('Types de rendez-vous', 'fas fa-calendar', AppointmentType::class);
         yield MenuItem::linkToUrl('Retour au site', 'fas fa-home', $this->generateUrl('home_index'));
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

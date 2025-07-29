@@ -1,0 +1,19 @@
+{{ form_start(form, {
+    'action': action ?? app.request.uri,
+    'attr': {
+        'data-controller': 'ajax-form',
+        'data-action': 'submit->ajax-form#submit'
+    }
+}) }}
+    {{ form_errors(form) }}
+    <div class="mb-3">
+        {{ form_row(form.startAt) }}
+    </div>
+    <h5 class="mt-4">Personne évaluée</h5>
+    {{ form_row(form.evaluatedPerson) }}
+
+    <button class="btn btn-success mt-4" type="submit">Confirmer la réservation</button>
+    <button type="button" class="btn btn-link" data-action="click->appointment-type#reloadRecap">Annuler</button>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}

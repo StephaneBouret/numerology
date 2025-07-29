@@ -1,0 +1,27 @@
+<div class="card">
+	<div class="card-body">
+		<h4 class="card-title">{{ type.name }}</h4>
+        <p>
+        <strong>Description et prérequis</strong> :<br>
+        {{ type.introduction }}
+        </p>
+		<p>{{ type.description | raw }}</p>
+		<ul class="list-unstyled">
+			<li>
+				<strong>Durée :</strong>
+				{{ type.duration }}
+				min</li>
+			<li>
+				<strong>Tarif :</strong>
+				{{ type.price|amount }}</li>
+		</ul>
+		<div class="mt-3">
+			<button class="btn btn-secondary" data-action="click->appointment-type#reloadRecap">Revenir</button>
+			<button class="btn btn-primary" 
+            data-action="click->appointment-type#showForm" 
+            data-url="{{ path('app_appointment_ajax_form', {id: type.id}) }}">
+            Réserver
+            </button>
+		</div>
+	</div>
+</div>

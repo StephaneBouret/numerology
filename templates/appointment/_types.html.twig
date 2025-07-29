@@ -1,0 +1,22 @@
+<div class="row">
+	{% for type in types %}
+		<div class="col-md-4 mb-4">
+			<div class="card h-100" data-action="click->appointment-type#showDetail" data-url="{{ path('app_appointment_type_detail', {id: type.id}) }}">
+				<div class="card-body">
+					<h5 class="card-title">{{ type.name }}</h5>
+					<p class="card-text">{{ type.introduction|u.truncate(80, '...') }}</p>
+					<ul class="list-unstyled mb-2">
+						<li>
+							<strong>Durée :</strong>
+							{{ type.duration }}
+							min</li>
+						<li>
+							<strong>Tarif :</strong>
+							{{ type.price|amount }}</li>
+					</ul>
+					<span class="btn btn-outline-primary">Voir le détail</span>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+</div>

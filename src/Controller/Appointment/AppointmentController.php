@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Appointment;
 
 use App\Entity\Appointment;
+use App\Entity\AppointmentType;
 use App\Form\AppointmentFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,14 +13,22 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
+#[Route('/rendezvous')]
 final class AppointmentController extends AbstractController
 {
-    #[Route('/rendezvous', name: 'app_appointment')]
-    public function book(Request $request, EntityManagerInterface $em): Response
+    #[Route('/type/{id}/form', name: 'app_appointment_ajax_form', methods: ['GET', 'POST'])]
+    public function ajaxForm(
+        AppointmentType $type,
+        Request $request, 
+        EntityManagerInterface $em
+        ): Response
     {
         $appointment = new Appointment();
+        $appointment->setType($type);
 
-        $form = $this->createForm(AppointmentFormType::class, $appointment);
+        $form = $this->createForm(AppointmentFormType::class, $appointment, [
+            // options personnalisées au besoin
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -34,17 +43,16 @@ final class AppointmentController extends AbstractController
             $em->flush();
 
             // Prévoir redirection vers Stripe ou page de confirmation
-            return $this->redirectToRoute('app_appointment_confirmation');
+            // return $this->redirectToRoute('app_appointment_confirmation');
+            return $this->render('appointment/confirmation.html.twig', [
+                'ajax' => true,
+            ]);
         }
 
-        return $this->render('appointment/book.html.twig', [
+        return $this->render('appointment/_form.html.twig', [
             'form' => $form,
+            'type' => $type,
+            'action' => $this->generateUrl('app_appointment_ajax_form', ['id' => $type->getId()]),
         ]);
-    }
-
-    #[Route('/rendezvous/confirmation', name: 'app_appointment_confirmation')]
-    public function confirmation(): Response
-    {
-        return $this->render('appointment/confirmation.html.twig');
     }
 }
