@@ -2,6 +2,8 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
     submit(event) {
+        console.log('ajax-form SUBMIT intercepted');
+        
         event.preventDefault();
         const form = event.target;
         const url = form.action;

@@ -5,8 +5,7 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container my-5">
-		<h1>Choisissez un rendez-vous</h1>
+	<div>
 		<div data-controller="appointment-type" data-appointment-type-target="container">
 			{% include "appointment/_types.html.twig" with { types: types } %}
 		</div>

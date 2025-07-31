@@ -47,3 +47,9 @@ vich_uploader:
            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
            delete_on_update: true
            delete_on_remove: true
+       appointments_images:
+           uri_prefix: /images/appointments
+           upload_destination: '%kernel.project_dir%/public/images/appointments'
+           namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+           delete_on_update: true
+           delete_on_remove: true

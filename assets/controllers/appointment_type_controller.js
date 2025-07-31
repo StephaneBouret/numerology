@@ -11,6 +11,10 @@ export default class extends Controller {
         fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
             .then(response => response.text())
             .then(html => {
+                if (html.includes('id="login_form"')) {
+                    window.location.href = "/login";
+                    return;
+                }
                 this.containerTarget.innerHTML = html;
             });
     }
@@ -23,6 +27,12 @@ export default class extends Controller {
         fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
             .then(response => response.text())
             .then(html => {
+                // Détection login avant d'injecter le HTML :
+                if (html.includes('id="login_form"')) {
+                    // On recharche la page pour forcer la redirection complète vers login
+                    window.location.href = "/login";
+                    return;
+                }
                 this.containerTarget.innerHTML = html;
             });
     }
