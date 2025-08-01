@@ -1924,7 +1924,8 @@ input.input100 {
     white-space: pre-line;
 }
 
-.n8b3tj, .orwcqk {
+.n8b3tj,
+.orwcqk {
     padding-top: 12px;
     padding-bottom: 12px;
     padding-left: 24px;
@@ -1942,4 +1943,14 @@ input.input100 {
     justify-content: center;
     align-items: center;
     display: flex;
+}
+
+.tj8cbo {
+    color: #FFFFFF !important;
+    background-color: #5BAEBE !important;
+    border-color: #5BAEBE !important;
+}
+
+.btod86 {
+    color: #5BAEBE !important;
 }
