@@ -20,7 +20,8 @@ class AvatarService
     public function createAndAssignAvatar(User $user): Avatar
     {
         $avatar = new Avatar();
-        $initial = strtoupper(substr($user->getFirstname(), 0, 1));
+        // $initial = strtoupper(substr($user->getFirstname(), 0, 1));
+        $initial = mb_strtoupper(mb_substr($user->getFirstname(), 0, 1, 'UTF-8'), 'UTF-8');
         $avatarsDirectory = $this->params->get('avatars_directory');
         $outputPath = $avatarsDirectory . '/' . uniqid() . '.png';
         $avatar->createDefaultAvatar($initial, $outputPath);
@@ -37,7 +38,8 @@ class AvatarService
         if ($avatarForm->isSubmitted() && $avatarForm->isValid()) {
             if ($avatar === null || $avatar->getImageName() === null) {
                 $avatar = $avatarForm->getData();
-                $initial = strtoupper(substr($user->getFirstname(), 0, 1));
+                // $initial = strtoupper(substr($user->getFirstname(), 0, 1));
+                $initial = mb_strtoupper(mb_substr($user->getFirstname(), 0, 1, 'UTF-8'), 'UTF-8');
                 $avatarsDirectory = $this->params->get('avatars_directory');
                 $outputPath = $avatarsDirectory . '/' . uniqid() . '.png';
                 $avatar->createDefaultAvatar($initial, $outputPath);
