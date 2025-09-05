@@ -25,7 +25,6 @@
         "scheb/2fa-bundle": "^7.6",
         "scheb/2fa-email": "^7.6",
         "scheb/2fa-trusted-device": "^7.6",
-        "stof/doctrine-extensions-bundle": "^1.14",
         "stripe/stripe-php": "^16.6",
         "symfony/asset": "7.2.*",
         "symfony/asset-mapper": "7.2.*",

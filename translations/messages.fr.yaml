@@ -1,14 +1,5 @@
-vich_uploader.form_label.delete_confirm: 'Supprimer?'
-vich_uploader.link.download: Télécharger
-'Your request has been sent': 'Votre demande a bien été envoyée'
-Trainings: Formations
-Newsletter: Newsletter
-'About Me': 'Qui suis-je ?'
-Testimonials: Témoignages
-Contact: Contact
-Administration: Administration
-Profile: Profil
-'My orders': 'Mes commandes'
-'My devices': 'Mes appareils'
-Logout: Se déconnecter
-Login: Se connecter
+Forbidden: "Accès refusé"
+Not Found: "Page non trouvée"
+Internal Server Error: "Erreur interne du serveur"
+Bad Request: "La syntaxe de la requête est erronée"
+Unauthorized: "Une authentification est nécessaire pour accéder à la ressource"

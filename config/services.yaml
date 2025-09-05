@@ -6,7 +6,6 @@
 parameters:
     avatars_directory: '%kernel.project_dir%/public/images/avatars'
     app.hostname: '%env(APP_HOSTNAME)%'
-    app.locales: [en, fr]
 
 services:
     # default configuration for services in *this* file
@@ -64,9 +63,5 @@ services:
     App\Command\GenerateSitemapCommand:
         arguments:
             $hostname: '%app.hostname%'
-
-    Gedmo\Translatable\TranslatableListener:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
 
     App\Service\DeviceService: ~
