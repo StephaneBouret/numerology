@@ -6,9 +6,12 @@ use App\Entity\AppointmentType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AppointmentTypeFixtures extends Fixture implements FixtureGroupInterface
 {
+    public function __construct(private SluggerInterface $slugger) {}
+
     public static function getGroups(): array
     {
         return ['appointmentType'];
@@ -85,9 +88,19 @@ class AppointmentTypeFixtures extends Fixture implements FixtureGroupInterface
         $types['adulte_potentiels']->setPrerequisite($types['adulte_identite']);
         $types['adulte_cycles']->setPrerequisite($types['adulte_identite']);
 
-        // Persistance
-        foreach ($types as $type) {
-            $manager->persist($type);
+        // Slugs + persistance
+        $used = [];
+        foreach ($types as $t) {
+            $base = strtolower($this->slugger->slug($t->getName())->toString());
+            $slug = $base;
+            $i = 2;
+            while (\in_array($slug, $used, true)) {
+                $slug = $base.'-'.$i++;
+            }
+            $used[] = $slug;
+
+            $t->setSlug($slug);
+            $manager->persist($t);
         }
 
         $manager->flush();

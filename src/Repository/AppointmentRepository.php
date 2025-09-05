@@ -35,6 +35,19 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findByDate(\DateTimeInterface $date): array
+    {
+        $start = \DateTimeImmutable::createFromFormat('Y-m-d', $date->format('Y-m-d'))->setTime(0, 0, 0);
+        $end = \DateTimeImmutable::createFromFormat('Y-m-d', $date->format('Y-m-d'))->setTime(23, 59, 59);
+
+        return $this->createQueryBuilder('a')
+                ->andWhere('a.startAt BETWEEN :start AND :end')
+                ->setParameter('start', $start)
+                ->setParameter('end', $end)
+                ->getQuery()
+                ->getResult();
+    }
+
     //    /**
     //     * @return Appointment[] Returns an array of Appointment objects
     //     */

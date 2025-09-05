@@ -20,6 +20,7 @@ use App\Entity\Program;
 use App\Entity\NewsLetter;
 use App\Entity\Purchase;
 use App\Entity\Question;
+use App\Entity\ScheduleSetting;
 use App\Entity\Sections;
 use App\Entity\Setting;
 use App\Entity\Testimonial;
@@ -80,6 +81,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Maintenance', 'fas fa-cogs', Setting::class);
         yield MenuItem::linkToCrud('Notif. Lancement', 'fas fa-rocket', LaunchNotification::class);
         yield MenuItem::linkToCrud('Types de rendez-vous', 'fas fa-calendar', AppointmentType::class);
+        yield MenuItem::linkToCrud('Créneaux horaires', 'fa fa-clock', ScheduleSetting::class);
         yield MenuItem::linkToUrl('Retour au site', 'fas fa-home', $this->generateUrl('home_index'));
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
