@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Google\GoogleService;
 use App\Repository\InvitationRepository;
 use App\Service\AvatarService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,7 +23,7 @@ final class InvitationController extends AbstractController
     {}
 
     #[Route('/invitation/{uuid}', name: 'app_invitation', requirements: ['uuid' => '[\w-]+'])]
-    public function index($uuid, Request $request, UserPasswordHasherInterface $userPassword): Response
+    public function index($uuid, Request $request, UserPasswordHasherInterface $userPassword, GoogleService $googleService): Response
     {
         $invitation = $this->invitationRepository->findOneBy([
             'uuid' => $uuid
@@ -62,6 +63,7 @@ final class InvitationController extends AbstractController
         return $this->render('invitation/index.html.twig', [
             'registrationForm' => $form,
             'invitation' => $invitation,
+            'google_api_key' => $googleService->getGoogleKey(),
         ]);
     }
 }
