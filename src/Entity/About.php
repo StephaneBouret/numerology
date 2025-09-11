@@ -7,13 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: AboutRepository::class)]
-#[Gedmo\TranslationEntity(class: AboutTranslation::class)]
 #[Vich\Uploadable]
 class About
 {
@@ -32,7 +30,6 @@ class About
     #[Assert\Length(min: 3, minMessage: "Le nom du dirigeant doit avoir au moins {{ limit }} caractères")]
     private ?string $lastname = null;
 
-    #[Gedmo\Translatable]
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "La description est obligatoire !")]
     private ?string $description = null;
@@ -70,22 +67,9 @@ class About
     #[ORM\OneToMany(targetEntity: Link::class, mappedBy: 'about', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $links;
 
-    /**
-     * @var Collection<int, AboutTranslation>
-     */
-    #[ORM\OneToMany(
-        targetEntity: AboutTranslation::class,
-        mappedBy: "object",
-        cascade: ["persist", "remove"],
-        orphanRemoval: true
-    )]
-    #[ORM\JoinColumn(nullable: false)]
-    private Collection $translations;
-
     public function __construct()
     {
         $this->links = new ArrayCollection();
-        $this->translations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,33 +182,6 @@ class About
             // set the owning side to null (unless already changed)
             if ($link->getAbout() === $this) {
                 $link->setAbout(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getTranslations(): Collection
-    {
-        return $this->translations;
-    }
-
-    public function addTranslation(AboutTranslation $translation): static
-    {
-        if (!$this->translations->contains($translation)) {
-            $this->translations->add($translation);
-            $translation->setObject($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTranslation(AboutTranslation $translation): static
-    {
-        if ($this->translations->removeElement($translation)) {
-            // Supprime la relation inverse
-            if ($translation->getObject() === $this) {
-                $translation->setObject(null);
             }
         }
 
