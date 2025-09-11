@@ -1,6 +1,6 @@
 # 🔢 SYM-NUMBERS — README d'installation et d'utilisation
 
-Bienvenue sur le projet **EcoRide**.  
+Bienvenue sur le projet **Sym-numbers**.  
 Ce guide décrit l'installation et la prise en main en local.
 
 ## 🛠️ Prérequis
@@ -19,8 +19,7 @@ Ce guide décrit l'installation et la prise en main en local.
 
 ```bash
 git clone https://github.com/StephaneBouret/numerology.git sym-numbers
-git clone --branch sym-numbers --single-branch https://github.com/StephaneBouret/numerology.git sym-numbers
-cd sym-ecoride
+cd sym-numbers
 ```
 
 ## 2️⃣ Installer les dépendances PHP
