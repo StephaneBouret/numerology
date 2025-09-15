@@ -192,4 +192,8 @@ return [
         'version' => '7.5.0',
         'type' => 'css',
     ],
+    'tom-select/dist/css/tom-select.bootstrap4.css' => [
+        'version' => '2.4.3',
+        'type' => 'css',
+    ],
 ];
