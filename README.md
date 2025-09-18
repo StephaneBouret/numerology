@@ -107,6 +107,19 @@ Ouvrez votre navigateur sur https://localhost:8000 ou https://127.0.0.1:8000/
 | Réinitialiser la base et recharger toutes les fixtures | `php bin/console doctrine:database:drop --force`<br/>`php bin/console doctrine:database:create`<br/>`php bin/console doctrine:migrations:migrate`<br/>`php bin/console doctrine:fixtures:load --no-interaction` |
 | Lancer une fixture spécifique        | `php bin/console doctrine:fixtures:load --group=company --append`                                                                                                                                                                          |
 
+## 📊 Export des données de la BDD
+
+Test en local : dans le terminal, éxécution de la commande ci-dessous :
+
+```bash
+php bin/console app:db:dump-data `
+  --output-dir="C:\Formations\numerology\var\backups" `
+  --prefix="test_local" `
+  --binary="C:\wamp64\bin\mysql\mysql9.1.0\bin\mysqldump.exe"
+```
+
+Attendu : test_local_YYYYMMDD_HHMMSS.sql dans le dossier var\backups
+
 ## 🆘 Support
 
 Si vous rencontrez un problème à l'installation ou à l'utilisation,\
