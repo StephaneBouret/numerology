@@ -109,7 +109,29 @@ Ouvrez votre navigateur sur https://localhost:8000 ou https://127.0.0.1:8000/
 
 ## 📊 Export des données de la BDD
 
-Test en local : dans le terminal, éxécution de la commande ci-dessous :
+### Plan pas-à-pas pour tester en local (Windows/Wamp) 
+
+> **Vérifier le binaire mysqldump**
+
+On trouve son chemin exact (exemples courants) :
+`C:\wamp64\bin\mysql\mysql9.1.0\bin\mysqldump.exe`
+ou `C:\wamp64\bin\mysql\mysql8.0.xx\bin\mysqldump.exe`
+
+On peut vérifier avec Powershell :
+
+```bash
+Get-ChildItem "C:\wamp64\bin\mysql" -Recurse -Filter mysqldump.exe
+```
+
+> **Créer un dossier de sortie**
+
+```bash
+New-Item -ItemType Directory -Force -Path C:\Dossier_du_projet\nom_du_projet\var\backups | Out-Null
+```
+
+Attention : Dossier du projet à renseigner s'il existe et nom_du_projet : nom dans VSCODE.
+
+> **Lancer la commande Symfony**
 
 ```bash
 php bin/console app:db:dump-data `
@@ -117,7 +139,7 @@ php bin/console app:db:dump-data `
   --prefix="test_local" `
   --binary="C:\wamp64\bin\mysql\mysql9.1.0\bin\mysqldump.exe"
 ```
-
+Attention : bien remplacer le `"C:\Formations\numerology\var\backups"` par ses valeurs propres
 Attendu : test_local_YYYYMMDD_HHMMSS.sql dans le dossier var\backups
 
 ## 🆘 Support
