@@ -24,6 +24,8 @@ use App\Entity\ScheduleSetting;
 use App\Entity\Sections;
 use App\Entity\Setting;
 use App\Entity\Testimonial;
+use App\Entity\Unavailability;
+use App\Entity\UnavailableDay;
 use App\Entity\UserDevice;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -80,8 +82,12 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Certificats', 'fa-solid fa-certificate', Certificate::class);
         yield MenuItem::linkToCrud('Maintenance', 'fas fa-cogs', Setting::class);
         yield MenuItem::linkToCrud('Notif. Lancement', 'fas fa-rocket', LaunchNotification::class);
-        yield MenuItem::linkToCrud('Types de rendez-vous', 'fas fa-calendar', AppointmentType::class);
-        yield MenuItem::linkToCrud('Créneaux horaires', 'fa fa-clock', ScheduleSetting::class);
+        yield MenuItem::subMenu('Gestion RDVs', 'fa-solid fa-calendar-check')->setSubItems([
+            MenuItem::linkToCrud('Types de rendez-vous', 'fas fa-calendar', AppointmentType::class),
+            MenuItem::linkToCrud('Horaires & jours ouvrés', 'fa fa-clock', ScheduleSetting::class),
+            MenuItem::linkToCrud('Indisponibilités horaires', 'fa fa-ban', Unavailability::class),
+            MenuItem::linkToCrud('Jours d\'indisponibilité', 'fa fa-calendar-xmark', UnavailableDay::class),
+        ]);
         yield MenuItem::linkToUrl('Retour au site', 'fas fa-home', $this->generateUrl('home_index'));
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

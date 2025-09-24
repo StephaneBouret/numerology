@@ -16,6 +16,16 @@ class UnavailableDayRepository extends ServiceEntityRepository
         parent::__construct($registry, UnavailableDay::class);
     }
 
+    public function isUnavailable(\DateTimeInterface $date): bool
+    {
+        return (bool) $this->createQueryBuilder('u')
+            ->andWhere('u.date = :d')
+            ->setParameter('d', $date->format('Y-m-d'))
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return UnavailableDay[] Returns an array of UnavailableDay objects
     //     */
