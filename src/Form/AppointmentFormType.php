@@ -15,7 +15,11 @@ class AppointmentFormType extends AbstractType
         $builder
             ->add('startAt', DateTimeType::class, [
                 'widget' => 'single_text',
-                'label' => 'Date et heure de début'
+                'label' => 'Date et heure de début',
+                'input' => 'datetime_immutable', // important
+                'model_timezone' => 'Europe/Paris', // <<--- crée l'objet en Paris
+                'view_timezone' => 'Europe/Paris', // et affiche Paris
+                'with_seconds' => false,
             ])
             ->add('evaluatedPerson', EvaluatedPersonType::class, [
                 'label' => false,

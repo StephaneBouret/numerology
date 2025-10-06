@@ -22,10 +22,10 @@ class Appointment
     #[ORM\JoinColumn(nullable: false)]
     private ?AppointmentType $type = null;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $startAt = null;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $endAt = null;
 
     #[ORM\Column(enumType: AppointmentStatus::class)]

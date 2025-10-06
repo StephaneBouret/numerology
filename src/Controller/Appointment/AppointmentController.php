@@ -2,9 +2,11 @@
 
 namespace App\Controller\Appointment;
 
+use App\Controller\Traits\ErrorFormTrait;
 use App\Entity\User;
 use App\Entity\Appointment;
 use App\Entity\AppointmentType;
+use App\Enum\AppointmentStatus;
 use App\Form\AppointmentFormType;
 use App\Repository\AppointmentRepository;
 use App\Service\AppointmentValidator;
@@ -19,12 +21,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/rendezvous')]
 final class AppointmentController extends AbstractController
 {
+    use ErrorFormTrait;
+
     #[Route('/type/{id}/form', name: 'app_appointment_ajax_form', methods: ['GET', 'POST'])]
     public function ajaxForm(
         AppointmentType $type,
         Request $request,
         EntityManagerInterface $em,
-        AppointmentValidator $appointmentValidator
+        AppointmentValidator $appointmentValidator,
+        AppointmentRepository $appointmentRepo,
     ): Response {
         $appointment = new Appointment();
         $appointment->setType($type);
@@ -42,21 +47,33 @@ final class AppointmentController extends AbstractController
             $appointmentValidator->validate($appointment, $user, $form);
 
             // Si ajout erreurs, on ne persiste pas
-            if (count($form->getErrors(true)) > 0) {
-                return $this->render('appointment/_form.html.twig', [
-                    'form' => $form,
-                    'type' => $type,
-                    'action' => $this->generateUrl('app_appointment_ajax_form', ['id' => $type->getId()]),
-                ]);
+            if ($form->getErrors(true)->count() > 0) {
+                return $this->renderAppointmentForm($form, $type);
             }
 
             // Création du RDV
             $appointment->setUser($user);
-            // Calcul automatique de de la date de fin
+
+            // Sécurité sur les dates
             $startAt = $appointment->getStartAt();
+            if (!$startAt) {
+                return $this->renderAppointmentForm($form, $type, 'Merci de sélectionner une date de début.');
+            }
+            // Calcul automatique de de la date de fin
             $duration = $appointment->getType()->getDuration(); // durée en minutes
+            if ($duration < 0) {
+                return $this->renderAppointmentForm($form, $type, 'La durée du type de rendez-vous est invalide.');
+            }
             $endAt = (clone $startAt)->modify("+{$duration} minutes");
             $appointment->setEndAt($endAt);
+
+            // Double-check anti-chevauchement
+            if ($appointmentRepo->hasOverlap($startAt, $endAt)) {
+                return $this->renderAppointmentForm($form, $type, "Ce créneau vient d'être pris. Merci d'en choisir un autre.");
+            }
+
+            // Statut initial : PENDING (en attente de paiement)
+            $appointment->setStatus(AppointmentStatus::PENDING);
             $em->persist($appointment);
             $em->flush();
 
@@ -71,10 +88,6 @@ final class AppointmentController extends AbstractController
             return $this->render('appointment/confirmation.html.twig');
         }
 
-        return $this->render('appointment/_form.html.twig', [
-            'form' => $form,
-            'type' => $type,
-            'action' => $this->generateUrl('app_appointment_ajax_form', ['id' => $type->getId()]),
-        ]);
+        return $this->renderAppointmentForm($form, $type);
     }
 }

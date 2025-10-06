@@ -24,6 +24,10 @@ services:
         arguments:
             $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"
 
+    App\Service\AppointmentNotifier:
+        arguments:
+            $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"
+
     App\EventDispatcher\ContactEmailSuccessSubscriber:
         arguments:
             $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"
@@ -55,7 +59,7 @@ services:
     App\EventListener\VideoDurationListener:
         tags:
             - { name: kernel.event_listener, event: vich_uploader.post_upload }
-    
+
     App\Command\GenerateSitemapCommand:
         arguments:
             $hostname: '%app.hostname%'

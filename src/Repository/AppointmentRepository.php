@@ -48,6 +48,24 @@ class AppointmentRepository extends ServiceEntityRepository
                 ->getResult();
     }
 
+    public function hasOverlap(\DateTimeInterface $start, \DateTimeInterface $end, ?Appointment $exclude = null): bool
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->andWhere('a.startAt < :end')
+            ->andWhere('a.endAt > :start')
+            ->andWhere('a.status = :statusConfirmed') // seuls les RDV confirmés bloquent
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('statusConfirmed', AppointmentStatus::CONFIRMED)
+            ->setMaxResults(1);
+
+        if ($exclude && $exclude->getId()) {
+            $qb->andWhere('a.id := :excludeId')->setParameter('excludeId', $exclude->getId());
+        }
+
+        return (bool) $qb->getQuery()->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return Appointment[] Returns an array of Appointment objects
     //     */

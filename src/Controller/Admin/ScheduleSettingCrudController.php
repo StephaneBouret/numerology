@@ -48,7 +48,9 @@ class ScheduleSettingCrudController extends AbstractCrudController
                 <code>morning_end</code> (HH:MM),
                 <code>afternoon_start</code> (HH:MM),
                 <code>afternoon_end</code> (HH:MM),
-                <code>open_days</code> (ex: 1,2,3,4,5)"
+                <code>open_days</code> (ex: 1,2,3,4,5)
+                <code>slot_buffer_minutes</code> (entier, ex: 15)
+                <code>fixed_slots</code> (0 ou 1)"
             )
             ->setFormTypeOptions([
                 'attr' => [
@@ -63,20 +65,40 @@ class ScheduleSettingCrudController extends AbstractCrudController
 
         yield $keyField;
 
-        // Champ valeur
-        yield TextField::new('value', 'Valeur')
+        // Valeur adaptée par défaut
+        $valueField = TextField::new('value', 'Valeur')
             ->setHelp(
-                "Pour heures : format <code>HH:MM</code> (ex: 09:00).
-                Pour <code>open_days</code> : liste de 1 à 7 séparés par des virgules (ex: 1,2,3,4,5 ; Lundi = 1)."
+                "Heures : format <code>HH:MM</code> (ex: 09:00).<br>
+                Jours <code>open_days</code> : liste de 1 à 7 séparés par des virgules (ex: 1,2,3,4,5 ; Lundi = 1).<br>
+                Entier pour <code>slot_buffer_minutes</code> (ex: 15) et pour <code>fixed_slots</code> (0 ou 1)."
             )
             ->setFormTypeOptions([
                 'attr' => [
-                    'placeholder' => 'ex: 09:00 ou 1,2,3,4,5',
-                    // pattern généraliste : HH:MM OU liste 1..7 séparés par virgules
-                    'pattern' => '(^\d{2}:\d{2}$)|(^[1-7](,[1-7])*$)',
-                    'title' => 'Heure au format HH:MM (ex : 09:00) ou jours open_days (ex : 1,2,3,4,5)',
+                    'placeholder' => 'ex: 09:00 ou 1,2,3,4,5 ou 15',
+                    // pattern généraliste : HH:MM OU liste 1..7 séparés par virgules OU entier
+                    'pattern' => '^(?:\d{2}:\d{2}|[1-7](?:,[1-7]){0,6}|\d+)$',
+                    'title' => 'Heure au format HH:MM (ex : 09:00) ou jours (ex : 1,2,3,4,5) ou entier (minutes)',
                     'inputmode' => 'text',
                 ],
             ]);
+
+        // Si on est en édition ET que la clé est fixed_slots, on force 0|1
+        if ($pageName === Crud::PAGE_EDIT) {
+            $instance = $this->getContext()->getEntity()->getInstance();
+            if ($instance instanceof ScheduleSetting && $instance->getSettingKey() === 'fixed_slots') {
+                // fixed_slots => seulement 0 ou 1
+                $valueField = $valueField
+                    ->setHelp("<code>fixed_slots</code> : valeur autorisée <strong>0</strong> (désactivé) ou <strong>1</strong> (activé)")
+                    ->setFormTypeOptions([
+                        'attr' => [
+                            'placeholder' => '0 ou 1',
+                            'pattern' => '^(0|1)$',
+                            'title' => 'Uniquement 0 ou 1',
+                        ],
+                    ]);
+            }
+        }
+
+        yield $valueField;
     }
 }

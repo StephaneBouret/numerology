@@ -11,7 +11,7 @@ class SendMailService
     public function __construct(protected MailerInterface $mailer, protected string $defaultFrom) {}
 
     public function sendMail(
-        string $from = null,
+        ?string $from = null,
         string $name,
         string $to,
         string $subject,

@@ -26,6 +26,23 @@ class ScheduleSettingRepository extends ServiceEntityRepository
         return $settings;
     }
 
+    public function get(string $key, ?string $default = null): ?string
+    {
+        $row = $this->findOneBy(['setting_key' => $key]);
+        return $row?->getValue() ?? $default;
+    }
+
+    public function getInt(string $key, int $default): int
+    {
+        return (int) ($this->get($key, (string) $default));
+    }
+
+    public function getBool(string $key, bool $default): bool
+    {
+        $val = strtolower((string) $this->get($key, $default ? '1' : '0'));
+        return in_array($val, ['1', 'true', 'yes', 'on'], true);
+    }
+
     //    /**
     //     * @return ScheduleSetting[] Returns an array of ScheduleSetting objects
     //     */
