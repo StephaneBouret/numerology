@@ -1,21 +1,37 @@
 <div class="container my-5">
-{{ form_start(form, {
+	<h5 class="mb-3 text-center">{{ type.name }}</h5>
+	<div class="card mb-4">
+		<div class="card-body">
+			<h5 class="card-title mb-3">Choisissez votre créneau</h5>
+			<div id="calendar" data-controller="calendar" data-calendar-endpoint-value="{{ path('api_fixed_slots_range') }}" data-calendar-type-id-value="{{ type.id }}" data-calendar-start-input-selector-value="#appointment_startAt" data-calendar-initial-view-value="timeGridWeek" data-calendar-slot-min-time-value="08:00:00" data-calendar-slot-max-time-value="20:00:00"></div>
+
+			<small class="text-muted d-block mt-2">
+				Cliquez sur un créneau disponible pour pré-remplir le formulaire.
+			</small>
+		</div>
+	</div>
+
+	{{ form_start(form, {
     'action': action ?? app.request.uri,
     'attr': {
         'data-controller': 'ajax-form',
         'data-action': 'submit->ajax-form#submit'
     }
 }) }}
-    {{ form_errors(form) }}
-    <div class="mb-3">
-        {{ form_row(form.startAt) }}
-    </div>
-    <h5 class="mt-4">Personne évaluée</h5>
-    {{ form_row(form.evaluatedPerson) }}
+	{{ form_errors(form) }}
+	<div
+		class="mb-3">
+		{# id stable utilisé par le controller Stimulus #}
+		{{ form_widget(form.startAt, { attr: { id: 'appointment_startAt', class: 'd-none' }}) }}
+		{{ form_errors(form.startAt) }}
+		{# si tu veux afficher l'erreur au besoin #}
+	</div>
+	<h5 class="mt-4">Personne évaluée</h5>
+	{{ form_row(form.evaluatedPerson) }}
 
-    <button class="btn btn-success mt-4" type="submit">Confirmer la réservation</button>
-    <button type="button" class="btn btn-link" data-action="click->appointment-type#reloadRecap">Annuler</button>
+	<button class="btn btn-success mt-4" type="submit">Confirmer la réservation</button>
+	<button type="button" class="btn btn-link" data-action="click->appointment-type#reloadRecap">Annuler</button>
 
-{{ form_rest(form) }}
-{{ form_end(form) }}
+	{{ form_rest(form) }}
+	{{ form_end(form) }}
 </div>

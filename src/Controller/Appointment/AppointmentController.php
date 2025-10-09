@@ -55,20 +55,28 @@ final class AppointmentController extends AbstractController
             $appointment->setUser($user);
 
             // Sécurité sur les dates
-            $startAt = $appointment->getStartAt();
-            if (!$startAt) {
+            $startAtParis = $appointment->getStartAt();  // objet en Europe/Paris grâce au form
+            if (!$startAtParis) {
                 return $this->renderAppointmentForm($form, $type, 'Merci de sélectionner une date de début.');
             }
-            // Calcul automatique de de la date de fin
-            $duration = $appointment->getType()->getDuration(); // durée en minutes
+
+            $duration = $appointment->getType()->getDuration();
             if ($duration < 0) {
                 return $this->renderAppointmentForm($form, $type, 'La durée du type de rendez-vous est invalide.');
             }
-            $endAt = (clone $startAt)->modify("+{$duration} minutes");
-            $appointment->setEndAt($endAt);
+            $endAtParis = $startAtParis->modify("+{$duration} minutes");
 
-            // Double-check anti-chevauchement
-            if ($appointmentRepo->hasOverlap($startAt, $endAt)) {
+            // 👉 Conversion d'INSTANT vers UTC (change juste la représentation, pas l'instant)
+            $utc = new \DateTimeZone('UTC');
+            $startAtUtc = $startAtParis->setTimezone($utc);
+            $endAtUtc   = $endAtParis->setTimezone($utc);
+
+            // Affecte en UTC AVANT les contrôles & flush
+            $appointment->setStartAt($startAtUtc);
+            $appointment->setEndAt($endAtUtc);
+
+            // Double-check overlap en UTC (et le repo doit bloquer PENDING + CONFIRMED)
+            if ($appointmentRepo->hasOverlap($startAtUtc, $endAtUtc)) {
                 return $this->renderAppointmentForm($form, $type, "Ce créneau vient d'être pris. Merci d'en choisir un autre.");
             }
 

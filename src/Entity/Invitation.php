@@ -22,7 +22,7 @@ class Invitation
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $uuid = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'invitation', cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
     #[ORM\Column]
@@ -64,6 +64,16 @@ class Invitation
 
     public function setUser(?User $user): static
     {
+        // désynchroniser l'ancien lien
+        if ($user === null && $this->user !== null) {
+            $this->user->setInvitation(null);
+        }
+
+        // synchroniser le nouveau lien
+        if ($user !== null && $user->getInvitation() !== $this) {
+            $user->setInvitation($this);
+        }
+        
         $this->user = $user;
 
         return $this;

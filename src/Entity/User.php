@@ -441,6 +441,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this;
     }
 
+    public function getInvitation(): ?Invitation
+    {
+        return $this->invitation;
+    }
+
+    public function setInvitation(?Invitation $invitation): static
+    {
+        // si on supprime le lien
+        if ($invitation === null && $this->invitation !== null) {
+            $this->invitation->setUser(null);
+        }
+
+        // si on définit un nouveau lien
+        if ($invitation !== null && $invitation->getUser() !== $this) {
+            $invitation->setUser($this);
+        }
+
+        $this->invitation = $invitation;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Comments>
      */

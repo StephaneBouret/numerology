@@ -1,9 +1,5 @@
 import './bootstrap.js';
 
-import {
-    Application
-} from "@hotwired/stimulus";
-import ToastController from "./controllers/toast_controller.js";
 import Filter from './js/modules/Filter.js';
 import Comments from './js/modules/Comments.js';
 import Loadmore from './js/modules/Loadmore.js';
@@ -25,9 +21,6 @@ import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import 'flag-icons/css/flag-icons.min.css';
 import "video.js/dist/video-js.min.css";
 import 'bootstrap';
-
-window.Stimulus = Application.start();
-Stimulus.register("toast", ToastController);
 
 // Close alert message after 5 secondes
 const closeAlertMessage = () => {

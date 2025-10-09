@@ -61,9 +61,9 @@ final class SlotService
         $appointments = $this->appointmentRepo->findByDate($date); // idéalement: CONFIRMED only
         // Par sureté, on filtre ici si le repo renvoie d'autres statuts :
         $appointments = array_filter($appointments, function ($a) {
-            return method_exists($a, 'getStatus')
-                ? $a->getStatus() === AppointmentStatus::CONFIRMED
-                : true;
+            if (!method_exists($a, 'getStatus')) return true;
+            $st = $a->getStatus();
+            return in_array($st, [AppointmentStatus::PENDING, AppointmentStatus::CONFIRMED], true);
         });
         $unavails     = $this->unavailabilityRepo->findForDate($date);
 

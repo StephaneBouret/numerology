@@ -35,35 +35,41 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findByDate(\DateTimeInterface $date): array
+    public function findByDate(\DateTimeInterface $dayParis): array
     {
-        $start = \DateTimeImmutable::createFromFormat('Y-m-d', $date->format('Y-m-d'))->setTime(0, 0, 0);
-        $end = \DateTimeImmutable::createFromFormat('Y-m-d', $date->format('Y-m-d'))->setTime(23, 59, 59);
+        $tzParis = new \DateTimeZone('Europe/Paris');
+        $tzUtc   = new \DateTimeZone('UTC');
+
+        // bornes Paris
+        $startParis = \DateTimeImmutable::createFromInterface($dayParis)
+            ->setTime(0, 0, 0, 0)
+            ->setTimezone($tzParis);
+        $endParis = $startParis->modify('+1 day');
+
+        // convertis à UTC pour la requête (important si la colonne est UTC)
+        $startUtc = $startParis->setTimezone($tzUtc);
+        $endUtc   = $endParis->setTimezone($tzUtc);
 
         return $this->createQueryBuilder('a')
-                ->andWhere('a.startAt BETWEEN :start AND :end')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->getQuery()
-                ->getResult();
+            ->andWhere('a.startAt < :endUtc')
+            ->andWhere('a.endAt   >= :startUtc')
+            ->setParameter('startUtc', $startUtc)
+            ->setParameter('endUtc',   $endUtc)
+            ->orderBy('a.startAt', 'ASC')
+            ->getQuery()->getResult();
     }
 
-    public function hasOverlap(\DateTimeInterface $start, \DateTimeInterface $end, ?Appointment $exclude = null): bool
+    public function hasOverlap(\DateTimeInterface $start, \DateTimeInterface $end): bool
     {
-        $qb = $this->createQueryBuilder('a')
+        return (int) $this->createQueryBuilder('a')
+            ->select('COUNT(a.id)')
             ->andWhere('a.startAt < :end')
-            ->andWhere('a.endAt > :start')
-            ->andWhere('a.status = :statusConfirmed') // seuls les RDV confirmés bloquent
+            ->andWhere('a.endAt   > :start')
+            ->andWhere('a.status IN (:blocking)')
             ->setParameter('start', $start)
-            ->setParameter('end', $end)
-            ->setParameter('statusConfirmed', AppointmentStatus::CONFIRMED)
-            ->setMaxResults(1);
-
-        if ($exclude && $exclude->getId()) {
-            $qb->andWhere('a.id := :excludeId')->setParameter('excludeId', $exclude->getId());
-        }
-
-        return (bool) $qb->getQuery()->getOneOrNullResult();
+            ->setParameter('end',   $end)
+            ->setParameter('blocking', [AppointmentStatus::PENDING, AppointmentStatus::CONFIRMED])
+            ->getQuery()->getSingleScalarResult() > 0;
     }
 
     //    /**
