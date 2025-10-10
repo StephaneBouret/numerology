@@ -3,20 +3,25 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Embeddable]
 class EvaluatedPerson
 {
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank()]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank()]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $patronyms = null;
 
     #[ORM\Column(type: 'date')]
+    #[Assert\NotNull()]
+    #[Assert\LessThan('today')]
     private ?\DateTimeInterface $birthdate = null;
 
     public function getFirstname(): ?string
