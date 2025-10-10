@@ -16,17 +16,17 @@ class Unavailability
     private ?int $id = null;
 
     // Début et fin (sur une même journée)
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime_immutable')]
     #[Assert\NotNull(message: 'La date/heure de début est obligatoire.')]
-    private ?\DateTimeInterface $startAt = null;
+    private ?\DateTimeImmutable $startAt = null;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime_immutable')]
     #[Assert\NotNull(message: 'La date/heure de fin est obligatoire.')]
     #[Assert\GreaterThan(
         propertyPath: 'startAt',
         message: "L'heure de fin doit être strictement postérieure à l'heure de début"
     )]
-    private ?\DateTimeInterface $endAt = null;
+    private ?\DateTimeImmutable $endAt = null;
 
     // Coche "journée entière" => on normalise (00:00:00 / 23:59:59)
     #[ORM\Column(type: 'boolean')]
@@ -40,24 +40,24 @@ class Unavailability
         return $this->id;
     }
 
-    public function getStartAt(): ?\DateTimeInterface
+    public function getStartAt(): ?\DateTimeImmutable
     {
         return $this->startAt;
     }
 
-    public function setStartAt(\DateTimeInterface $startAt): static
+    public function setStartAt(\DateTimeImmutable $startAt): static
     {
         $this->startAt = $startAt;
 
         return $this;
     }
 
-    public function getEndAt(): ?\DateTimeInterface
+    public function getEndAt(): ?\DateTimeImmutable
     {
         return $this->endAt;
     }
 
-    public function setEndAt(\DateTimeInterface $endAt): static
+    public function setEndAt(\DateTimeImmutable $endAt): static
     {
         $this->endAt = $endAt;
 
@@ -91,14 +91,13 @@ class Unavailability
     #[Assert\Callback()]
     public function validateSameDay(ExecutionContextInterface $context, mixed $payload): void
     {
-        if (!$this->startAt || !$this->endAt) {
-            return;
-        }
+        if (!$this->startAt || !$this->endAt) return;
 
-        $startDay = $this->startAt->format('Y-m-d');
-        $endDay = $this->endAt->format('Y-m-d');
+        $paris = new \DateTimeZone('Europe/Paris');
+        $s = $this->startAt->setTimezone($paris);
+        $e = $this->endAt->setTimezone($paris);
 
-        if ($startDay !== $endDay) {
+        if ($s->format('Y-m-d') !== $e->format('Y-m-d')) {
             $context->buildViolation("L'indisponibilité doit se situer sur une seule journée")
                 ->atPath('endAt') // cible le champ "fin"
                 ->addViolation();

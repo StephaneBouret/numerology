@@ -13,8 +13,8 @@ class UnavailableDay
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'date', unique: true)]
-    private ?\DateTimeInterface $date = null;
+    #[ORM\Column(type: 'datetime_immutable', unique: true)]
+    private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $reason = null;
@@ -24,12 +24,12 @@ class UnavailableDay
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTimeImmutable
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    public function setDate(\DateTimeImmutable $date): static
     {
         $this->date = $date;
 

@@ -52,38 +52,70 @@ class UnavailabilityCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        // Affichage en Europe/paris dans les listings
+        $displayTz = 'Europe/Paris';
+
         return [
             IdField::new('id')->onlyOnIndex(),
-            DateTimeField::new('startAt', 'Début')->setHelp('Date & Heure de début'),
-            DateTimeField::new('endAt', 'Fin')->setHelp('Date & Heure de fin'),
+            DateTimeField::new('startAt', 'Début')
+                ->setHelp('Date & Heure de début')
+                // Saisie : vue Paris / modèle UTC
+                ->setFormTypeOption('widget', 'single_text')
+                ->setFormTypeOption('view_timezone', $displayTz)
+                ->setFormTypeOption('model_timezone', 'UTC')
+                // Affichage index/show
+                ->setTimezone($displayTz),
+            DateTimeField::new('endAt', 'Fin')
+                ->setHelp('Date & Heure de fin')
+                ->setFormTypeOption('widget', 'single_text')
+                ->setFormTypeOption('view_timezone', $displayTz)
+                ->setFormTypeOption('model_timezone', 'UTC')
+                ->setTimezone($displayTz),
             BooleanField::new('allDay', 'Journée entière')
                 ->setHelp('Si coché, la plage sera normalisée à 00.00-23:59 pour le jour concerné'),
             TextField::new('reason', 'Motif (optionnel)')->hideOnIndex(),
         ];
     }
 
-    // Normalise si "Journée entière" est cochée : 00:00-23:59 sur la date de startAt
+    /**
+     * Normalise si "Journée entière" est cochée : 00:00-23:59 sur la date de startAt
+     * — la normalisation se fait en Europe/Paris puis on laisse EA convertir en UTC (model_timezone)
+     */
     public function persistEntity(EntityManagerInterface $em, $entityInstance): void
     {
-        if ($entityInstance instanceof Unavailability && $entityInstance->isAllDay()) {
-            $d = $entityInstance->getStartAt();
-            $start = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $d->format('Y-m-d') . ' 00:00:00');
-            $end   = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $d->format('Y-m-d') . ' 23:59:59');
-            $entityInstance->setStartAt($start);
-            $entityInstance->setEndAt($end);
-        }
+        $this->normalizeAllDayIfNeeded($entityInstance);
         parent::persistEntity($em, $entityInstance);
     }
 
     public function updateEntity(EntityManagerInterface $em, $entityInstance): void
     {
-        if ($entityInstance instanceof Unavailability && $entityInstance->isAllDay()) {
-            $d = $entityInstance->getStartAt();
-            $start = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $d->format('Y-m-d') . ' 00:00:00');
-            $end   = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $d->format('Y-m-d') . ' 23:59:59');
-            $entityInstance->setStartAt($start);
-            $entityInstance->setEndAt($end);
-        }
+        $this->normalizeAllDayIfNeeded($entityInstance);
         parent::updateEntity($em, $entityInstance);
+    }
+
+    private function normalizeAllDayIfNeeded($entityInstance): void
+    {
+        if (!$entityInstance instanceof Unavailability) {
+            return;
+        }
+        if (!$entityInstance->isAllDay()) {
+            return;
+        }
+        $startAt = $entityInstance->getStartAt();
+        if (!$startAt) {
+            return;
+        }
+
+        $paris = new \DateTimeZone('Europe/Paris');
+        $dayParis = $startAt->setTimezone($paris); // on "voit" le jour réel sur Paris
+
+        // 00:00:00 et 23:59:59 (Paris)
+        $startParis = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dayParis->format('Y-m-d') . ' 00:00:00', $paris);
+        $endParis   = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dayParis->format('Y-m-d') . ' 23:59:59', $paris);
+
+        // On affecte directement ces instants (EA se charge déjà de model_timezone=UTC côté formulaire)
+        // Ici nous sommes en phase persist/update, donc nous restons cohérents : on enregistre des instants corrects
+        $entityInstance->setStartAt($startParis);
+        $entityInstance->setEndAt($endParis);
     }
 }

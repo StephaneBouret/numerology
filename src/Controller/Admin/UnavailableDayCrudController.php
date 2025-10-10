@@ -52,7 +52,11 @@ class UnavailableDayCrudController extends AbstractCrudController
         return [
             IdField::new('id')->onlyOnIndex(),
             DateField::new('date', 'Date')
-                ->setHelp('Jour fermé à la réservation'),
+                ->setHelp('Jour fermé à la réservation')
+                // widgetnatif (calendar), pas de TZ car type DATE
+                ->setFormTypeOption('widget', 'single_text')
+                // format d'affichage en liste/détail
+                ->setFormat('dd/MM/yyyy'),
             TextField::new('reason', 'Motif (optionnel')
                 ->setHelp('Ex: Congés, Formation, Exception...')
                 ->hideOnIndex(),
