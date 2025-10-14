@@ -1959,28 +1959,49 @@ input.input100 {
 # FullCalendar
 --------------------------------------------------------------*/
 /* 0) Sécurise la toolbar */
-.fc .fc-header-toolbar { display: flex !important; }
+.fc .fc-header-toolbar {
+    display: flex !important;
+}
 
 /* 1) Boutons : utilise les styles Bootstrap existants, mais affine l'espace */
-.fc .fc-toolbar-chunk .btn { padding: .375rem .6rem; line-height: 1.2; }
+.fc .fc-toolbar-chunk .btn {
+    padding: .375rem .6rem;
+    line-height: 1.2;
+}
 
 /* 2) Titre plus compact */
-.fc .fc-toolbar-title { font-size: 1.1rem; font-weight: 600; }
+.fc .fc-toolbar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
 
 /* 3) Aujourd'hui en douce */
-.fc .fc-day-today { background-color: rgba(13,110,253,.06); }
+.fc .fc-day-today {
+    background-color: rgba(13, 110, 253, .06);
+}
 
 /* 4) Now indicator (ligne rouge), un peu plus visible */
-.fc .fc-timegrid-now-indicator-line { border-color: #dc3545; border-width: 2px; }
-.fc .fc-timegrid-now-indicator-arrow { border-top-color: #dc3545; }
+.fc .fc-timegrid-now-indicator-line {
+    border-color: #dc3545;
+    border-width: 2px;
+}
+
+.fc .fc-timegrid-now-indicator-arrow {
+    border-top-color: #dc3545;
+}
 
 /* 5) Slots libres (tes events "disponibles") : vert doux */
-.fc .fc-event { border-radius: .35rem; }
-.fc .fc-daygrid-event, .fc .fc-timegrid-event {
-  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+.fc .fc-event {
+    border-radius: .35rem;
 }
+
+.fc .fc-daygrid-event,
+.fc .fc-timegrid-event {
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
 .fc .fc-timegrid-event:hover {
-  filter: brightness(0.98);
+    filter: brightness(0.98);
 }
 
 /* Couleurs cohérentes avec ton JS :
@@ -1990,75 +2011,233 @@ input.input100 {
 */
 
 /* 6) Créneaux passés (déjà géré côté JS), éventuellement un peu plus "gris" au texte */
-.fc .fc-event[style*="background-color: #e9ecef"] { color: #6c757d !important; }
+.fc .fc-event[style*="background-color: #e9ecef"] {
+    color: #6c757d !important;
+}
 
 /* 7) Bordures colonnes de la grille : plus subtiles */
-.fc .fc-scrollgrid, .fc .fc-timegrid-col, .fc .fc-timegrid-slot {
-  border-color: #e9ecef;
+.fc .fc-scrollgrid,
+.fc .fc-timegrid-col,
+.fc .fc-timegrid-slot {
+    border-color: #e9ecef;
 }
 
 /* 8) En "month view" : rounds et hover doux */
-.fc .fc-daygrid-day-frame:hover { background-color: rgba(0,0,0,.02); }
+.fc .fc-daygrid-day-frame:hover {
+    background-color: rgba(0, 0, 0, .02);
+}
 
 /* 9) Si tu veux rafraîchir l'apparence des boutons actifs */
-.fc .btn-primary.active, .fc .btn-primary:active { filter: brightness(0.95); }
+.fc .btn-primary.active,
+.fc .btn-primary:active {
+    filter: brightness(0.95);
+}
+
+.fc-selected-notice .fc-selected-text {
+  font-weight: 600;
+}
 
 /* 10) Mobile: toolbar en colonne, boutons compacts */
 @media (max-width: 576px) {
-  .fc .fc-header-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: .5rem;
-  }
-  .fc .fc-toolbar-chunk {
-    display: flex;
-    justify-content: space-between;
-    gap: .5rem;
-  }
-  .fc .fc-toolbar-title { font-size: 1rem; line-height: 1.2; }
+    .fc .fc-header-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: .5rem;
+    }
 
-  /* Boutons plus petits */
-  .fc .fc-toolbar-chunk .btn {
-    padding: .25rem .5rem;
-    font-size: .9rem;
-    line-height: 1.2;
-  }
+    .fc .fc-toolbar-chunk {
+        display: flex;
+        justify-content: space-between;
+        gap: .5rem;
+    }
 
-  /* On cache les vues moins utiles pour mobile (on garde Semaine) */
-  .fc .fc-dayGridMonth-button,
-  .fc .fc-timeGridDay-button {
-    display: none;
-  }
+    .fc .fc-toolbar-title {
+        font-size: 1rem;
+        line-height: 1.2;
+    }
 
-  /* Grille plus dense et lisible */
-  .fc .fc-col-header-cell-cushion,
-  .fc .fc-timegrid-axis-cushion {
-    font-size: .85rem;
-    padding: .25rem .25rem;
-  }
-  .fc .fc-timegrid-slot-label {
-    font-size: .8rem;
-    padding-right: .25rem;
-  }
-  .fc .fc-timegrid-slot {
-    height: 2.2rem; /* réduit la hauteur des lignes */
-  }
+    /* Boutons plus petits */
+    .fc .fc-toolbar-chunk .btn {
+        padding: .25rem .5rem;
+        font-size: .9rem;
+        line-height: 1.2;
+    }
 
-  /* Un léger fond pour le week-end (optionnel) */
-  .fc .fc-day-sat .fc-timegrid-col-frame,
-  .fc .fc-day-sun .fc-timegrid-col-frame {
-    background-color: rgba(108,117,125,.03);
-  }
+    /* On cache les vues moins utiles pour mobile (on garde Semaine) */
+    .fc .fc-dayGridMonth-button,
+    .fc .fc-timeGridDay-button {
+        display: none;
+    }
 
-  /* Autorise le scroll horizontal si nécessaire (petits écrans) */
-  #calendar, .fc { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    /* Grille plus dense et lisible */
+    .fc .fc-col-header-cell-cushion,
+    .fc .fc-timegrid-axis-cushion {
+        font-size: .85rem;
+        padding: .25rem .25rem;
+    }
+
+    .fc .fc-timegrid-slot-label {
+        font-size: .8rem;
+        padding-right: .25rem;
+    }
+
+    .fc .fc-timegrid-slot {
+        height: 2.2rem;
+        /* réduit la hauteur des lignes */
+    }
+
+    /* Un léger fond pour le week-end (optionnel) */
+    .fc .fc-day-sat .fc-timegrid-col-frame,
+    .fc .fc-day-sun .fc-timegrid-col-frame {
+        background-color: rgba(108, 117, 125, .03);
+    }
+
+    /* Autorise le scroll horizontal si nécessaire (petits écrans) */
+    #calendar,
+    .fc {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 
 /* 11) Desktop: un peu de confort */
 @media (min-width: 577px) {
-  .fc .fc-toolbar-title { font-size: 1.1rem; font-weight: 600; }
-  .fc .fc-timegrid-now-indicator-line { border-color: #dc3545; border-width: 2px; }
-  .fc .fc-timegrid-now-indicator-arrow { border-top-color: #dc3545; }
-  .fc .fc-scrollgrid, .fc .fc-timegrid-col, .fc .fc-timegrid-slot { border-color: #e9ecef; }
-  .fc .fc-daygrid-day-frame:hover { background-color: rgba(0,0,0,.02); }
+    .fc .fc-toolbar-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .fc .fc-timegrid-now-indicator-line {
+        border-color: #dc3545;
+        border-width: 2px;
+    }
+
+    .fc .fc-timegrid-now-indicator-arrow {
+        border-top-color: #dc3545;
+    }
+
+    .fc .fc-scrollgrid,
+    .fc .fc-timegrid-col,
+    .fc .fc-timegrid-slot {
+        border-color: #e9ecef;
+    }
+
+    .fc .fc-daygrid-day-frame:hover {
+        background-color: rgba(0, 0, 0, .02);
+    }
+}
+
+.ahrnxrrwh {
+    color: #054652;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding-block-start: 12px;
+    padding-block-end: 16px;
+    padding-inline-start: 24px;
+    padding-inline-end: 24px;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    width: 100%;
+}
+
+@media (min-width: 800px) {
+    .ahrnxrrwh {
+        text-align: center;
+        justify-content: center;
+        padding-block-start: 16px;
+    }
+}
+
+.rr9wdqka1 {
+    font: 500 30px / 32px 'AirbnbCereal', 'Helvetica Neue', sans-serif;
+    white-space: pre-line;
+}
+
+@media (min-width: 800px) {
+    .rr9wdqka1 {
+        font: 500 40px / 42px 'AirbnbCereal', 'Helvetica Neue', sans-serif;
+    }
+}
+
+.x6r3cy81b {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 800px) {
+    .x6r3cy81b {
+        flex-direction: row;
+    }
+}
+
+.qqzl966qj {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 0 24px;
+    min-height: 48px;
+    font: 500 16px / 20px 'AirbnbCereal', 'Helvetica Neue', sans-serif;
+    border-radius: 9999px;
+    border: 0 solid #0000;
+    background: #5BAEBE;
+    color: #fff;
+}
+
+.qqzl966qj:hover {
+    background: #4997A7;
+    text-decoration: none;
+    color: #fff;
+}
+
+.oz6fza55s {
+    gap: 8px;
+    color: currentColor;
+    justify-content: center;
+    max-width: 100%;
+    display: flex;
+    position: relative;
+}
+
+.in6imj8sc {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: auto;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.hrs7k1fab {
+    aspect-ratio: 1;
+    display: inline-flex;
+    position: relative;
+    color: #FFFFFF;
+    width: 24px;
+}
+
+.pmdrn4qjx {
+    white-space: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    min-width: 0;
+    display: inline-flex;
+}
+
+.cw6dqx7z9 {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: 0;
+    background: none;
+    color: #ffffff;
 }

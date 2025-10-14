@@ -22,6 +22,12 @@ function fmtTimeFr(d, timeZone = "Europe/Paris") {
         hour12: false,
     }).format(d);
 }
+// Ex: "2025-10-15T09:00:00+02:00" -> "2025-10-15T09:00" (pour <input type="datetime-local">)
+function isoTzToLocalInputValue(isoTz) {
+    return String(isoTz)
+        .replace(/([+-]\d{2}:\d{2}|Z)$/, "")
+        .slice(0, 16);
+}
 
 export default class extends Controller {
     static values = {
@@ -33,12 +39,90 @@ export default class extends Controller {
         slotMaxTime: { type: String, default: "20:00:00" },
         timeZone: { type: String, default: "Europe/Paris" },
         firstDay: { type: Number, default: 1 },
+        // Admin
+        openDelayHours: { type: Number, default: 48 }, // "opening_delay_hours"
+        openDays: { type: String, default: "1,2,3,4,5" }, // "1=lundi … 7=dimanche"
     };
+
+    // ====== Jours ouverts ======
+    parseOpenDays(csv) {
+        return csv
+            .split(",")
+            .map((s) => parseInt(s.trim(), 10))
+            .filter((n) => Number.isInteger(n) && n >= 1 && n <= 7);
+    }
+    // FullCalendar: 0=dim..6=sam ; Notre config: 1=lun..7=dim
+    openDaysToHiddenDays(openDays) {
+        const keepFc = new Set(openDays.map((n) => (n === 7 ? 0 : n)));
+        const all = new Set([0, 1, 2, 3, 4, 5, 6]);
+        keepFc.forEach((k) => all.delete(k));
+        return Array.from(all); // ex: [0,6] pour cacher dim & sam
+    }
+
+    // ====== Barrière ouvrable (corrigée) ======
+    computeBusinessBarrier(timeZone, openDelayHours, openDays) {
+        const now = new Date();
+        const sod = this.startOfDayInTz(now, timeZone);
+        const daysToAdd = Math.ceil(openDelayHours / 24);
+
+        let d = new Date(sod.getTime());
+        let remaining = daysToAdd;
+
+        // 🟢 On compte aussi le jour courant s'il est ouvré
+        while (remaining > 0) {
+            const dow = ((d.getDay() + 6) % 7) + 1; // 1=lun..7=dim
+            if (openDays.includes(dow)) {
+                remaining--;
+                if (remaining === 0) break; // on s'arrête sur le Nᵉ jour ouvré
+            }
+            d = this.addDays(d, 1);
+        }
+
+        // Ouverture = lendemain du Nᵉ jour ouvré consommé
+        d = this.addDays(d, 1);
+        return d;
+    }
+
+    startOfDayInTz(date, timeZone) {
+        const parts = new Intl.DateTimeFormat("fr-FR", {
+            timeZone,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        })
+            .formatToParts(date)
+            .reduce((acc, p) => ((acc[p.type] = p.value), acc), {});
+        return new Date(`${parts.year}-${parts.month}-${parts.day}T00:00:00`);
+    }
+
+    addDays(d, n) {
+        return new Date(d.getTime() + n * 24 * 60 * 60 * 1000);
+    }
+
+    // ====== Sélection visuelle (réinitialisation propre) ======
+    resetSelectedEventAppearance() {
+        if (this.selectedEvent) {
+            const ep = this.selectedEvent.extendedProps || {};
+            this.selectedEvent.setProp(
+                "backgroundColor",
+                ep._defaultBg || "#d1e7dd"
+            );
+            this.selectedEvent.setProp(
+                "borderColor",
+                ep._defaultBorder || "#198754"
+            );
+            this.selectedEvent.setProp(
+                "textColor",
+                ep._defaultText || "#0f5132"
+            );
+            this.selectedEvent = null;
+        }
+    }
 
     connect() {
         const fc = window.FullCalendar;
 
-        // Recherche de l'input caché
+        // Récupère l'input hidden "startAt"
         this.startInput =
             document.querySelector(this.startInputSelectorValue) ||
             document.querySelector("[name$='[startAt]']") ||
@@ -50,13 +134,30 @@ export default class extends Controller {
         this.selectedEvent = null;
         this.loadingEl = this.ensureLoadingEl();
 
+        // ===== Calculs init =====
+        this.tz = this.timeZoneValue || "Europe/Paris";
+        const openDelay = Number.isFinite(this.openDelayHoursValue)
+            ? this.openDelayHoursValue
+            : 48;
+
+        // Jours ouverts
+        this.openDaysList = this.parseOpenDays(this.openDaysValue);
+        this.hiddenDays = this.openDaysToHiddenDays(this.openDaysList);
+
+        // Barrière ouvrable
+        this.barrierStart = this.computeBusinessBarrier(
+            this.tz,
+            openDelay,
+            this.openDaysList
+        );
+
         // ===== Initialisation FullCalendar =====
         this.calendar = new fc.Calendar(this.element, {
             themeSystem: "bootstrap5",
             locale: "fr",
             initialView: this.initialViewValue,
             firstDay: this.firstDayValue,
-            timeZone: this.timeZoneValue,
+            timeZone: this.tz,
             slotMinTime: this.slotMinTimeValue,
             slotMaxTime: this.slotMaxTimeValue,
             nowIndicator: true,
@@ -79,22 +180,31 @@ export default class extends Controller {
             headerToolbar: {
                 left: "prev,next today",
                 center: "title",
-                right: "timeGridWeek", // vue unique (mobile-friendly)
+                right: "timeGridWeek",
             },
-            validRange: { start: new Date() },
+
+            hiddenDays: this.hiddenDays,
+            validRange: { start: this.barrierStart },
+
             events: (info, success, failure) =>
-                this.loadRange(info)
+                this.loadRangeClamped(info)
                     .then((events) => {
-                        this.toggleEmptyNotice(events.length === 0);
-                        this.renderList(events); // ⬅️ met à jour la liste
-                        success(events);
+                        const filtered = events.filter(
+                            (e) =>
+                                new Date(e.start) >= this.barrierStart &&
+                                !isPast(e.end || e.start)
+                        );
+                        this.toggleEmptyNotice(filtered.length === 0);
+                        this.renderList(filtered);
+                        success(filtered);
                     })
                     .catch((e) => {
                         console.error("[calendar] events load error", e);
                         this.toggleEmptyNotice(true);
-                        this.renderList([]); // ⬅️ vide la liste
+                        this.renderList([]);
                         failure(e);
                     }),
+
             eventClick: (arg) => this.onEventClick(arg),
             eventMouseEnter: (info) => {
                 info.el.style.cursor = "pointer";
@@ -106,6 +216,7 @@ export default class extends Controller {
         // UI en dehors du conteneur FC
         this.ensureEmptyNoticeEl();
         this.ensureListEl();
+        this.ensureSelectedNoticeEl();
     }
 
     disconnect() {
@@ -114,15 +225,19 @@ export default class extends Controller {
             this.listEl.removeEventListener("click", this.onListClickBound);
     }
 
-    // ===== Chargement par range =====
-    async loadRange(info) {
+    // ===== Chargement par range (avec clamp barrière) =====
+    async loadRangeClamped(info) {
         this.setLoading(true);
+
+        const start =
+            info.start < this.barrierStart ? this.barrierStart : info.start;
+        const end = info.end;
 
         const url = new URL(this.endpointValue, window.location.origin);
         url.searchParams.set("type", String(this.typeIdValue));
         const ymd = (d) => d.toISOString().slice(0, 10);
-        url.searchParams.set("start", ymd(info.start));
-        url.searchParams.set("end", ymd(info.end));
+        url.searchParams.set("start", ymd(start));
+        url.searchParams.set("end", ymd(end));
 
         try {
             const resp = await fetch(url.toString(), {
@@ -130,8 +245,9 @@ export default class extends Controller {
             });
             if (!resp.ok) return [];
 
-            const data = await resp.json(); // [{start,end}]
-            return data.map((e) => {
+            const data = await resp.json(); // [{start,end}] (RFC3339 avec fuseau)
+            // On conserve les ISO TZ-AWARE tel quels, et on pose les couleurs
+           return data.map((e) => {
                 const past = isPast(e.end || e.start);
                 return {
                     ...e,
@@ -161,38 +277,28 @@ export default class extends Controller {
             return;
         if (!this.startInput) return;
 
-        // Conversion simple vers <input type="datetime-local">
-        const iso = arg.event.startStr; // ex: 2025-10-08T14:00:00+02:00
-        const local = iso.replace(/([+-]\d{2}:\d{2}|Z)$/, "").slice(0, 16);
+        // startStr / endStr sont des ISO avec fuseau selon la timeZone du calendrier
+        const startIsoTz = arg.event.startStr;
+        const endIsoTz =
+            arg.event.endStr || arg.event.end?.toISOString() || startIsoTz;
 
-        this.startInput.value = local;
+        // Remplir l'input en local (on retire juste le fuseau)
+        this.startInput.value = isoTzToLocalInputValue(startIsoTz);
         this.startInput.dispatchEvent(new Event("input", { bubbles: true }));
         this.startInput.dispatchEvent(new Event("change", { bubbles: true }));
-        console.debug("[calendar] startAt rempli :", local);
 
-        // Feedback visuel dans le calendrier
-        if (this.selectedEvent) {
-            const ep = this.selectedEvent.extendedProps || {};
-            this.selectedEvent.setProp(
-                "backgroundColor",
-                ep._defaultBg || "#d1e7dd"
-            );
-            this.selectedEvent.setProp(
-                "borderColor",
-                ep._defaultBorder || "#198754"
-            );
-            this.selectedEvent.setProp(
-                "textColor",
-                ep._defaultText || "#0f5132"
-            );
-        }
+        // Réinitialise l'ancien éventuel puis colore le nouveau
+        this.resetSelectedEventAppearance();
         arg.event.setProp("backgroundColor", "#cfe2ff");
         arg.event.setProp("borderColor", "#0d6efd");
         arg.event.setProp("textColor", "#084298");
         this.selectedEvent = arg.event;
 
+        // Bannière "créneau sélectionné" (en format Europe/Paris)
+        this.showSelectedNotice(startIsoTz, endIsoTz);
+
         // Feedback dans la liste (actif)
-        this.highlightListItem(iso);
+        this.highlightListItem(startIsoTz);
     }
 
     // ===== UI: Loader =====
@@ -225,9 +331,10 @@ export default class extends Controller {
         box = document.createElement("div");
         box.className = "fc-empty-notice alert alert-warning d-none";
         box.style.cssText = "margin:.5rem 0;";
+        const barrierLabel = this.barrierStart.toLocaleDateString("fr-FR");
         box.innerHTML = `
       <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-2">
-        <div><strong>Aucun créneau disponible sur cette période.</strong></div>
+        <div><strong>Aucun créneau visible avant ${barrierLabel}.</strong></div>
         <div class="text-muted">Essayez une autre semaine.</div>
         <div class="ms-sm-auto">
           <button type="button" class="btn btn-sm btn-primary fc-next-week">Voir la semaine suivante</button>
@@ -251,7 +358,6 @@ export default class extends Controller {
 
     // ===== UI: Liste des créneaux restants =====
     ensureListEl() {
-        // Crée / récupère un conteneur sous la bannière
         let after = this.emptyNoticeEl || this.element;
         let el = after.nextElementSibling;
         if (!(el && el.classList && el.classList.contains("fc-slot-list"))) {
@@ -268,7 +374,6 @@ export default class extends Controller {
         this.listEl = el;
         this.listBodyEl = el.querySelector(".fc-slot-list-body");
 
-        // Délégation de clic sur les boutons de créneau
         this.onListClickBound = this.onListClick.bind(this);
         this.listEl.addEventListener("click", this.onListClickBound);
 
@@ -278,46 +383,47 @@ export default class extends Controller {
     renderList(events) {
         if (!this.listBodyEl) return;
 
-        // Garde uniquement les slots "cliquables" (non passés)
         const avail = events
-            .filter((e) => !isPast(e.end || e.start))
+            .filter(
+                (e) =>
+                    new Date(e.start) >= this.barrierStart &&
+                    !isPast(e.end || e.start)
+            )
             .sort((a, b) => new Date(a.start) - new Date(b.start));
 
         if (avail.length === 0) {
-            this.listBodyEl.innerHTML = `
-        <div class="text-muted small">Aucun créneau sur cette période.</div>
-      `;
+            this.listBodyEl.innerHTML = `<div class="text-muted small">Aucun créneau sur cette période.</div>`;
             return;
         }
 
-        // Group by date (Europe/Paris)
         const byDay = new Map();
         for (const e of avail) {
             const d = new Date(e.start);
-            const key = d.toISOString().slice(0, 10); // YYYY-MM-DD
+            const key = d.toISOString().slice(0, 10); // YYYY-MM-DD (ok pour regrouper)
             if (!byDay.has(key)) byDay.set(key, []);
             byDay.get(key).push(e);
         }
 
-        // Build HTML
         const chunks = [];
         for (const [day, evts] of byDay.entries()) {
             const d = new Date(evts[0].start);
-            const dayLabel = fmtDateFr(d, this.timeZoneValue);
+            const dayLabel = fmtDateFr(d, this.tz);
             const items = evts
                 .map((e) => {
-                    const s = new Date(e.start);
-                    const en = new Date(e.end);
-                    const label = `${fmtTimeFr(
-                        s,
-                        this.timeZoneValue
-                    )} – ${fmtTimeFr(en, this.timeZoneValue)}`;
-                    // data-iso garde la valeur startStr avec timezone (que renvoie FullCalendar)
-                    // si elle n'est pas disponible ici, on la reconstituera depuis la vue.
+                    // e.start / e.end proviennent de l'API (RFC3339 avec fuseau)
+                    const startIsoTz = e.start;
+                    const endIsoTz = e.end;
+                    const s = new Date(startIsoTz);
+                    const en = new Date(endIsoTz);
+                    const label = `${fmtTimeFr(s, this.tz)} – ${fmtTimeFr(
+                        en,
+                        this.tz
+                    )}`;
                     return `<button type="button"
-                    class="btn btn-outline-success btn-sm me-2 mb-2 fc-slot-btn"
-                    data-iso="${new Date(e.start).toISOString()}"
-                  >${label}</button>`;
+              class="btn btn-outline-success btn-sm me-2 mb-2 fc-slot-btn"
+              data-start-tz="${startIsoTz}"
+              data-end-tz="${endIsoTz}"
+            >${label}</button>`;
                 })
                 .join("");
 
@@ -332,46 +438,61 @@ export default class extends Controller {
         }
 
         this.listBodyEl.innerHTML = chunks.join("");
-        this.syncListHighlight(); // surbrillance si un slot est déjà sélectionné
+        this.syncListHighlight();
     }
 
     onListClick(e) {
         const btn = e.target.closest(".fc-slot-btn");
         if (!btn) return;
 
-        // On veut sélectionner l'event correspondant dans FullCalendar
-        // On recherche par "minute près" en comparant startStr
-        // 1) ISO du bouton (UTC). On doit le convertir au même format que startStr (avec TZ de la vue)
-        const isoUtc = btn.getAttribute("data-iso"); // ex: 2025-10-08T12:00:00.000Z
+        const startIsoTz = btn.getAttribute("data-start-tz");
+        const endIsoTz = btn.getAttribute("data-end-tz");
 
-        // 2) Find matching event in calendar by "instant"
-        const targetTime = new Date(isoUtc).getTime();
+        // Toujours nettoyer l'ancienne sélection visuelle AVANT de changer
+        this.resetSelectedEventAppearance();
+
+        // 1) Essaie de retrouver l'event dans FC par l'instant (tolérance 1 min)
+        const targetMs = new Date(startIsoTz).getTime();
         const candidates = this.calendar
             .getEvents()
             .filter((ev) => ev.start && ev.end);
         let match = null;
         for (const ev of candidates) {
-            if (Math.abs(ev.start.getTime() - targetTime) < 60000) {
-                // tolérance 1 min
+            if (Math.abs(ev.start.getTime() - targetMs) < 60000) {
                 match = ev;
                 break;
             }
         }
 
         if (match) {
-            // Simule un click sur l'event pour mutualiser la logique
-            this.onEventClick({ event: match });
-            // Met surbrillance dans la liste
-            this.highlightListItem(match.start.toISOString());
+            this.onEventClick({ event: match }); // se charge de tout (input + bannière + bleu)
+            this.highlightListItem(startIsoTz);
+            return;
         }
+
+        // 2) Fallback : remplir l'input directement depuis la liste (calendrier masqué/pas de match)
+        if (this.startInput) {
+            this.startInput.value = isoTzToLocalInputValue(startIsoTz);
+            this.startInput.dispatchEvent(
+                new Event("input", { bubbles: true })
+            );
+            this.startInput.dispatchEvent(
+                new Event("change", { bubbles: true })
+            );
+        }
+        this.selectedEvent = null;
+        this.highlightListItem(startIsoTz);
+
+        // Bannière "créneau sélectionné"
+        this.showSelectedNotice(startIsoTz, endIsoTz);
     }
 
     // Surbrillance dans la liste pour le start sélectionné
-    highlightListItem(startIsoUtc) {
+    highlightListItem(startIsoTz) {
         if (!this.listBodyEl) return;
-        const targetMs = new Date(startIsoUtc).getTime();
+        const targetMs = new Date(startIsoTz).getTime();
         this.listBodyEl.querySelectorAll(".fc-slot-btn").forEach((btn) => {
-            const ms = new Date(btn.dataset.iso).getTime();
+            const ms = new Date(btn.getAttribute("data-start-tz")).getTime();
             btn.classList.toggle(
                 "btn-primary",
                 Math.abs(ms - targetMs) < 60000
@@ -386,6 +507,99 @@ export default class extends Controller {
     // Si on revient sur une vue déjà sélectionnée, garde la cohérence visuelle
     syncListHighlight() {
         if (!this.selectedEvent) return;
-        this.highlightListItem(this.selectedEvent.start.toISOString());
+        this.highlightListItem(
+            this.selectedEvent.startStr ||
+                this.selectedEvent.start.toISOString()
+        );
+    }
+
+        // ===== UI: Bannière "créneau sélectionné" =====
+    ensureSelectedNoticeEl() {
+        let after = this.listEl || this.emptyNoticeEl || this.element;
+        let el = after.nextElementSibling;
+        if (
+            !(el && el.classList && el.classList.contains("fc-selected-notice"))
+        ) {
+            el = document.createElement("div");
+            el.className = "fc-selected-notice alert alert-info d-none mt-2";
+            el.innerHTML = `
+        <div class="d-flex align-items-center gap-2">
+          <div class="fw-semibold">Créneau sélectionné :</div>
+          <div class="fc-selected-text"></div>
+        </div>
+      `;
+            if (after.parentNode)
+                after.parentNode.insertBefore(el, after.nextSibling);
+            else document.body.appendChild(el);
+        }
+        this.selectedNoticeEl = el;
+        this.selectedNoticeTextEl = el.querySelector(".fc-selected-text");
+        return el;
+    }
+    showSelectedNotice(startIsoTz, endIsoTz) {
+        if (!this.selectedNoticeEl) this.ensureSelectedNoticeEl();
+        const s = new Date(startIsoTz);
+        const e = new Date(endIsoTz);
+        const day = fmtDateFr(s, this.tz);
+        const range = `${fmtTimeFr(s, this.tz)} – ${fmtTimeFr(e, this.tz)}`;
+        this.selectedNoticeTextEl.textContent = `${day} • ${range}`;
+        this.selectedNoticeEl.classList.remove("d-none");
+    }
+    clearSelectedNotice() {
+        this.selectedNoticeEl?.classList.add("d-none");
+    }
+
+    // ===== UI: Loader & Empty Notice =====
+    ensureLoadingEl() {
+        let el = this.element.querySelector(".fc-loading-indicator");
+        if (!el) {
+            el = document.createElement("div");
+            el.className = "fc-loading-indicator";
+            el.style.cssText =
+                "position:absolute;top:8px;right:8px;z-index:5;padding:.25rem .5rem;border-radius:.25rem;background:#f8f9fa;border:1px solid #dee2e6;font-size:.85rem;display:none;";
+            el.textContent = "Chargement des créneaux…";
+            if (!this.element.style.position)
+                this.element.style.position = "relative";
+            this.element.appendChild(el);
+        }
+        return el;
+    }
+    setLoading(isLoading) {
+        if (this.loadingEl)
+            this.loadingEl.style.display = isLoading ? "block" : "none";
+    }
+
+    ensureEmptyNoticeEl() {
+        let box = this.element.nextElementSibling;
+        if (box && box.classList.contains("fc-empty-notice")) {
+            this.emptyNoticeEl = box;
+            return box;
+        }
+        box = document.createElement("div");
+        box.className = "fc-empty-notice alert alert-warning d-none";
+        box.style.cssText = "margin:.5rem 0;";
+        const barrierLabel = this.barrierStart.toLocaleDateString("fr-FR");
+        box.innerHTML = `
+      <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-2">
+        <div><strong>Aucun créneau visible avant ${barrierLabel}.</strong></div>
+        <div class="text-muted">Essayez une autre semaine.</div>
+        <div class="ms-sm-auto">
+          <button type="button" class="btn btn-sm btn-primary fc-next-week">Voir la semaine suivante</button>
+        </div>
+      </div>
+    `;
+        if (this.element.parentNode) {
+            this.element.parentNode.insertBefore(box, this.element.nextSibling);
+        } else {
+            document.body.appendChild(box);
+        }
+        const btn = box.querySelector(".fc-next-week");
+        btn?.addEventListener("click", () => this.calendar.next());
+        this.emptyNoticeEl = box;
+        return box;
+    }
+    toggleEmptyNotice(show) {
+        if (this.emptyNoticeEl)
+            this.emptyNoticeEl.classList.toggle("d-none", !show);
     }
 }
