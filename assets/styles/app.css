@@ -2039,6 +2039,8 @@ input.input100 {
 
 /* 10) Mobile: toolbar en colonne, boutons compacts */
 @media (max-width: 576px) {
+    /* cache le conteneur du calendrier */
+
     .fc .fc-header-toolbar {
         flex-direction: column;
         align-items: stretch;
@@ -2098,6 +2100,14 @@ input.input100 {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
+
+    /* on garde la bannière "aucun créneau" et la liste */
+    .fc-empty-notice {display:block !important;}
+    .fc-slot-list {display:block !important;}
+
+    /* Petits ajustements d'espacement quand la grille est cachée */
+        .fc-empty-notice {margin-top: .5rem;}
+    .fc-slot-list {margin-top: .5rem;}
 }
 
 /* 11) Desktop: un peu de confort */
@@ -2130,7 +2140,7 @@ input.input100 {
 .ahrnxrrwh {
     color: #054652;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-grow: 0;
     flex-shrink: 1;
     flex-basis: auto;

@@ -17,7 +17,8 @@ class EvaluatedPersonType extends AbstractType
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom de la personne évaluée',
                 'attr' => [
-                    'placeholder' => 'Tous les prénoms enregistrés à l\'état civil, séparés par des espaces'
+                    'placeholder' => 'Tous les prénoms enregistrés à l\'état civil, séparés par des espaces',
+                    'data-names-formatter-target' => 'input',
                 ],
                 'help' => 'Tous les prénoms enregistrés à l\'état civil',
                 'help_attr' => [
@@ -27,7 +28,8 @@ class EvaluatedPersonType extends AbstractType
             ->add('lastname', TextType::class, [
                 'label' => 'Nom de la personne évaluée',
                 'attr' => [
-                    'placeholder' => 'Tous les noms enregistrés à l\'état civil, séparés par des espaces'
+                    'placeholder' => 'Tous les noms enregistrés à l\'état civil, séparés par des espaces',
+                    'data-names-formatter-target' => 'input',
                 ],
                 'help' => 'Tous les noms enregistrés à l\'état civil',
                 'help_attr' => [
@@ -38,7 +40,8 @@ class EvaluatedPersonType extends AbstractType
                 'label' => 'Identité sociale',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Le prénom et le nom que vous utilisez tous les jours'
+                    'placeholder' => 'Le prénom et le nom que vous utilisez tous les jours',
+                    'data-names-formatter-target' => 'input',
                 ],
                 'help' => 'Par « Identité sociale », on entend le prénom et le nom que vous utilisez tous les jours',
                 'help_attr' => [
