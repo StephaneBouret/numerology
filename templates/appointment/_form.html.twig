@@ -33,10 +33,37 @@
 		{{ form_errors(form.startAt) }}
 		{# si tu veux afficher l'erreur au besoin #}
 	</div>
-	<h5 class="mt-4">Personne évaluée</h5>
-	{{ form_row(form.evaluatedPerson) }}
+	<h5 class="mt-4 mb-3">Personne évaluée</h5>
+	{# --- Bloc Personne principale --- #}
+	<div class="evaluated-person-block">
+		<button class="btn-reset evaluated-person-header collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMainPerson" aria-expanded="false" aria-controls="collapseMainPerson">
+			<h6 class="evaluated-person-title">
+				<i class="bi bi-person evaluated-person-icon"></i>
+				Personne principale
+			</h6>
+			<i class="bi bi-chevron-down chevron"></i>
+		</button>
+		<div id="collapseMainPerson" class="collapse collapse-md-open">
+			{{ form_row(form.evaluatedPerson) }}
+		</div>
+	</div>
+	{# --- Bloc Partenaire (affiché seulement si présent dans le form) --- #}
+	{% if form.partner is defined %}
+		<div class="evaluated-person-block">
+			<button class="btn-reset evaluated-person-header collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePartner" aria-expanded="false" aria-controls="collapsePartner">
+				<h6 class="evaluated-person-title">
+					<i class="bi bi-heart evaluated-person-icon"></i>
+					Partenaire
+				</h6>
+				<i class="bi bi-chevron-down chevron"></i>
+			</button>
+			<div id="collapsePartner" class="collapse collapse-md-open">
+				{{ form_row(form.partner) }}
+			</div>
+		</div>
+	{% endif %}
 
-	<div class="x6r3cy81b">
+	<div class="x6r3cy81b mt-4">
 		<div class="qqzl966qj">
 			<span class="oz6fza55s">
 				<span class="in6imj8sc">

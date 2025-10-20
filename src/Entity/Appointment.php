@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\EvaluatedPerson;
 use App\Enum\AppointmentStatus;
-use App\Repository\AppointmentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AppointmentRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
 class Appointment
@@ -38,7 +40,12 @@ class Appointment
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Embedded(class: EvaluatedPerson::class)]
+    #[Assert\Valid()]
     private EvaluatedPerson $evaluatedPerson;
+
+    #[ORM\Embedded(class: EvaluatedPerson::class, columnPrefix: 'partner_')]
+    #[Assert\Valid()]
+    private ?EvaluatedPerson $partner = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $paymentId = null;
@@ -160,6 +167,18 @@ class Appointment
     {
         $this->paymentId = $paymentId;
 
+        return $this;
+    }
+
+    public function getPartner(): ?EvaluatedPerson
+    {
+        return $this->partner;
+    }
+
+    public function setPartner(?EvaluatedPerson $partner): static
+    {
+        $this->partner = $partner;
+        
         return $this;
     }
 }

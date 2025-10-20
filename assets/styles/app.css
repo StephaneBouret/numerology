@@ -1718,39 +1718,46 @@ input.input100 {
 /*--------------------------------------------------------------
 # Appointment List page
 --------------------------------------------------------------*/
-.fgfump {
-    min-height: 378px;
+/* La carte prend toute la hauteur de la colonne */
+.fgfump.card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Le body pousse le CTA en bas */
+.fgfump .card-body {
+    display: flex;
+    flex-direction: column;
 }
 
 .hfos1d {
     color: #054652 !important;
-    display: flex;
-    flex-direction: row;
-    flex-grow: 0;
-    flex-shrink: 1;
-    flex-basis: auto;
-    flex-wrap: nowrap;
-    -webkit-padding-before: 0;
-    padding-block-start: 0;
-    -webkit-padding-after: 8px;
-    padding-block-end: 8px;
-    -webkit-padding-start: 0;
-    padding-inline-start: 0;
-    -webkit-padding-end: 24px;
-    padding-inline-end: 24px;
-    -webkit-margin-before: 0;
-    margin-block-start: 0;
-    -webkit-margin-after: 0;
-    margin-block-end: 0;
-    -webkit-margin-start: 0;
-    margin-inline-start: 0;
-    -webkit-margin-end: 0;
-    margin-inline-end: 0;
+    margin: 0 24px .5rem 0;
+    line-height: 1.25;
+    /* line-height cohérent et stable */
+    display: block;
 }
 
 .hih6mu {
-    font: 500 26px / 24px 'AirbnbCereal', 'Helvetica Neue', sans-serif;
-    white-space: pre-line;
+    font-family: 'AirbnbCereal', 'Helvetica Neue', sans-serif;
+    font-weight: 500;
+    font-size: 1.125rem;
+    /* ≈ 18px : stable à tous les breakpoints */
+    line-height: 1.25;
+    /* ≈ 22.5px */
+    /* coupe sur 2 lignes */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* passe à 3 si tu veux plus d'air */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    /* évite les surprises */
+    white-space: normal;
+    /* au lieu de pre-line */
+    min-height: calc(2 * 1.25em);
+    /* garantit la même hauteur partout */
 }
 
 .f6416l {
@@ -1766,7 +1773,7 @@ input.input100 {
     object-fit: contain;
     -o-object-position: center center;
     object-position: center center;
-    margin: 0px auto;
+    margin: 0 auto;
     aspect-ratio: unset;
     width: 60%;
     height: auto;
@@ -1776,6 +1783,8 @@ input.input100 {
 .g5av1p {
     border-color: #5BAEBE !important;
     color: #5BAEBE !important;
+    margin-top: auto;
+    align-self: flex-start;
 }
 
 .g5av1p:hover {
@@ -2034,12 +2043,16 @@ input.input100 {
 }
 
 .fc-selected-notice .fc-selected-text {
-  font-weight: 600;
+    font-weight: 600;
 }
 
 /* 10) Mobile: toolbar en colonne, boutons compacts */
 @media (max-width: 576px) {
+
     /* cache le conteneur du calendrier */
+    .fc .fc-view-harness {
+        display: none !important;
+    }
 
     .fc .fc-header-toolbar {
         flex-direction: column;
@@ -2102,12 +2115,22 @@ input.input100 {
     }
 
     /* on garde la bannière "aucun créneau" et la liste */
-    .fc-empty-notice {display:block !important;}
-    .fc-slot-list {display:block !important;}
+    .fc-empty-notice {
+        display: block !important;
+    }
+
+    .fc-slot-list {
+        display: block !important;
+    }
 
     /* Petits ajustements d'espacement quand la grille est cachée */
-        .fc-empty-notice {margin-top: .5rem;}
-    .fc-slot-list {margin-top: .5rem;}
+    .fc-empty-notice {
+        margin-top: .5rem;
+    }
+
+    .fc-slot-list {
+        margin-top: .5rem;
+    }
 }
 
 /* 11) Desktop: un peu de confort */
@@ -2250,4 +2273,115 @@ input.input100 {
     border: 0;
     background: none;
     color: #ffffff;
+}
+
+/* --------------------------------------------------------------
+# Accordéon doux mobile pour les blocs "Personne" / "Partenaire"
+-------------------------------------------------------------- */
+/* Bouton-titre cliquable (réinitialise le style d'un <button>) */
+.btn-reset {
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* En-tête : icône + chevron qui pivote */
+.evaluated-person-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    padding-bottom: .25rem;
+    border-bottom: 1px dashed rgba(0, 0, 0, .12);
+    margin-bottom: 1rem;
+}
+
+.evaluated-person-title {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin: 0;
+    /* supprime le margin du h6 par défaut */
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+.evaluated-person-icon {
+    font-size: 1.2rem;
+    color: #0d6efd;
+}
+
+/* Chevron (Bootstrap Icons) */
+.chevron {
+    transition: transform .2s ease-in-out;
+    font-size: 1rem;
+    opacity: .8;
+}
+
+/* Sur mobile, le bouton a la classe .collapsed quand la zone est fermée */
+.btn-reset.collapsed .chevron {
+    transform: rotate(0deg);
+}
+
+.btn-reset:not(.collapsed) .chevron {
+    transform: rotate(180deg);
+}
+
+/* Cartes */
+.evaluated-person-block {
+    border: 1px solid rgba(0, 0, 0, .1);
+    border-radius: .5rem;
+    padding: 1rem;
+    /* un peu moins de padding sur mobile */
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    transition: box-shadow .2s ease-in-out;
+}
+
+.evaluated-person-block:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+}
+
+.evaluated-person-block+.evaluated-person-block {
+    margin-top: 1rem;
+}
+
+/* Aide sous champ */
+.evaluated-person-block small.form-text {
+    margin-top: .25rem;
+    display: block;
+}
+
+/* ----- Comportement "toujours ouvert" à partir de md ----- */
+@media (min-width: 768px) {
+    .evaluated-person-block {
+        padding: 1.5rem;
+    }
+
+    .evaluated-person-block+.evaluated-person-block {
+        margin-top: 1.75rem;
+    }
+
+    /* La magie : le contenu collapse est forcé ouvert sur md+ */
+    .collapse-md-open {
+        display: block !important;
+        height: auto !important;
+        visibility: visible !important;
+    }
+
+    /* Sur desktop, on neutralise l'effet chevron et bordure d'en-tête */
+    .evaluated-person-header {
+        border-bottom: none;
+        margin-bottom: 1rem;
+    }
+
+    .chevron {
+        display: none;
+    }
 }

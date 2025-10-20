@@ -8,15 +8,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Embeddable]
 class EvaluatedPerson
 {
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     #[Assert\NotBlank()]
+    #[Assert\Length(max: 100)]
     private ?string $firstname = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     #[Assert\NotBlank()]
+    #[Assert\Length(max: 100)]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     private ?string $patronyms = null;
 
     #[ORM\Column(type: 'date')]

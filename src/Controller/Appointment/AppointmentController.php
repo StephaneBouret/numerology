@@ -41,7 +41,7 @@ final class AppointmentController extends AbstractController
         $openDaysCsv       = $settings->get('open_days', '1,2,3,4,5');
 
         $form = $this->createForm(AppointmentFormType::class, $appointment, [
-            // options personnalisées au besoin
+            'is_couple' => ($type->getId() === 6),
         ]);
         $form->handleRequest($request);
 
