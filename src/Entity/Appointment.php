@@ -50,6 +50,9 @@ class Appointment
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $paymentId = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private ?bool $isSent = false;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -178,7 +181,19 @@ class Appointment
     public function setPartner(?EvaluatedPerson $partner): static
     {
         $this->partner = $partner;
-        
+
+        return $this;
+    }
+
+    public function isSent(): ?bool
+    {
+        return $this->isSent;
+    }
+
+    public function setIsSent(bool $isSent): static
+    {
+        $this->isSent = $isSent;
+
         return $this;
     }
 }

@@ -72,6 +72,39 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getQuery()->getSingleScalarResult() > 0;
     }
 
+    public function findForCalendarExport(bool $includePending = false, bool $onlyNotSent = true): array
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->join('a.type', 't')->addSelect('t')
+            ->join('a.user', 'u')->addSelect('u')
+            ->orderBy('a.startAt', 'ASC');
+
+        $statuses = [AppointmentStatus::CONFIRMED];
+        if ($includePending) {
+            $statuses[] = AppointmentStatus::PENDING;
+        }
+        $qb->andWhere('a.status IN (:st)')->setParameter('st', $statuses);
+
+        if ($onlyNotSent) {
+            $qb->andWhere('a.isSent = :sent')->setParameter('sent', false);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function markAsSent(array $appointments): void
+    {
+        if (!$appointments) {
+            return;
+        }
+
+        foreach ($appointments as $a) {
+            $a->setIsSent(true);
+        }
+
+        $this->getEntityManager()->flush();
+    }
+
     //    /**
     //     * @return Appointment[] Returns an array of Appointment objects
     //     */

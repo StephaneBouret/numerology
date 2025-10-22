@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\About;
 use App\Entity\Answer;
+use App\Entity\Appointment;
 use App\Entity\AppointmentType;
 use App\Entity\Category;
 use App\Entity\Certificate;
@@ -83,6 +84,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Maintenance', 'fas fa-cogs', Setting::class);
         yield MenuItem::linkToCrud('Notif. Lancement', 'fas fa-rocket', LaunchNotification::class);
         yield MenuItem::subMenu('Gestion RDVs', 'fa-solid fa-calendar-check')->setSubItems([
+            MenuItem::linkToCrud('Rendez-vous', 'fa fa-calendar-check', Appointment::class),
             MenuItem::linkToCrud('Types de rendez-vous', 'fas fa-calendar', AppointmentType::class),
             MenuItem::linkToCrud('Horaires & jours ouvrés', 'fa fa-clock', ScheduleSetting::class),
             MenuItem::linkToCrud('Indisponibilités horaires', 'fa fa-ban', Unavailability::class),
