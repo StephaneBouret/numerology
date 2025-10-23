@@ -19,10 +19,11 @@ class EvaluatedPerson
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank()]
     #[Assert\Length(max: 255)]
     private ?string $patronyms = null;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'date', nullable: true)]
     #[Assert\NotNull()]
     #[Assert\LessThan('today')]
     private ?\DateTimeInterface $birthdate = null;

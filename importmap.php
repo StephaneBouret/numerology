@@ -152,6 +152,10 @@ return [
         'path' => './assets/js/purchase.js',
         'entrypoint' => true,
     ],
+    'appointment' => [
+        'path' => './assets/js/appointment.js',
+        'entrypoint' => true,
+    ],
     'tom-select' => [
         'version' => '2.4.3',
     ],

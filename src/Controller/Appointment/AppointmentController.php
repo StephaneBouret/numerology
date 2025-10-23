@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted('ROLE_USER')]
-#[Route('/rendezvous')]
+#[Route('/rendez-vous')]
 final class AppointmentController extends AbstractController
 {
     use ErrorFormTrait;
@@ -104,14 +104,16 @@ final class AppointmentController extends AbstractController
             $em->flush();
 
             if ($request->isXmlHttpRequest()) {
-                return $this->render('appointment/confirmation.html.twig', [
-                    'ajax' => true,
+                return $this->json([
+                    'redirect' => $this->generateUrl('app_appointment_checkout', [
+                        'id' => $appointment->getId(),
+                    ])
                 ]);
             }
 
-            // Prévoir redirection vers Stripe ou page de confirmation
-            // return $this->redirectToRoute('app_appointment_confirmation');
-            return $this->render('appointment/confirmation.html.twig');
+            return $this->redirectToRoute('app_appointment_checkout', [
+                'id' => $appointment->getId(),
+            ]);
         }
 
         return $this->renderAppointmentForm($form, $type, null, 'app_appointment_ajax_form', [

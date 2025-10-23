@@ -7,42 +7,52 @@ export default class extends Controller {
         event.preventDefault();
         const url = event.currentTarget.dataset.url;
         if (!url) return;
-
-        fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
-            .then(response => response.text())
-            .then(html => {
-                if (html.includes('id="login_form"')) {
-                    window.location.href = "/login";
-                    return;
-                }
-                this.containerTarget.innerHTML = html;
-            });
+        this.fetchIntoContainer(url);
     }
 
     showForm(event) {
         event.preventDefault();
         const url = event.currentTarget.dataset.url;
         if (!url) return;
-
-        fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
-            .then(response => response.text())
-            .then(html => {
-                // Détection login avant d'injecter le HTML :
-                if (html.includes('id="login_form"')) {
-                    // On recharche la page pour forcer la redirection complète vers login
-                    window.location.href = "/login";
-                    return;
-                }
-                this.containerTarget.innerHTML = html;
-            });
+        this.fetchIntoContainer(url);
     }
 
     reloadRecap(event) {
         event.preventDefault();
-        fetch('/rendez-vous/types', { headers: { "X-Requested-With": "XMLHttpRequest" } })
-            .then(response => response.text())
-            .then(html => {
-                this.containerTarget.innerHTML = html;
-            });
+        this.fetchIntoContainer('/rendez-vous/types');
+    }
+
+    // --- utilitaire commun ---
+    fetchIntoContainer(url) {
+        fetch(url, {
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "Accept": "application/json, text/html"
+            }
+        })
+        .then(async (response) => {
+            const ct = (response.headers.get("Content-Type") || "").toLowerCase();
+
+            // JSON : on attend potentiellement { redirect: ... }
+            if (ct.includes("application/json")) {
+                const payload = await response.json();
+                if (payload.redirect) {
+                    window.location.href = payload.redirect;
+                    return;
+                }
+            }
+
+            // HTML : fragment à injecter
+            const html = await response.text();
+
+            // Sécurité login (comme avant)
+            if (html.includes('id="login_form"')) {
+                window.location.href = "/login";
+                return;
+            }
+
+            this.containerTarget.innerHTML = html;
+        })
+        .catch((e) => console.error("Erreur AJAX RDV:", e));
     }
 }
