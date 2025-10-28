@@ -107,7 +107,9 @@
     font-weight: 500;
     line-height: 1.375;
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+    transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, -webkit-text-decoration-color, -webkit-filter, -webkit-backdrop-filter;
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-filter, -webkit-backdrop-filter;
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
     transition-timing-function: cubic-bezier(.4, 0, .2, 1);
     transition-duration: .2s;
@@ -1471,6 +1473,12 @@ nav .breadcrumb .breadcrumb-item a:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+}
+
+@media (min-width: 577px) {
+    .flex-nowrap-sm-down {
+        flex-wrap: nowrap !important;
+    }
 }
 
 .btn-row .btn-icon {
@@ -4022,7 +4030,9 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     min-width: 8rem;
     padding: 0 1.2rem;
     justify-content: center;
-    user-select: none;
+    -moz-user-select: none;
+     -ms-user-select: none;
+         user-select: none;
     -webkit-user-select: none;
     vertical-align: bottom;
     white-space: nowrap;
@@ -4072,7 +4082,9 @@ trix-toolbar [data-toggle=popover][aria-expanded=true] select.dropdown-item.trix
     min-width: 8rem;
     padding: 0 1.2rem;
     justify-content: center;
-    user-select: none;
+    -moz-user-select: none;
+     -ms-user-select: none;
+         user-select: none;
     -webkit-user-select: none;
     vertical-align: bottom;
     white-space: nowrap;

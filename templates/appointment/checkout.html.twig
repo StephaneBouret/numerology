@@ -73,10 +73,13 @@
 											</dl>
 										</dl>
 										<hr class="my-6">
-										{{ form_start(confirmationForm) }}
-										<div class="justify-content-between btn-row-full-width-sm space-y-4 align-items-center mt-10 btn-row btn-row-left">
+										{{ form_start(confirmationForm, {
+                                            action: path('app_appointment_confirm', { id: appointment.id }),
+                                            method: 'POST'
+                                        }) }}
+										<div class="justify-content-between btn-row-full-width-sm space-y-4 align-items-center mt-10 btn-row btn-row-left flex-nowrap-sm-down">
 											{{ form_widget(confirmationForm.agreeTerms, {
-													label : 'J\'accepte les <a href="'~path('app_terms')~'">conditions générales de vente</a>',
+													label : 'Je reconnais que la prestation de service commencera avant la fin du délai légal de rétractation et je renonce expressément à mon droit de rétractation conformément à l\'article L221-28 du Code de la consommation. <a href="'~path('app_terms')~'">Voir les conditions de remboursement</a>',
 													label_html: true
 												}) }}
 												<button type="submit" id="complete_button" class="btn btn-md kw41uk" disabled>

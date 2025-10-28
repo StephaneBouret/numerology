@@ -47,8 +47,8 @@ class Appointment
     #[Assert\Valid()]
     private ?EvaluatedPerson $partner = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $paymentId = null;
+    #[ORM\Column(length: 255, nullable: true, unique: true)]
+    private ?string $number = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private ?bool $isSent = false;
@@ -161,14 +161,14 @@ class Appointment
         return $this;
     }
 
-    public function getPaymentId(): ?string
+    public function getNumber(): ?string
     {
-        return $this->paymentId;
+        return $this->number;
     }
 
-    public function setPaymentId(?string $paymentId): static
+    public function setNumber(?string $number): static
     {
-        $this->paymentId = $paymentId;
+        $this->number = $number;
 
         return $this;
     }
