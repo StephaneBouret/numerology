@@ -25,8 +25,7 @@ final class AppointmentPaymentController extends AbstractController
             $appointment->getUser() !== $user ||
             $appointment->getStatus() === AppointmentStatus::CONFIRMED
         ) {
-            // A prévoir la redirection vers la liste des RDVs
-            return $this->redirectToRoute('home_index');
+            return $this->redirectToRoute('app_appointment_list');
         }
 
         $paymentIntent = $this->stripeService->getPaymentIntentForAppointment($appointment);

@@ -28,8 +28,7 @@ final class AppointmentPaymentSuccessController extends AbstractController
             $appointment->getUser() !== $user ||
             $appointment->getStatus() === AppointmentStatus::CONFIRMED
         ) {
-            // A prévoir la redirection vers la liste des RDVs
-            return $this->redirectToRoute('home_index');
+            return $this->redirectToRoute('app_appointment_list');
         }
 
         $appointment->setStatus(AppointmentStatus::CONFIRMED)
@@ -40,8 +39,8 @@ final class AppointmentPaymentSuccessController extends AbstractController
         $dispatcher->dispatch(new AppointmentSuccessEvent($appointment), AppointmentSuccessEvent::NAME);
 
         $this->addFlash('success', 'La commande a été payée et confirmée !');
-        // return $this->redirectToRoute('app_appointment_list');
-        return $this->redirectToRoute('home_index');
+        
+        return $this->redirectToRoute('app_appointment_list');
 
     }
 }

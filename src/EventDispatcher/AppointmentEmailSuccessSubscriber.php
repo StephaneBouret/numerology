@@ -28,8 +28,7 @@ class AppointmentEmailSuccessSubscriber implements EventSubscriberInterface
         $type        = $appointment->getType();
 
         // Lien pratique
-        $myAppointmentsUrl = $this->urlGenerator->generate('home_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
-        // A prévoir la vraie route "Liste RDVs", ex: 'app_appointment_list'
+        $myAppointmentsUrl = $this->urlGenerator->generate('app_appointment_list', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         // 1) Mail à l'utilisateur
         if ($user && $user->getEmail()) {

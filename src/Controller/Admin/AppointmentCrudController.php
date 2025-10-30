@@ -28,11 +28,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NullFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AppointmentCrudController extends AbstractCrudController
 {
-    public function __construct(protected AppointmentRepository $appointmentRepository) {}
+    public function __construct(protected AppointmentRepository $appointmentRepository, protected AdminUrlGenerator $adminUrl) {}
 
     public static function getEntityFqcn(): string
     {
@@ -63,7 +65,11 @@ class AppointmentCrudController extends AbstractCrudController
                 'En attente'   => AppointmentStatus::PENDING->value,
                 'RDV confirmé' => AppointmentStatus::CONFIRMED->value,
                 'RDV annulé'   => AppointmentStatus::CANCELED->value,
-            ]));
+            ]))
+            ->add(
+                NullFilter::new('number', 'Numéro renseigné')
+                    ->setChoiceLabels('Sans numéro', 'Avec numéro')
+            );
     }
 
     public function configureActions(Actions $actions): Actions
@@ -92,12 +98,23 @@ class AppointmentCrudController extends AbstractCrudController
             ->addCssClass('btn btn-outline-primary')
             ->createAsGlobalAction();
 
+        $generatePdf = Action::new('generatePdf', 'Générer PDF')
+            ->linkToUrl(function (Appointment $appointment) {
+                return $this->adminUrl
+                    ->setRoute('app_appointment_pdf_admin', ['id' => $appointment->getId()])
+                    ->generateUrl();
+            })
+            ->setIcon('fa fa-file-pdf')
+            ->addCssClass('btn btn-secondary')
+            ->displayIf(fn(Appointment $appointment) => $appointment->getStatus() === AppointmentStatus::CONFIRMED);
+
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_INDEX, $exportCsv)
             ->add(Crud::PAGE_INDEX, $exportAllCsv)
             ->add(Crud::PAGE_INDEX, $exportIcs)
             ->add(Crud::PAGE_INDEX, $exportAllIcs)
+            ->add(Crud::PAGE_INDEX, $generatePdf)
             ->remove(Crud::PAGE_INDEX, Action::NEW)
             ->remove(Crud::PAGE_INDEX, Action::EDIT)
             ->remove(CRud::PAGE_INDEX, Action::DELETE)
@@ -131,6 +148,8 @@ class AppointmentCrudController extends AbstractCrudController
                 AppointmentStatus::CANCELED->value  => 'danger',
             ])
             ->formatValue(fn($value) => $value instanceof AppointmentStatus ? $value->label() : $value);
+
+        yield TextField::new('number', 'Numéro')->onlyOnIndex();
 
         // Planification (Europe/Paris + immutables)
         yield FormField::addPanel('Planification')->setIcon('fa fa-calendar');

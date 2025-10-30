@@ -1,79 +1,152 @@
 <html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Votre facture</title>
-    <style>
-       .text-center {
-           text-align: center;
-       }
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Votre facture</title>
+		<style>
+			body {
+				font-family: AirbnbCereal, sans-serif;
+				font-size: 12px;
+				margin: 0;
+			}
+			.text-center {
+				text-align: center;
+			}
+			.text-right {
+				text-align: right;
+			}
+			.text-left {
+				text-align: left;
+			}
+			table {
+				border-collapse: collapse;
+				width: 100%;
+			}
+			th,
+			td {
+				padding: 0.5rem;
+				border-top: 1px solid #ccc;
+				vertical-align: top;
+			}
+			.mt-1 {
+				margin-top: 0.5rem;
+			}
+			.mt-2 {
+				margin-top: 1rem;
+			}
+			.mt-3 {
+				margin-top: 1.5rem;
+			}
+			.mb-2 {
+				margin-bottom: 1rem;
+			}
+			@page {
+				margin: 20mm 15mm 30mm;
+			}
+			.page-wrap {
+				padding: 0 0 60px;
+			}
+			.pdf-footer {
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				font-size: 10px;
+				color: #555;
+				border-top: 1px solid #ccc;
+				padding: 6px 10mm 4px;
+			}
+			.pdf-footer .footer-grid {
+				display: table;
+				width: 100%;
+			}
+			.pdf-footer .col {
+				display: table-cell;
+				vertical-align: top;
+				width: 33%;
+			}
+			.pdf-footer .col.right {
+				text-align: right;
+			}
+			.pdf-footer .label {
+				color: #888;
+			}
 
-       .text-right {
-           text-align: right;
-       }
-
-       .text-left {
-           text-align: left;
-       }
-
-       body {
-           font-family: AirbnbCereal, sans-serif;
-       }
-
-       table {
-           border-collapse: collapse;
-       }
-       table td, table th {
-           padding:0.5rem;
-           border-top: 1px solid #ccc;
-       }
-    </style>
-</head>
-<body>
-<div class="text-center">
-<h3>Facture commande n°{{ purchase.number }}</h3>
-<table style="width: 100%;border-bottom:1px solid gray;">
-    <tr>
-        <td style="width: 49%;">
-            <strong>Potentiel Consulting</strong><br/>
-            1 B La Fendoire,<br/>
-            44770, La Plaine sur Mer<br/>
-            ftuncq@gmail.com<br/>
-            06 34 56 05 79
-        </td>
-    </tr>
-</table>
-</div>
-<h3>Votre commande en date du {{ purchase.createdAt|format_datetime('long', 'none', locale='fr') }}</h3>
-<div class="text-right" style="margin-top: 10px; margin-bottom: 10px;">
-    {{ purchase.user.firstname }} {{ purchase.user.lastname }}
-    <br>
-    {{ purchase.user.adress }}
-    <br>
-    {{ purchase.user.postalCode }} {{ purchase.user.city }}
-    <br>
-    {{ purchase.user.email }}
-</div>
-<table style="width: 100%; margin-top: 20px;">
-    <thead>
-    <tr>
-        <th scope="col" class="text-left">Référence</th>
-        <th scope="col" class="text-left">Programme de formation</th>
-        <th scope="col" class="text-right">Total T.T.C</th>
-    </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>{{ purchase.number }}</td>
-            <td>{{ purchase.program.name }}</td>
-            <td class="text-right">{{ purchase.amount|amount }}</td>
-        </tr>
-    </tbody>
-</table>
-
-<div class="text-right" style="margin-top: 10px;">
-    <strong>Total T.T.C : </strong> {{ purchase.amount|amount }}
-</div>
-
-</body>
+			h3 {
+				margin: 0 0 0.5rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-wrap">
+			<div class="text-center mb-2">
+				<h3>Facture commande n°{{ purchase.number }}</h3>
+			</div>
+			<table style="border-bottom:1px solid #999;">
+				<tr>
+					<td style="width: 60%;">
+						{% set co = company ?? null %}
+						<strong>{{ co ? co.name : 'Nom de l\'entreprise' }}</strong><br/>
+                        {{ co ? co.adress : '' }}<br/>
+                        {{ co ? co.postalCode ~ ' ' ~ co.city : '' }}<br/>
+                        {{ co ? co.email : '' }}<br/>
+                        {{ co and co.phone ? co.phone|phone_number_format('NATIONAL', 'FR') : '' }}
+                    </td>
+                    <td class="text-right" style="width:40%;">
+                        <strong>{{ purchase.user.firstname }} {{ purchase.user.lastname }}</strong><br/>
+                        {{ purchase.user.adress }}<br/>
+                        {{ purchase.user.postalCode }} {{ purchase.user.city }}<br/>
+                        {{ purchase.user.email }}
+                    </td>
+				</tr>
+			</table>
+            <h3 class="mt-2">
+                Votre commande en date du {{ purchase.createdAt|format_datetime('long','none', timezone=tz, locale='fr') }}
+            </h3>
+            <table class="mt-1">
+                <thead>
+                    <tr>
+                        <th class="text-left" style="width:25%;">Référence</th>
+                        <th class="text-left">Programme de formation</th>
+                        <th class="text-right" style="width:25%;">Total T.T.C</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ purchase.number ?: purchase.id }}</td>
+                        <td>{{ purchase.program.name }}</td>
+                        <td class="text-right">{{ purchase.amount|amount }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-right mt-2">
+                <strong>Total T.T.C&nbsp;:</strong> {{ purchase.amount|amount }}
+            </div>
+            <p class="mt-3">
+                Document généré le {{ "now"|format_datetime('long','short', timezone=tz, locale='fr') }}.
+            </p>
+        </div>
+        <div class="pdf-footer">
+            <div class="footer-grid">
+                <div class="col">
+                    <div>
+                        <span class="label">Siège social</span><br>
+                        {{ co ? co.adress ~ ', ' ~ co.postalCode ~ ' ' ~ co.city : '—' }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div>
+                    <span class="label">Nom entreprise</span><br>
+                    {{ co ? co.name : '—' }}
+                    </div>
+                </div>
+                <div class="col right">
+                    <div>
+                    <div><span class="label">SIREN</span> : {{ co and co.siren ? co.siren : '—' }}</div>
+                    <div>TVA non applicable, art. 293 B du CGI</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</body>
 </html>

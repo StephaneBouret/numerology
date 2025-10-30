@@ -105,6 +105,24 @@ class AppointmentRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * Compte les rendez-vous payés par user
+     *
+     * @param User $user
+     * @return integer
+     */
+    public function countPaidByUser(User $user): int
+    {
+        return (int) $this->createQueryBuilder('a')
+            ->select('COUNT(a.id)')
+            ->andWhere('a.user = :user')
+            ->andWhere('a.status = :status')
+            ->setParameter('user', $user)
+            ->setParameter('status', AppointmentStatus::CONFIRMED)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     //    /**
     //     * @return Appointment[] Returns an array of Appointment objects
     //     */
