@@ -1,0 +1,63 @@
+{# Contexte: variable "a" = Appointment #}
+
+<div
+	class="d-flex align-items-center gap-2">
+	{# --- Annuler (uniquement si confirmé) --- #}
+	{% if a.status == constant('App\\Enum\\AppointmentStatus::CONFIRMED') %}
+        <div
+        data-controller="appointment-cancel"
+        data-appointment-cancel-appointment-id-value="{{ a.id }}"
+        data-appointment-cancel-start-at-utc-iso-value="{{ a.startAt|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}"
+        data-appointment-cancel-amount-cents-value="{{ a.type.price ?? 0 }}"
+        data-appointment-cancel-csrf-value="{{ csrf_token('cancel_appointment_' ~ a.id) }}"
+        data-appointment-cancel-cancel-url-value="{{ path('app_appointment_cancel') }}"
+        >
+		    <button type="button" class="btn btn-outline-danger btn-sm" data-action="appointment-cancel#open">
+				Annuler le RDV
+			</button>
+
+			{# --- Modale de confirmation --- #}
+			<div class="modal fade" tabindex="-1" aria-hidden="true" data-appointment-cancel-target="modal">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" data-appointment-cancel-target="title"></h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+						</div>
+						<div class="modal-body" data-appointment-cancel-target="body"></div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-light" data-bs-dismiss="modal">Retour</button>
+							<button type="button" class="btn btn-danger" data-appointment-cancel-target="confirmBtn" data-action="appointment-cancel#confirm">
+								<span class="spinner-border spinner-border-sm d-none" aria-hidden="true" data-appointment-cancel-target="spinner"></span>
+								<span>Confirmer l'annulation</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{# --- Modale de succès --- #}
+			<div class="modal fade" tabindex="-1" aria-hidden="true" data-appointment-cancel-target="successModal">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header bg-success text-white">
+							<h5 class="modal-title">Annulation confirmée</h5>
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body" data-appointment-cancel-target="successBody"></div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-light" data-bs-dismiss="modal">Fermer</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
+	{# --- Modifier --- #}
+	{% if a.status == constant('App\\Enum\\AppointmentStatus::CONFIRMED') %}
+		{# <a href="{{ path('app_appointment_edit', {'id': a.id}) }}" class="btn btn-outline-primary btn-sm">
+			Modifier
+		</a> #}
+	{% endif %}
+</div>
