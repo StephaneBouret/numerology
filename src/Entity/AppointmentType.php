@@ -61,7 +61,7 @@ class AppointmentType
 
     #[Assert\Image(
         maxSize: '2M',
-        maxSizeMessage: 'L\'image est trop lourde ({{ size }} {{ suffix }}). 
+        maxSizeMessage: 'L\'image est trop lourde ({{ size }} {{ suffix }}).
         Le maximum autorisé est {{ limit }} {{ suffix }}',
         minWidth: 400,
         minWidthMessage: 'La largeur de l\'image est trop petite ({{ width }}px).
@@ -304,5 +304,10 @@ class AppointmentType
     public function getImageName(): ?string
     {
         return $this->imageName;
+    }
+
+    public function isCouple(): bool
+    {
+        return (int) ($this->participants ?? 1) === 2;
     }
 }

@@ -7,6 +7,7 @@ use App\Enum\AppointmentStatus;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AppointmentRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
 class Appointment
@@ -40,11 +41,11 @@ class Appointment
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Embedded(class: EvaluatedPerson::class)]
-    #[Assert\Valid()]
+    #[Assert\Valid(groups: ['Default', 'couple'])]   // ✅ cascade sur les deux groupes
     private EvaluatedPerson $evaluatedPerson;
 
     #[ORM\Embedded(class: EvaluatedPerson::class, columnPrefix: 'partner_')]
-    #[Assert\Valid()]
+    #[Assert\Valid(groups: ['couple'])]              // ✅ cascade seulement en couple
     private ?EvaluatedPerson $partner = null;
 
     #[ORM\Column(length: 255, nullable: true, unique: true)]
@@ -195,5 +196,29 @@ class Appointment
         $this->isSent = $isSent;
 
         return $this;
+    }
+
+    #[Assert\Callback]
+    public function validatePersons(ExecutionContextInterface $ctx): void
+    {
+        // Toujours vérifier la personne principale
+        $p = $this->evaluatedPerson ?? null;
+        if (!$p || !$p->getFirstname() || !$p->getLastname() || !$p->getPatronyms() || !$p->getBirthdate()) {
+            $ctx->buildViolation('Tous les champs de la personne principale sont obligatoires.')
+                ->atPath('evaluatedPerson.firstname')
+                ->addViolation();
+        }
+
+        // Si type couple -> vérifier le partenaire
+        $type = $this->getType();
+        $isCouple = $type && (method_exists($type, 'isCouple') ? $type->isCouple() : ((int)$type->getParticipants() === 2));
+        if ($isCouple) {
+            $q = $this->partner ?? null;
+            if (!$q || !$q->getFirstname() || !$q->getLastname() || !$q->getPatronyms() || !$q->getBirthdate()) {
+                $ctx->buildViolation('Tous les champs du partenaire sont obligatoires.')
+                    ->atPath('partner.firstname')
+                    ->addViolation();
+            }
+        }
     }
 }

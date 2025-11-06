@@ -16,6 +16,7 @@ class EvaluatedPersonType extends AbstractType
         $builder
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom de la personne évaluée',
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'Tous les prénoms enregistrés à l\'état civil, séparés par des espaces',
                     'data-names-formatter-target' => 'input',
@@ -27,6 +28,7 @@ class EvaluatedPersonType extends AbstractType
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Nom de la personne évaluée',
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'Tous les noms enregistrés à l\'état civil, séparés par des espaces',
                     'data-names-formatter-target' => 'input',
@@ -38,7 +40,7 @@ class EvaluatedPersonType extends AbstractType
             ])
             ->add('patronyms', TextType::class, [
                 'label' => 'Identité sociale',
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'Le prénom et le nom que vous utilisez tous les jours',
                     'data-names-formatter-target' => 'input',
@@ -49,9 +51,10 @@ class EvaluatedPersonType extends AbstractType
                 ],
             ])
             ->add('birthdate', DateType::class, [
+                'required' => true,
                 'widget' => 'single_text',
                 'label' => 'Date de naissance',
-                'input' => 'datetime',
+                // 'input' => 'datetime',
             ])
         ;
     }

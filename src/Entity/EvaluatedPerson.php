@@ -9,70 +9,36 @@ use Symfony\Component\Validator\Constraints as Assert;
 class EvaluatedPerson
 {
     #[ORM\Column(length: 100, nullable: true)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     #[Assert\Length(max: 100)]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     #[Assert\Length(max: 100)]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     private ?string $patronyms = null;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    #[Assert\NotNull()]
+    #[Assert\NotNull]
     #[Assert\LessThan('today')]
     private ?\DateTimeInterface $birthdate = null;
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
+    // --- Getters / Setters ---
 
-    public function setFirstname(string $firstname): static
-    {
-        $this->firstname = $firstname;
+    public function getFirstname(): ?string { return $this->firstname; }
+    public function setFirstname(?string $v): static { $this->firstname = $v; return $this; }
 
-        return $this;
-    }
+    public function getLastname(): ?string { return $this->lastname; }
+    public function setLastname(?string $v): static { $this->lastname = $v; return $this; }
 
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
+    public function getPatronyms(): ?string { return $this->patronyms; }
+    public function setPatronyms(?string $v): static { $this->patronyms = $v; return $this; }
 
-    public function setLastname(string $lastname): static
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    public function getPatronyms(): ?string
-    {
-        return $this->patronyms;
-    }
-
-    public function setPatronyms(?string $patronyms): static
-    {
-        $this->patronyms = $patronyms;
-
-        return $this;
-    }
-
-    public function getBirthdate(): ?\DateTimeInterface
-    {
-        return $this->birthdate;
-    }
-
-    public function setBirthdate(\DateTimeInterface $birthdate): static
-    {
-        $this->birthdate = $birthdate;
-
-        return $this;
-    }
+    public function getBirthdate(): ?\DateTimeInterface { return $this->birthdate; }
+    public function setBirthdate(?\DateTimeInterface $v): static { $this->birthdate = $v; return $this; }
 }

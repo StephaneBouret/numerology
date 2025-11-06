@@ -40,8 +40,11 @@ final class AppointmentController extends AbstractController
         $openingDelayHours = $settings->getInt('opening_delay_hours', 48);
         $openDaysCsv       = $settings->get('open_days', '1,2,3,4,5');
 
+        $type = $appointment->getType();
+        $isCouple = $type && method_exists($type, 'isCouple') ? $type->isCouple() : ((int)$type->getParticipants() === 2);
+
         $form = $this->createForm(AppointmentFormType::class, $appointment, [
-            'is_couple' => ($type->getId() === 6),
+            'is_couple' => $isCouple,
         ]);
         $form->handleRequest($request);
 

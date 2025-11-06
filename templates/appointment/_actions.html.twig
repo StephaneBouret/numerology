@@ -55,9 +55,9 @@
 	{% endif %}
 
 	{# --- Modifier --- #}
-	{% if a.status == constant('App\\Enum\\AppointmentStatus::CONFIRMED') %}
-		{# <a href="{{ path('app_appointment_edit', {'id': a.id}) }}" class="btn btn-outline-primary btn-sm">
-			Modifier
-		</a> #}
+	{% if a.status != constant('App\\Enum\\AppointmentStatus::CANCELED') %}
+		<a href="{{ path('app_appointment_edit_persons', {'id': a.id}) }}" class="btn btn-outline-primary btn-sm">
+			Modifier les infos évaluées
+		</a>
 	{% endif %}
 </div>
