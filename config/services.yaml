@@ -44,6 +44,10 @@ services:
         arguments:
             $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"
 
+    App\EventDispatcher\AppointmentEmailRescheduledSubscriber:
+        arguments:
+            $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"
+
     App\Controller\CommentsController:
         arguments:
             $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"

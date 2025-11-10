@@ -6,6 +6,7 @@ import CalendarController from './controllers/calendar_controller.js';
 import ToastController from './controllers/toast_controller.js';
 import NamesFormatter from './controllers/names_formatter_controller.js';
 import AppointmentCancelController from './controllers/appointment-cancel_controller.js';
+import AppointmentRescheduleController from './controllers/appointment_reschedule_controller.js';
 
 const app = startStimulusApp();
 // register any custom, 3rd party controllers here
@@ -16,3 +17,4 @@ app.register('calendar', CalendarController);
 app.register('toast', ToastController);
 app.register('names-formatter', NamesFormatter);
 app.register('appointment-cancel', AppointmentCancelController);
+app.register('appointment-reschedule', AppointmentRescheduleController);

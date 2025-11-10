@@ -1,0 +1,17 @@
+<div
+  data-controller="toast"
+  data-action="toast:show@document->toast#show"
+  style="position: relative; z-index: 1080;"
+>
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div class="toast text-bg-success border-0" role="status"
+         data-toast-target="toast"
+         data-bs-autohide="true" data-bs-delay="3500">
+      <div class="d-flex">
+        <div class="toast-body" data-toast-target="body">OK</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast" aria-label="Fermer"></button>
+      </div>
+    </div>
+  </div>
+</div>
