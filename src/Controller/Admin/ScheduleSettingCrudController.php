@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ScheduleSetting;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -20,9 +21,9 @@ class ScheduleSettingCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular("Paramètre d'horaire")
-            ->setEntityLabelInPlural("Horaires & jours ouvrés")
-            ->setPageTitle(Crud::PAGE_INDEX, 'Horaires & jours ouvrés')
+            ->setEntityLabelInSingular("Réglage")
+            ->setEntityLabelInPlural("Réglages")
+            ->setPageTitle(Crud::PAGE_INDEX, 'Paramètres de planning')
             ->setPageTitle(Crud::PAGE_NEW, 'Nouveau paramètre')
             ->setPageTitle(Crud::PAGE_EDIT, 'Modifier le paramètre')
             ->setEntityPermission('ROLE_ADMIN')
@@ -51,7 +52,8 @@ class ScheduleSettingCrudController extends AbstractCrudController
                 <code>open_days</code> (ex: 1,2,3,4,5)
                 <code>slot_buffer_minutes</code> (entier, ex: 15)
                 <code>fixed_slots</code> (0 ou 1)
-                <code>opening_delay_hours</code> (entier, ex: 48 pour J+2, 72 pour J+3)"
+                <code>opening_delay_hours</code> (entier, ex: 48 pour J+2, 72 pour J+3)
+                <code>reschedule_min_notice_hours</code> (préavis minimal de report en heures, défaut 24)."
             )
             ->setFormTypeOptions([
                 'attr' => [
@@ -71,11 +73,12 @@ class ScheduleSettingCrudController extends AbstractCrudController
             ->setHelp(
                 "Heures : format <code>HH:MM</code> (ex: 09:00).<br>
                 Jours <code>open_days</code> : liste de 1 à 7 séparés par des virgules (ex: 1,2,3,4,5 ; Lundi = 1).<br>
-                Entier pour <code>slot_buffer_minutes</code> (ex: 15), pour <code>fixed_slots</code> (0 ou 1) et <code>opening_delay_hours</code>."
+                Entier pour <code>slot_buffer_minutes</code> (ex: 15), pour <code>fixed_slots</code> (0 ou 1) et <code>opening_delay_hours</code>.
+                Pour <code>reschedule_min_notice_hours</code>, mettre 24 (ou plus)."
             )
             ->setFormTypeOptions([
                 'attr' => [
-                    'placeholder' => 'ex: 09:00 ou 1,2,3,4,5 ou 15 ou 48',
+                    'placeholder' => 'ex: 09:00 ou 1,2,3,4,5 ou 15 ou 48 ou 24',
                     // pattern généraliste : HH:MM OU liste 1..7 séparés par virgules OU entier
                     'pattern' => '^(?:\d{2}:\d{2}|[1-7](?:,[1-7]){0,6}|\d+)$',
                     'title' => 'Heure au format HH:MM (ex : 09:00) ou jours (ex : 1,2,3,4,5) ou entier (minutes)',
@@ -115,5 +118,31 @@ class ScheduleSettingCrudController extends AbstractCrudController
         }
 
         yield $valueField;
+    }
+
+    public function persistEntity(EntityManagerInterface $em, $entityInstance): void
+    {
+        if ($entityInstance instanceof ScheduleSetting) {
+            $this->applyDefaults($entityInstance);
+        }
+        parent::persistEntity($em, $entityInstance);
+    }
+
+    public function updateEntity(EntityManagerInterface $em, $entityInstance): void
+    {
+        if ($entityInstance instanceof ScheduleSetting) {
+            $this->applyDefaults($entityInstance);
+        }
+        parent::updateEntity($em, $entityInstance);
+    }
+
+    private function applyDefaults(ScheduleSetting $s): void
+    {
+        if (strtolower((string) $s->getSettingKey() === 'reschedule_min_notice_hours')) {
+            $val = trim((string) $s->getValue());
+            if ($val === '') {
+                $s->setValue('24');
+            }
+        }
     }
 }

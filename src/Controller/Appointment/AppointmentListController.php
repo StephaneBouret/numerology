@@ -23,6 +23,7 @@ final class AppointmentListController extends AbstractController
 
         $openingDelayHours = $settings->getInt('opening_delay_hours', 48);
         $openDaysCsv       = $settings->get('open_days', '1,2,3,4,5');
+        $rescheduleMinNoticeHours = $settings->getInt('reschedule_min_notice_hours', 24);
 
         $appointments = $repo->createQueryBuilder('a')
             ->andWhere('a.user = :user')
@@ -38,6 +39,7 @@ final class AppointmentListController extends AbstractController
             'appointments' => $appointments,
             'openingDelayHours' => $openingDelayHours,
             'openDaysCsv'       => $openDaysCsv,
+            'rescheduleMinNoticeHours' => $rescheduleMinNoticeHours,
         ]);
     }
 }

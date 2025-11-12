@@ -155,6 +155,11 @@
 					</div>
 				{% endfor %}
 			</div>
+            <div class="mt-4">
+                {% include "appointment/_cgv_summary.html.twig" with {
+                    minNotice: rescheduleMinNoticeHours|default(24)
+                } %}
+            </div>
 		{% endif %}
 	</div>
 {% endblock %}

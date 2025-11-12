@@ -86,7 +86,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('Gestion RDVs', 'fa-solid fa-calendar-check')->setSubItems([
             MenuItem::linkToCrud('Rendez-vous', 'fa fa-calendar-check', Appointment::class),
             MenuItem::linkToCrud('Types de rendez-vous', 'fas fa-calendar', AppointmentType::class),
-            MenuItem::linkToCrud('Horaires & jours ouvrés', 'fa fa-clock', ScheduleSetting::class),
+            MenuItem::linkToCrud('Paramètres de planning', 'fa fa-clock', ScheduleSetting::class),
             MenuItem::linkToCrud('Indisponibilités horaires', 'fa fa-ban', Unavailability::class),
             MenuItem::linkToCrud('Jours d\'indisponibilité', 'fa fa-calendar-xmark', UnavailableDay::class),
         ]);
