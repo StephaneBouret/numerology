@@ -6,10 +6,9 @@ use App\Entity\Appointment;
 use App\Entity\AppointmentType;
 use App\Enum\AppointmentStatus;
 use App\Form\EvaluatedPersonType;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
 use App\Service\AppointmentExportService;
-use DateTimeZone;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -21,16 +20,17 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NullFilter;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\NullFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class AppointmentCrudController extends AbstractCrudController
 {
@@ -116,7 +116,6 @@ class AppointmentCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $exportAllIcs)
             ->add(Crud::PAGE_INDEX, $generatePdf)
             ->remove(Crud::PAGE_INDEX, Action::NEW)
-            ->remove(Crud::PAGE_INDEX, Action::EDIT)
             ->remove(CRud::PAGE_INDEX, Action::DELETE)
             ->remove(Crud::PAGE_DETAIL, Action::EDIT)
             ->remove(Crud::PAGE_DETAIL, Action::DELETE);
@@ -124,6 +123,30 @@ class AppointmentCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        if ($pageName === Crud::PAGE_EDIT) {
+            yield FormField::addPanel('Ressources du rendez-vous');
+
+            yield TextField::new('visioUrl', 'Lien de visioconférence')
+                ->setRequired(false)
+                ->setFormTypeOption('attr', [
+                    'placeholder' => 'https://dicord.gg/... ou lien Teams'
+                ]);
+
+            yield Field::new('pdfFile', 'Support PDF')
+                ->setFormType(VichFileType::class)
+                ->setFormTypeOptions([
+                    'required' => false,
+                    'allow_delete' => true,
+                    'delete_label' => 'Supprimer le fichier existant',
+                    'download_uri' => true,
+                    'download_label' => 'Télécharger le fichier actuel',
+                    'asset_helper' => true,
+                ])
+                ->onlyOnForms();
+
+            return;
+        }
+
         yield IdField::new('id')->onlyOnIndex();
 
         yield AssociationField::new('user', 'Client')
@@ -148,6 +171,16 @@ class AppointmentCrudController extends AbstractCrudController
                 AppointmentStatus::CANCELED->value  => 'danger',
             ])
             ->formatValue(fn($value) => $value instanceof AppointmentStatus ? $value->label() : $value);
+
+        yield TextField::new('visioUrl', 'Lien de visioconférence')
+            ->setRequired(false)
+            ->setFormTypeOption('attr', [
+                'placeholder' => 'https://dicord.gg/... ou lien Teams'
+            ])
+            ->onlyOnDetail();
+
+        yield TextField::new('pdfName', 'Support PDF')
+            ->onlyOnIndex();
 
         yield TextField::new('number', 'Numéro')->onlyOnIndex();
 

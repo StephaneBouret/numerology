@@ -8,7 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AppointmentRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
 class Appointment
 {
@@ -53,6 +56,29 @@ class Appointment
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private ?bool $isSent = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $reminder7SentAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $reminder24SentAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(message: 'Veuillez saisir une URL valide (https://...).')]
+    private ?string $visioUrl = null;
+
+    #[Assert\File(
+        extensions: ['pdf'],
+        extensionsMessage: 'Merci de télécharger un PDF valide'
+    )]
+    #[Vich\UploadableField(mapping: 'appointment_pdf', fileNameProperty: 'pdfName')]
+    private ?File $pdfFile = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pdfName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $pdfUpdatedAt = null;
 
     public function __construct()
     {
@@ -220,5 +246,75 @@ class Appointment
                     ->addViolation();
             }
         }
+    }
+
+    public function getReminder7SentAt(): ?\DateTimeImmutable
+    {
+        return $this->reminder7SentAt;
+    }
+
+    public function setReminder7SentAt(?\DateTimeImmutable $reminder7SentAt): static
+    {
+        $this->reminder7SentAt = $reminder7SentAt;
+
+        return $this;
+    }
+
+    public function getReminder24SentAt(): ?\DateTimeImmutable
+    {
+        return $this->reminder24SentAt;
+    }
+
+    public function setReminder24SentAt(?\DateTimeImmutable $reminder24SentAt): static
+    {
+        $this->reminder24SentAt = $reminder24SentAt;
+
+        return $this;
+    }
+
+    public function getVisioUrl(): ?string
+    {
+        return $this->visioUrl;
+    }
+
+    public function setVisioUrl(?string $visioUrl): static
+    {
+        $this->visioUrl = $visioUrl;
+
+        return $this;
+    }
+
+    public function setPdfFile(?File $file = null): void
+    {
+        $this->pdfFile = $file;
+
+        if (null !== $file) {
+            $this->pdfUpdatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getPdfFile(): ?File
+    {
+        return $this->pdfFile;
+    }
+
+    public function getPdfName(): ?string
+    {
+        return $this->pdfName;
+    }
+
+    public function setPdfName(?string $pdfName): void
+    {
+        $this->pdfName = $pdfName;
+    }
+
+    public function getPdfUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->pdfUpdatedAt;
+    }
+
+    public function setPdfUpdatedAt(?\DateTimeImmutable $date): void
+    {
+        $this->pdfUpdatedAt = $date;
     }
 }
