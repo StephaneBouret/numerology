@@ -1,0 +1,23 @@
+# Normalisation des fins de ligne
+* text=auto eol=lf
+
+# Fichiers binaires
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
+
+# Polices
+*.woff binary
+*.woff2 binary
+*.ttf binary
+
+# Ne jamais normaliser les fichiers composer
+composer.lock text eol=lf
+
+# Ne jamais normaliser vendors (normalement ignoré, mais au cas où)
+vendor/** -text
